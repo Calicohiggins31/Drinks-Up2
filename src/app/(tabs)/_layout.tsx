@@ -11,6 +11,10 @@ export default function TabsLayout() {
         <NativeTabs.Trigger.Label>Mix</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon sf={{ default: 'wineglass', selected: 'wineglass.fill' }} md="local_bar" />
       </NativeTabs.Trigger>
+      <NativeTabs.Trigger name="drinks">
+        <NativeTabs.Trigger.Label>Drinks</NativeTabs.Trigger.Label>
+        <NativeTabs.Trigger.Icon sf="magnifyingglass" md="search" />
+      </NativeTabs.Trigger>
       <NativeTabs.Trigger name="bar">
         <NativeTabs.Trigger.Label>My Bar</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon sf={{ default: 'cabinet', selected: 'cabinet.fill' }} md="liquor" />

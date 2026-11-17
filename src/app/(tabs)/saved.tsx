@@ -19,12 +19,11 @@ export default function SavedScreen() {
 
   const mine = useMemo(() => matchAll(owned, customRecipes), [owned, customRecipes]);
   const saved = useMemo(() => matchAll(owned, recipes.filter((r) => favorites.has(r.id))), [owned, recipes, favorites]);
-  const all = useMemo(() => matchAll(owned, recipes), [owned, recipes]);
 
   return (
     <Screen
       title="Saved"
-      subtitle="Your recipes, favourites and every drink"
+      subtitle="Your recipes and favourites"
       right={
         <View style={styles.headerBtns}>
           <Pressable
@@ -66,15 +65,15 @@ export default function SavedScreen() {
         saved.map((m) => <DrinkCard key={m.recipe.id} match={m} favorite />)
       )}
 
-      <SectionTitle hint={`${recipes.length} recipes`}>All drinks</SectionTitle>
-      {all.map((m) => (
-        <DrinkCard key={m.recipe.id} match={m} favorite={favorites.has(m.recipe.id)} />
-      ))}
+      <Pressable onPress={() => router.navigate('/drinks')} style={styles.browse}>
+        <Text style={[styles.emptyHint, { color: t.accent }]}>🔍 Browse and search all {recipes.length} drinks ›</Text>
+      </Pressable>
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
+  browse: { alignItems: 'center', paddingVertical: 18 },
   headerBtns: { flexDirection: 'row', gap: 8, marginBottom: 6, alignItems: 'center' },
   acctBtn: { width: 40, height: 40, borderRadius: radius.pill, alignItems: 'center', justifyContent: 'center' },
   newBtn: { paddingHorizontal: 16, paddingVertical: 9, borderRadius: radius.pill },

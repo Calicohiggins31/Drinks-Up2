@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { BaseGroup } from '../../components/BaseGroup';
 import { DrinkCard } from '../../components/DrinkCard';
@@ -8,6 +8,7 @@ import { ingredientName } from '../../data/ingredients';
 import { findStoresNearby } from '../../features/stores/storeFinder';
 import { groupByBase, type BaseId } from '../../lib/base';
 import { matchAll, shoppingSuggestions, type DrinkMatch } from '../../lib/matching';
+import { pickRandom } from '../../lib/pick';
 import { useBar } from '../../state/BarContext';
 import { radius, useTheme } from '../../theme';
 
@@ -23,6 +24,7 @@ export default function MixScreen() {
   const { owned, favorites, ready, addIngredients, recipes } = useBar();
   const [filter, setFilter] = useState<Filter>('all');
   const [open, setOpen] = useState<ReadonlySet<string>>(new Set());
+  const lastPick = useRef<string | undefined>(undefined);
   const toggle = (key: string) =>
     setOpen((prev) => {
       const next = new Set(prev);
@@ -42,6 +44,14 @@ export default function MixScreen() {
   const suggestions = useMemo(() => shoppingSuggestions(matches, 4), [matches]);
   const readyGroups = useMemo(() => groupByBase(ready_, (m) => m.recipe), [ready_]);
   const almostGroups = useMemo(() => groupByBase(almost, (m) => m.recipe), [almost]);
+
+  // Random pick from the drinks you can make right now (respects the All/Cocktails/Mocktails filter).
+  const pickForMe = () => {
+    const id = pickRandom(ready_.map((m) => m.recipe.id), lastPick.current);
+    if (!id) return;
+    lastPick.current = id;
+    router.push(`/drink/${id}`);
+  };
 
   // Drinks under a foldable header per base spirit. A section with only one group starts open.
   const renderGroups = (section: string, groups: { id: BaseId; label: string; emoji: string; items: DrinkMatch[] }[]) =>
@@ -111,6 +121,17 @@ export default function MixScreen() {
           );
         })}
       </View>
+
+      {ready_.length > 0 ? (
+        <Pressable
+          onPress={pickForMe}
+          accessibilityRole="button"
+          accessibilityHint="Opens a random drink you can make right now"
+          style={({ pressed }) => [styles.pick, { backgroundColor: t.accent, opacity: pressed ? 0.85 : 1 }]}
+        >
+          <Text style={[styles.pickText, { color: t.onAccent }]}>🎲 Pick a drink for me</Text>
+        </Pressable>
+      ) : null}
 
       {ready_.length > 0 ? (
         <>
@@ -190,6 +211,8 @@ const styles = StyleSheet.create({
   suggestionName: { fontSize: 16, fontWeight: '600' },
   suggestionHint: { fontSize: 13, marginTop: 2 },
   addBtn: { minWidth: 48, paddingHorizontal: 12, paddingVertical: 8, borderRadius: radius.pill, alignItems: 'center' },
+  pick: { paddingVertical: 15, borderRadius: radius.pill, alignItems: 'center', marginTop: 4 },
+  pickText: { fontSize: 17, fontWeight: '700' },
   storeBtn: { borderWidth: 1.5, borderRadius: radius.md, padding: 14, alignItems: 'center', gap: 2, marginTop: 4 },
   storeBtnText: { fontSize: 16, fontWeight: '700' },
   storeBtnHint: { fontSize: 12 },
