@@ -155,3 +155,11 @@ test('share text adds app store links only once they are set', async () => {
   });
   assert.match(text, /Get Drinks Up:\niPhone: https:\/\/apps\.apple\.com\/app\/id123\nAndroid: https:\/\/play\.google\.com/);
 });
+
+test('shopping list share text', async () => {
+  const { shoppingListText } = await import('./shareText');
+  assert.equal(
+    shoppingListText([{ id: 'lime_juice', checked: false }, { id: 'gin', checked: true }]),
+    '🛒 Drinks Up shopping list\n\n☐ Lime juice\n✓ Gin',
+  );
+});

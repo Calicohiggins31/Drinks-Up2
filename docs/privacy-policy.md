@@ -12,7 +12,7 @@ We do not knowingly collect information from anyone under 21. If you believe som
 
 ## Information stored only on your phone
 
-Without an account, your bar, your favourite drinks, your notes and your settings are saved only on your device. We cannot see them. Deleting the app deletes them. (Anonymous usage counts are described under "Usage statistics" below.)
+Without an account, your bar, your favourite drinks, your notes, your shopping list and your settings are saved only on your device. We cannot see them. Deleting the app deletes them. (Anonymous usage counts are described under "Usage statistics" below.)
 
 ## Information we collect if you create an account
 
@@ -20,7 +20,7 @@ An account is optional and free. It is required to create your own recipes, and 
 
 When you create an account we collect your name, email address, city and state, and a password (stored securely by our provider; we cannot see it).
 
-While you are signed in we store the ingredients in your bar, the recipes you create, any ingredients you add yourself, your favourite drinks and your private notes, so they can be backed up and synced.
+While you are signed in we store the ingredients in your bar, the recipes you create, any ingredients you add yourself, your favourite drinks, your private notes and your shopping list, so they can be backed up and synced.
 
 If you rate a drink, we store your star rating with your account. Other people only ever see the average rating and the number of ratings, never your name or email. Your notes are private and are never shown to anyone else.
 

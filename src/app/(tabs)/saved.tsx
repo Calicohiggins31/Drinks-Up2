@@ -65,6 +65,9 @@ export default function SavedScreen() {
         saved.map((m) => <DrinkCard key={m.recipe.id} match={m} favorite />)
       )}
 
+      <Pressable onPress={() => router.push('/shopping')} style={styles.browse}>
+        <Text style={[styles.emptyHint, { color: t.accent }]}>🛒 My shopping list ›</Text>
+      </Pressable>
       <Pressable onPress={() => router.navigate('/drinks')} style={styles.browse}>
         <Text style={[styles.emptyHint, { color: t.accent }]}>🔍 Browse and search all {recipes.length} drinks ›</Text>
       </Pressable>

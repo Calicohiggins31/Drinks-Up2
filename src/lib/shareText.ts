@@ -30,3 +30,12 @@ export function recipeShareText(recipe: Recipe, units: UnitSystem, servings = 1,
   if (stores.length) lines.push('', 'Get Drinks Up:', ...stores);
   return lines.join('\n');
 }
+
+/** Plain-text shopping list for sharing. Bought items are ticked. */
+export function shoppingListText(items: { id: string; checked: boolean }[]): string {
+  return [
+    '🛒 Drinks Up shopping list',
+    '',
+    ...items.map((i) => `${i.checked ? '✓' : '☐'} ${ingredientName(i.id)}`),
+  ].join('\n');
+}

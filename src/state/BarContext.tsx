@@ -23,7 +23,11 @@ type Saved = {
   backupPromptDismissed?: boolean;
   shareUsageStats?: boolean;
   notes?: Record<string, string>;
+  shopping?: ShoppingItem[];
 };
+
+/** One line on the shopping list. `checked` means bought. */
+export type ShoppingItem = { id: string; checked: boolean };
 
 type BarContextValue = {
   ready: boolean;
@@ -60,6 +64,14 @@ type BarContextValue = {
   notes: Readonly<Record<string, string>>;
   setNote: (recipeId: string, text: string) => void;
   replaceNotes: (notes: Record<string, string>) => void;
+  shopping: ShoppingItem[];
+  addToShopping: (ids: string[]) => void;
+  toggleShoppingChecked: (id: string) => void;
+  removeFromShopping: (id: string) => void;
+  /** Adds every ticked item to My Bar and takes it off the list. Returns how many moved. */
+  moveCheckedToBar: () => number;
+  clearShopping: () => void;
+  replaceShopping: (items: ShoppingItem[]) => void;
 };
 
 const BarContext = createContext<BarContextValue | null>(null);
@@ -89,6 +101,7 @@ export function BarProvider({ children }: { children: ReactNode }) {
   const [backupPromptDismissed, setBackupPromptDismissed] = useState(false);
   const [shareUsageStats, setShareUsageStats] = useState(true);
   const [notes, setNotes] = useState<Readonly<Record<string, string>>>({});
+  const [shopping, setShopping] = useState<ShoppingItem[]>([]);
   useMemo(() => setUsageEnabled(shareUsageStats), [shareUsageStats]);
 
   // Keep the ingredient name lookup in sync before children render.
@@ -115,6 +128,9 @@ export function BarProvider({ children }: { children: ReactNode }) {
         if (saved.units === 'ml' || saved.units === 'oz') setUnitsState(saved.units);
         setBackupPromptDismissed(!!saved.backupPromptDismissed);
         if (saved.shareUsageStats === false) setShareUsageStats(false);
+        if (Array.isArray(saved.shopping)) {
+          setShopping(saved.shopping.filter((i) => i && typeof i.id === 'string').map((i) => ({ id: i.id, checked: !!i.checked })));
+        }
         if (saved.notes && typeof saved.notes === 'object') {
           setNotes(Object.fromEntries(Object.entries(saved.notes).filter(([, v]) => typeof v === 'string' && v.trim())));
         }
@@ -126,9 +142,9 @@ export function BarProvider({ children }: { children: ReactNode }) {
   // Save whenever something changes (after the first load, so we never overwrite with empty state).
   useEffect(() => {
     if (!ready) return;
-    const data: Saved = { ageGate: ageStatus, owned: [...owned], favorites: [...favorites], units, customIngredients, customRecipes, backupPromptDismissed, shareUsageStats, notes };
+    const data: Saved = { ageGate: ageStatus, owned: [...owned], favorites: [...favorites], units, customIngredients, customRecipes, backupPromptDismissed, shareUsageStats, notes, shopping };
     AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(data)).catch(() => {});
-  }, [ready, ageStatus, owned, favorites, units, customIngredients, customRecipes, backupPromptDismissed, shareUsageStats, notes]);
+  }, [ready, ageStatus, owned, favorites, units, customIngredients, customRecipes, backupPromptDismissed, shareUsageStats, notes, shopping]);
 
   const toggleIngredient = useCallback((id: string) => {
     tap();
@@ -209,6 +225,29 @@ export function BarProvider({ children }: { children: ReactNode }) {
       return next;
     });
   }, []);
+  const addToShopping = useCallback((ids: string[]) => {
+    tap();
+    setShopping((prev) => {
+      const have = new Set(prev.map((i) => i.id));
+      return [...prev, ...ids.filter((id) => !have.has(id)).map((id) => ({ id, checked: false }))];
+    });
+  }, []);
+  const toggleShoppingChecked = useCallback((id: string) => {
+    tap();
+    setShopping((prev) => prev.map((i) => (i.id === id ? { ...i, checked: !i.checked } : i)));
+  }, []);
+  const removeFromShopping = useCallback((id: string) => setShopping((prev) => prev.filter((i) => i.id !== id)), []);
+  const clearShopping = useCallback(() => setShopping([]), []);
+  const replaceShopping = useCallback((items: ShoppingItem[]) => setShopping(items.map((i) => ({ ...i }))), []);
+  const moveCheckedToBar = useCallback(() => {
+    const bought = shopping.filter((i) => i.checked).map((i) => i.id);
+    if (bought.length === 0) return 0;
+    trackUsage('stocked', bought.filter((id) => !owned.has(id)));
+    setOwned((prev) => new Set([...prev, ...bought]));
+    setShopping((prev) => prev.filter((i) => !i.checked));
+    return bought.length;
+  }, [shopping, owned]);
+
   const replaceNotes = useCallback((next: Record<string, string>) => setNotes({ ...next }), []);
 
   const replaceOwned = useCallback((ids: Iterable<string>) => setOwned(new Set(ids)), []);
@@ -234,6 +273,7 @@ export function BarProvider({ children }: { children: ReactNode }) {
       addCustomIngredient, deleteCustomIngredient, saveRecipe, deleteRecipe,
       replaceFavorites, replaceCustom, backupPromptDismissed, dismissBackupPrompt,
       replaceOwned, shareUsageStats, setShareUsageStats, notes, setNote, replaceNotes,
+      shopping, addToShopping, toggleShoppingChecked, removeFromShopping, moveCheckedToBar, clearShopping, replaceShopping,
     }),
     [
       ready, ageStatus, setAgeStatus, owned, favorites, units, recipes, customRecipes, customIngredients, findRecipe,
@@ -241,6 +281,7 @@ export function BarProvider({ children }: { children: ReactNode }) {
       addCustomIngredient, deleteCustomIngredient, saveRecipe, deleteRecipe,
       replaceFavorites, replaceCustom, backupPromptDismissed, dismissBackupPrompt,
       replaceOwned, shareUsageStats, notes, setNote, replaceNotes,
+      shopping, addToShopping, toggleShoppingChecked, removeFromShopping, moveCheckedToBar, clearShopping, replaceShopping,
     ],
   );
 

@@ -174,3 +174,16 @@ alter table public.notes enable row level security;
 drop policy if exists "own notes" on public.notes;
 create policy "own notes" on public.notes
   for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+
+-- ─── Shopping list (added in v5) ─────────────────────────────────────────────
+-- Synced for signed-in users so the list follows them across devices. Private to each user.
+create table if not exists public.shopping_items (
+  user_id uuid not null references auth.users (id) on delete cascade,
+  ingredient_id text not null,
+  checked boolean not null default false,
+  primary key (user_id, ingredient_id)
+);
+alter table public.shopping_items enable row level security;
+drop policy if exists "own shopping list" on public.shopping_items;
+create policy "own shopping list" on public.shopping_items
+  for all using (auth.uid() = user_id) with check (auth.uid() = user_id);

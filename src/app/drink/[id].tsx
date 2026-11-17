@@ -13,7 +13,10 @@ import { radius, useTheme } from '../../theme';
 export default function DrinkScreen() {
   const t = useTheme();
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { owned, favorites, toggleFavorite, toggleIngredient, units, setUnits, findRecipe, deleteRecipe } = useBar();
+  const {
+    owned, favorites, toggleFavorite, toggleIngredient, units, setUnits, findRecipe, deleteRecipe, shopping, addToShopping,
+  } = useBar();
+  const listed = new Set(shopping.map((i) => i.id));
   const recipe = findRecipe(id);
   const [servings, setServings] = useState(1);
   const builtIn = recipe && !recipe.custom;
@@ -113,6 +116,17 @@ export default function DrinkScreen() {
               ? '✓ You have everything for this one'
               : `Missing ${missing.length}: ${missing.map((m) => ingredientName(m.id)).join(', ')}`}
           </Text>
+          {!canMake ? (
+            missing.every((m) => listed.has(m.id)) ? (
+              <Pressable onPress={() => router.push('/shopping')} hitSlop={6}>
+                <Text style={[styles.bannerLink, { color: t.accent }]}>🛒 On your shopping list ›</Text>
+              </Pressable>
+            ) : (
+              <Pressable onPress={() => addToShopping(missing.map((m) => m.id))} hitSlop={6}>
+                <Text style={[styles.bannerLink, { color: t.accent }]}>+ Add missing to shopping list</Text>
+              </Pressable>
+            )
+          ) : null}
         </View>
 
         <View style={styles.sectionRow}>
@@ -184,14 +198,27 @@ export default function DrinkScreen() {
                 </View>
                 <Text style={[styles.amount, { color: t.textMuted }]}>{formatAmount(item, units, servings)}</Text>
                 {!have ? (
-                  <Pressable
-                    onPress={() => toggleIngredient(item.id)}
-                    hitSlop={8}
-                    accessibilityLabel={`I have ${ingredientName(item.id)}`}
-                    style={[styles.haveBtn, { borderColor: t.accent }]}
-                  >
-                    <Text style={{ color: t.accent, fontWeight: '700', fontSize: 13 }}>I have it</Text>
-                  </Pressable>
+                  <View style={styles.rowBtns}>
+                    <Pressable
+                      onPress={() => toggleIngredient(item.id)}
+                      hitSlop={6}
+                      accessibilityLabel={`I have ${ingredientName(item.id)}`}
+                      style={[styles.haveBtn, { borderColor: t.accent }]}
+                    >
+                      <Text style={{ color: t.accent, fontWeight: '700', fontSize: 13 }}>I have it</Text>
+                    </Pressable>
+                    <Pressable
+                      onPress={() => (listed.has(item.id) ? router.push('/shopping') : addToShopping([item.id]))}
+                      hitSlop={6}
+                      accessibilityLabel={
+                        listed.has(item.id) ? `${ingredientName(item.id)} is on your list` : `Add ${ingredientName(item.id)} to shopping list`
+                      }
+                    >
+                      <Text style={{ color: listed.has(item.id) ? t.success : t.textMuted, fontWeight: '700', fontSize: 13 }}>
+                        {listed.has(item.id) ? '✓ Listed' : '+ List'}
+                      </Text>
+                    </Pressable>
+                  </View>
                 ) : null}
               </View>
             );
@@ -244,6 +271,8 @@ const styles = StyleSheet.create({
   metaText: { fontSize: 13, fontWeight: '600' },
   banner: { marginTop: 16, padding: 14, borderRadius: radius.md },
   bannerText: { fontSize: 15, fontWeight: '600' },
+  bannerLink: { fontSize: 15, fontWeight: '700', marginTop: 8 },
+  rowBtns: { alignItems: 'flex-end', gap: 6 },
   headerBtns: { flexDirection: 'row', alignItems: 'center', gap: 18 },
   servingsRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 12 },
   servingsLabel: { fontSize: 15, fontWeight: '600' },

@@ -21,7 +21,8 @@ const FILTERS: { id: Filter; label: string }[] = [
 
 export default function MixScreen() {
   const t = useTheme();
-  const { owned, favorites, ready, addIngredients, recipes } = useBar();
+  const { owned, favorites, ready, addIngredients, recipes, shopping, addToShopping } = useBar();
+  const listed = new Set(shopping.map((i) => i.id));
   const [filter, setFilter] = useState<Filter>('all');
   const [open, setOpen] = useState<ReadonlySet<string>>(new Set());
   const lastPick = useRef<string | undefined>(undefined);
@@ -157,18 +158,38 @@ export default function MixScreen() {
                     Unlocks {s.unlocks.map((r) => r.name).join(', ')}
                   </Text>
                 </View>
-                <Pressable
-                  onPress={() => addIngredients([s.ingredientId])}
-                  accessibilityLabel={`I have ${ingredientName(s.ingredientId)}`}
-                  style={({ pressed }) => [styles.addBtn, { backgroundColor: t.accent, opacity: pressed ? 0.8 : 1 }]}
-                >
-                  <Text style={[styles.addBtnText, { color: t.onAccent }]}>+{s.unlocks.length}</Text>
-                </Pressable>
+                <View style={styles.suggestionBtns}>
+                  <Pressable
+                    onPress={() => addIngredients([s.ingredientId])}
+                    accessibilityLabel={`I have ${ingredientName(s.ingredientId)}`}
+                    style={({ pressed }) => [styles.addBtn, { backgroundColor: t.accent, opacity: pressed ? 0.8 : 1 }]}
+                  >
+                    <Text style={[styles.addBtnText, { color: t.onAccent }]}>I have it</Text>
+                  </Pressable>
+                  <Pressable
+                    onPress={() => (listed.has(s.ingredientId) ? router.push('/shopping') : addToShopping([s.ingredientId]))}
+                    accessibilityLabel={`Add ${ingredientName(s.ingredientId)} to shopping list`}
+                    hitSlop={6}
+                  >
+                    <Text style={[styles.listBtnText, { color: listed.has(s.ingredientId) ? t.success : t.accent }]}>
+                      {listed.has(s.ingredientId) ? '✓ Listed' : '+ List'}
+                    </Text>
+                  </Pressable>
+                </View>
               </View>
             ))}
           </View>
         </>
       ) : null}
+      <Pressable
+        onPress={() => router.push('/shopping')}
+        style={({ pressed }) => [styles.listLink, { backgroundColor: t.surface, borderColor: t.border, opacity: pressed ? 0.7 : 1 }]}
+      >
+        <Text style={[styles.listLinkText, { color: t.text }]}>🛒 My shopping list</Text>
+        <Text style={[styles.listLinkCount, { color: t.textMuted }]}>
+          {shopping.length ? `${shopping.length} ${shopping.length === 1 ? 'item' : 'items'} ›` : 'Empty ›'}
+        </Text>
+      </Pressable>
       <Pressable
         onPress={() => findStoresNearby().catch(() => {})}
         accessibilityRole="link"
@@ -216,5 +237,13 @@ const styles = StyleSheet.create({
   storeBtn: { borderWidth: 1.5, borderRadius: radius.md, padding: 14, alignItems: 'center', gap: 2, marginTop: 4 },
   storeBtnText: { fontSize: 16, fontWeight: '700' },
   storeBtnHint: { fontSize: 12 },
+  suggestionBtns: { alignItems: 'center', gap: 6 },
+  listBtnText: { fontSize: 13, fontWeight: '700' },
+  listLink: {
+    flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
+    padding: 14, borderRadius: radius.md, borderWidth: StyleSheet.hairlineWidth, marginTop: 4,
+  },
+  listLinkText: { fontSize: 16, fontWeight: '600' },
+  listLinkCount: { fontSize: 15 },
   addBtnText: { fontSize: 15, fontWeight: '700' },
 });
