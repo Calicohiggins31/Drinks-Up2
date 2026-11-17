@@ -54,7 +54,7 @@ export default function AccountScreen() {
       <View style={[styles.center, { backgroundColor: t.background }]}>
         <Text style={styles.big}>🛠️</Text>
         <Text style={[styles.title, { color: t.text }]}>Accounts are coming soon</Text>
-        <Text style={[styles.body, { color: t.textMuted }]}>Account sign-up isn't switched on in this version yet.</Text>
+        <Text style={[styles.body, { color: t.textMuted }]}>Account sign-up isn’t switched on in this version yet.</Text>
       </View>
     );
   }

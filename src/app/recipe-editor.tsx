@@ -96,7 +96,7 @@ export default function RecipeEditor() {
         <Text style={{ fontSize: 48 }}>🔒</Text>
         <Text style={[styles.gateTitle, { color: t.text }]}>Free account needed</Text>
         <Text style={[styles.gateBody, { color: t.textMuted }]}>
-          Create a free account to save your own recipes. They're kept safe in your account and only you can see them.
+          Create a free account to save your own recipes. They’re kept safe in your account and only you can see them.
         </Text>
         <Pressable
           onPress={() => router.replace({ pathname: '/account', params: { reason: 'recipe' } })}

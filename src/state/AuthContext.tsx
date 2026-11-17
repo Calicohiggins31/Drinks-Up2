@@ -39,7 +39,8 @@ export function friendlyAuthError(e: unknown): string {
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
-  const [profile, setProfile] = useState<Profile | null>(null);
+  // Remember whose profile was loaded, so a signed-out user never sees a stale one.
+  const [loaded, setLoaded] = useState<{ userId: string; profile: Profile | null } | null>(null);
   const [loading, setLoading] = useState(accountsConfigured);
 
   useEffect(() => {
@@ -55,17 +56,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const userId = session?.user.id ?? null;
 
   useEffect(() => {
-    if (!supabase || !userId) {
-      setProfile(null);
-      return;
-    }
+    if (!supabase || !userId) return;
     supabase
       .from('profiles')
       .select('name, city, state')
       .eq('id', userId)
       .maybeSingle()
-      .then(({ data }) => setProfile(data ?? null));
+      .then(({ data }) => setLoaded({ userId, profile: data ?? null }));
   }, [userId]);
+  const profile = userId && loaded?.userId === userId ? loaded.profile : null;
 
   const signUp = useCallback(async ({ email, password, name, city, state }: SignUpInput) => {
     const { data, error } = await requireClient().auth.signUp({

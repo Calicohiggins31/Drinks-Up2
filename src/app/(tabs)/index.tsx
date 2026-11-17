@@ -40,7 +40,7 @@ export default function MixScreen() {
           <Text style={styles.emptyEmoji}>🍸</Text>
           <Text style={[styles.emptyTitle, { color: t.text }]}>Your bar is empty</Text>
           <Text style={[styles.emptyText, { color: t.textMuted }]}>
-            Tell Drinks Up which bottles, mixers and fruit you have, and we'll show every drink you
+            Tell Drinks Up which bottles, mixers and fruit you have, and we’ll show every drink you
             can mix right now.
           </Text>
           <Pressable
@@ -125,7 +125,7 @@ export default function MixScreen() {
         style={({ pressed }) => [styles.storeBtn, { borderColor: t.accent, opacity: pressed ? 0.7 : 1 }]}
       >
         <Text style={[styles.storeBtnText, { color: t.accent }]}>📍 Find a liquor store near me</Text>
-        <Text style={[styles.storeBtnHint, { color: t.textMuted }]}>Opens Maps. Drinks Up doesn't see your location.</Text>
+        <Text style={[styles.storeBtnHint, { color: t.textMuted }]}>Opens Maps. Drinks Up doesn’t see your location.</Text>
       </Pressable>
 
       {almost.length > 0 ? (

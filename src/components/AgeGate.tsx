@@ -27,7 +27,7 @@ export function AgeGate() {
     return (
       <SafeAreaView style={[styles.fill, styles.center, { backgroundColor: t.background }]}>
         <Text style={styles.bigEmoji}>🚫</Text>
-        <Text style={[styles.title, { color: t.text }]}>Sorry, you can't use Drinks Up</Text>
+        <Text style={[styles.title, { color: t.text }]}>Sorry, you can’t use Drinks Up</Text>
         <Text style={[styles.body, { color: t.textMuted }]}>
           You must be {LEGAL_AGE} or older to use this app.
         </Text>
@@ -102,7 +102,7 @@ export function AgeGate() {
         </Pressable>
 
         <Text style={[styles.fine, { color: t.textMuted }]}>
-          Your date of birth isn't stored. Please drink responsibly.
+          Your date of birth isn’t stored. Please drink responsibly.
         </Text>
       </KeyboardAvoidingView>
     </SafeAreaView>
