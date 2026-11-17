@@ -2,13 +2,14 @@ import { useMemo, useState } from 'react';
 import { FlatList, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { DrinkCard } from '../../components/DrinkCard';
+import { isClassic } from '../../data/classics';
 import { baseOf, BASES, type BaseId } from '../../lib/base';
 import { matchRecipe } from '../../lib/matching';
 import { searchRecipes } from '../../lib/search';
 import { useBar } from '../../state/BarContext';
 import { radius, useTheme } from '../../theme';
 
-type Filter = 'all' | 'can-make' | BaseId;
+type Filter = 'all' | 'classics' | 'can-make' | BaseId;
 
 export default function DrinksScreen() {
   const t = useTheme();
@@ -20,11 +21,13 @@ export default function DrinksScreen() {
     const matches = searchRecipes(recipes, query).map((r) => matchRecipe(r, owned));
     if (filter === 'all') return matches;
     if (filter === 'can-make') return matches.filter((m) => m.canMake);
+    if (filter === 'classics') return matches.filter((m) => isClassic(m.recipe.id));
     return matches.filter((m) => baseOf(m.recipe) === filter);
   }, [recipes, query, owned, filter]);
 
   const filters: { id: Filter; label: string }[] = [
     { id: 'all', label: 'All' },
+    { id: 'classics', label: '★ Classics' },
     { id: 'can-make', label: '✓ I can make' },
     ...BASES.map((b) => ({ id: b.id, label: `${b.emoji} ${b.label}` })),
   ];
@@ -35,7 +38,7 @@ export default function DrinksScreen() {
       <Text style={[styles.subtitle, { color: t.textMuted }]}>
         {query || filter !== 'all'
           ? `${results.length} ${results.length === 1 ? 'match' : 'matches'}`
-          : `All ${recipes.length} drinks, A to Z`}
+          : `All ${recipes.length} drinks, classics first`}
       </Text>
       <TextInput
         value={query}

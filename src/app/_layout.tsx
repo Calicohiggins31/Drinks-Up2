@@ -38,6 +38,7 @@ function Gated() {
         <Stack.Screen name="recipe-editor" options={{ title: 'New recipe', headerBackTitle: 'Cancel' }} />
         <Stack.Screen name="privacy" options={{ title: 'Privacy policy', headerBackTitle: 'Back' }} />
         <Stack.Screen name="account" options={{ title: 'Account', headerBackTitle: 'Back' }} />
+        <Stack.Screen name="settings" options={{ title: 'Settings', headerBackTitle: 'Back' }} />
       </Stack>
   );
 }

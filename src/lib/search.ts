@@ -1,3 +1,4 @@
+import { byFame } from '../data/classics';
 import { ingredientName } from '../data/ingredients';
 import type { Recipe } from '../data/recipes';
 
@@ -9,10 +10,11 @@ export function fold(text: string): string {
 /**
  * Drinks matching every word typed, best matches first:
  * name starts with the words, then name contains them, then ingredients, then descriptions.
+ * Ties go to the classics, so well-known drinks come first.
  */
 export function searchRecipes(recipes: Recipe[], query: string): Recipe[] {
   const words = fold(query).split(/\s+/).filter(Boolean);
-  if (words.length === 0) return [...recipes].sort((a, b) => a.name.localeCompare(b.name));
+  if (words.length === 0) return [...recipes].sort(byFame);
 
   const scored: { recipe: Recipe; score: number }[] = [];
   for (const recipe of recipes) {
@@ -36,6 +38,6 @@ export function searchRecipes(recipes: Recipe[], query: string): Recipe[] {
     if (all) scored.push({ recipe, score });
   }
   return scored
-    .sort((a, b) => b.score - a.score || a.recipe.name.localeCompare(b.recipe.name))
+    .sort((a, b) => b.score - a.score || byFame(a.recipe, b.recipe))
     .map((s) => s.recipe);
 }

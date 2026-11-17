@@ -27,11 +27,11 @@ export default function SavedScreen() {
       right={
         <View style={styles.headerBtns}>
           <Pressable
-            onPress={() => router.push('/account')}
-            accessibilityLabel="Account"
+            onPress={() => router.push('/settings')}
+            accessibilityLabel="Settings and account"
             style={({ pressed }) => [styles.acctBtn, { backgroundColor: t.surfaceAlt, opacity: pressed ? 0.7 : 1 }]}
           >
-            <Text style={{ fontSize: 18 }}>👤</Text>
+            <Text style={{ fontSize: 18 }}>⚙️</Text>
           </Pressable>
           <Pressable
             onPress={newRecipe}

@@ -122,3 +122,10 @@ test('share text has the ingredients, steps and scaled amounts', async () => {
   assert.match(text, /1\. Shake everything with ice/);
   assert.match(text, /Shared from Drinks Up/);
 });
+
+test('among drinks you can make, classics are listed first', () => {
+  const all = matchAll(new Set(['white_rum', 'lime_juice', 'simple_syrup', 'mint', 'soda_water', 'honey', 'cola']));
+  const ready = all.filter((m) => m.canMake).map((m) => m.recipe.name);
+  assert.equal(ready[0], 'Mojito');
+  assert.ok(ready.indexOf('Daiquiri') < ready.indexOf('Canchánchara'));
+});

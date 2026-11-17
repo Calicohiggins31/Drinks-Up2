@@ -1,10 +1,11 @@
 import { router, Stack, useLocalSearchParams } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Alert, Platform, Pressable, ScrollView, Share, StyleSheet, Text, View } from 'react-native';
 import { BackupPrompt } from '../../components/BackupPrompt';
 import { ingredientName } from '../../data/ingredients';
 import { formatAmount, hasIngredient, matchRecipe, SERVING_OPTIONS, usedIngredient } from '../../lib/matching';
 import { recipeShareText } from '../../lib/shareText';
+import { trackView } from '../../lib/usage';
 import { useBar } from '../../state/BarContext';
 import { radius, useTheme } from '../../theme';
 
@@ -14,6 +15,10 @@ export default function DrinkScreen() {
   const { owned, favorites, toggleFavorite, toggleIngredient, units, setUnits, findRecipe, deleteRecipe } = useBar();
   const recipe = findRecipe(id);
   const [servings, setServings] = useState(1);
+  const builtIn = recipe && !recipe.custom;
+  useEffect(() => {
+    if (builtIn) trackView(id); // anonymous count; never for people's own recipes
+  }, [id, builtIn]);
 
   if (!recipe) {
     return (

@@ -33,3 +33,8 @@ export function diffById<T extends { id: string }>(before: T[], after: T[]): { u
 }
 
 export type CloudData = { favorites: string[]; recipes: Recipe[]; ingredients: Ingredient[] };
+
+/** Built-in ids only (people's own recipes and ingredients are never counted), without duplicates. */
+export function usageItems(ids: Iterable<string>): string[] {
+  return [...new Set([...ids].filter((id) => /^[a-z0-9_]+$/.test(id) && !id.startsWith('custom_')))].slice(0, 50);
+}

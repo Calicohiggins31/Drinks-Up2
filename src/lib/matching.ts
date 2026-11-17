@@ -1,3 +1,4 @@
+import { byFame } from '../data/classics';
 import { RECIPES, type Recipe, type RecipeIngredient, type Unit } from '../data/recipes';
 
 export type DrinkMatch = {
@@ -25,7 +26,7 @@ export function matchRecipe(recipe: Recipe, owned: ReadonlySet<string>): DrinkMa
 export function matchAll(owned: ReadonlySet<string>, recipes: Recipe[] = RECIPES): DrinkMatch[] {
   return recipes
     .map((r) => matchRecipe(r, owned))
-    .sort((a, b) => a.missing.length - b.missing.length || a.recipe.name.localeCompare(b.recipe.name));
+    .sort((a, b) => a.missing.length - b.missing.length || byFame(a.recipe, b.recipe));
 }
 
 export type Suggestion = { ingredientId: string; unlocks: Recipe[] };

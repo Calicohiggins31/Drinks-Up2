@@ -3,6 +3,7 @@ import { useMemo, useRef, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { BaseGroup } from '../../components/BaseGroup';
 import { DrinkCard } from '../../components/DrinkCard';
+import { isClassic } from '../../data/classics';
 import { Screen, SectionTitle } from '../../components/Screen';
 import { ingredientName } from '../../data/ingredients';
 import { findStoresNearby } from '../../features/stores/storeFinder';
@@ -47,7 +48,11 @@ export default function MixScreen() {
 
   // Random pick from the drinks you can make right now (respects the All/Cocktails/Mocktails filter).
   const pickForMe = () => {
-    const id = pickRandom(ready_.map((m) => m.recipe.id), lastPick.current);
+    // Mostly suggest drinks people know: 3 times in 4, pick from the classics you can make.
+    const ids = ready_.map((m) => m.recipe.id);
+    const classics = ids.filter(isClassic);
+    const pool = classics.length > 0 && Math.random() < 0.75 ? classics : ids;
+    const id = pickRandom(pool, lastPick.current);
     if (!id) return;
     lastPick.current = id;
     router.push(`/drink/${id}`);

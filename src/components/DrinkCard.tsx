@@ -1,5 +1,6 @@
 import { router } from 'expo-router';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { isClassic } from '../data/classics';
 import { ingredientName } from '../data/ingredients';
 import type { DrinkMatch } from '../lib/matching';
 import { radius, useTheme } from '../theme';
@@ -30,6 +31,9 @@ export function DrinkCard({ match, favorite }: { match: DrinkMatch; favorite?: b
           <Text style={[styles.name, { color: t.text }]} numberOfLines={1}>
             {recipe.name}
           </Text>
+          {isClassic(recipe.id) ? (
+            <Text style={[styles.classic, { color: t.textMuted }]} accessibilityLabel="Classic">★</Text>
+          ) : null}
           {recipe.custom ? (
             <Text style={[styles.mine, { color: t.accent, backgroundColor: t.accentSoft }]}>YOURS</Text>
           ) : null}
@@ -66,6 +70,7 @@ const styles = StyleSheet.create({
   titleRow: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   name: { fontSize: 17, fontWeight: '600', flexShrink: 1 },
   summary: { fontSize: 13 },
+  classic: { fontSize: 13 },
   mine: { fontSize: 10, fontWeight: '800', paddingHorizontal: 6, paddingVertical: 2, borderRadius: 6, overflow: 'hidden' },
   status: { fontSize: 13, fontWeight: '600', marginTop: 2 },
   chevron: { fontSize: 26, fontWeight: '300' },

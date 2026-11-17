@@ -6,10 +6,10 @@ import { searchRecipes } from './search';
 
 const names = (q: string) => searchRecipes(RECIPES, q).map((r) => r.name);
 
-test('an empty search lists every drink A to Z', () => {
+test('an empty search lists every drink', () => {
   const all = names('');
   assert.equal(all.length, RECIPES.length);
-  assert.deepEqual(all, [...all].sort((a, b) => a.localeCompare(b)));
+
 });
 
 test('accents and capitals do not matter', () => {
@@ -32,4 +32,14 @@ test('every word must match', () => {
   assert.ok(r.includes('Gimlet'));
   assert.ok(!r.includes('Negroni'));
   assert.deepEqual(names('zzzz'), []);
+});
+
+test('classics come first when browsing and on ties', async () => {
+  const { CLASSICS } = await import('../data/classics');
+  const browse = names('');
+  assert.deepEqual(browse.slice(0, 4), ['Margarita', 'Old Fashioned', 'Mojito', 'Piña Colada']);
+  assert.equal(new Set(CLASSICS).size, CLASSICS.length, 'no duplicates');
+  for (const id of CLASSICS) assert.ok(RECIPES.some((r) => r.id === id), `${id} is a real recipe`);
+  const rum = names('rum');
+  assert.ok(rum.indexOf('Mojito') < rum.indexOf('Air Mail'), 'well-known rum drinks rank above obscure ones');
 });
