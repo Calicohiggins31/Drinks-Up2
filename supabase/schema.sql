@@ -137,3 +137,40 @@ alter table public.bar_items enable row level security;
 drop policy if exists "own bar" on public.bar_items;
 create policy "own bar" on public.bar_items
   for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+
+-- ─── Ratings and private notes (added in v4) ─────────────────────────────────
+-- Star ratings: one per person per drink. People can only see and change their own rows;
+-- everyone (signed in or not) can read the anonymous average through recipe_rating() below.
+create table if not exists public.ratings (
+  user_id uuid not null references auth.users (id) on delete cascade,
+  recipe_id text not null check (recipe_id ~ '^[a-z0-9_]+$' and recipe_id not like 'custom_%'),
+  stars smallint not null check (stars between 1 and 5),
+  updated_at timestamptz not null default now(),
+  primary key (user_id, recipe_id)
+);
+alter table public.ratings enable row level security;
+drop policy if exists "own ratings" on public.ratings;
+create policy "own ratings" on public.ratings
+  for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+
+-- Average and count for one drink. Returns no names or user ids.
+create or replace function public.recipe_rating(p_recipe_id text)
+returns table (average numeric, total bigint)
+language sql stable security definer set search_path = '' as $$
+  select round(avg(stars)::numeric, 1), count(*) from public.ratings where recipe_id = p_recipe_id;
+$$;
+revoke all on function public.recipe_rating(text) from public;
+grant execute on function public.recipe_rating(text) to anon, authenticated;
+
+-- Private tasting notes: only ever visible to their author.
+create table if not exists public.notes (
+  user_id uuid not null references auth.users (id) on delete cascade,
+  recipe_id text not null,
+  note text not null check (char_length(note) <= 2000),
+  updated_at timestamptz not null default now(),
+  primary key (user_id, recipe_id)
+);
+alter table public.notes enable row level security;
+drop policy if exists "own notes" on public.notes;
+create policy "own notes" on public.notes
+  for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
