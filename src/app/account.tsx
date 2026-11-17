@@ -8,6 +8,7 @@ import { radius, useTheme } from '../theme';
 const REASONS: Record<string, string> = {
   recipe: 'Create a free account to make your own recipes. They\'ll be saved to your account so you never lose them.',
   backup: 'Create a free account to back up your favourites and use them on all your devices.',
+  rate: 'Create a free account to rate drinks. Everyone sees the average; your name is never shown.',
 };
 
 export default function AccountScreen() {

@@ -6,12 +6,14 @@ One codebase runs on **iPhone and Android** (built with [Expo](https://expo.dev)
 
 ## What it does
 
-- **My Bar**: tap the bottles, mixers, juices and fresh things you have. Search, or add a whole starter kit (home bar basics, aperitivo, mocktails) in one tap.
+- **My Bar**: tap the bottles, mixers, juices and fresh things you have.
 - **Age gate**: date of birth on first launch; under-21s are blocked.
 - **Mix**: every drink you can make now, grouped under foldable base-spirit headers (Vodka, Gin, Rum…), filtered by cocktails or mocktails. It also shows drinks that are **one ingredient away**, plus a **shopping list** of the single purchases that unlock the most new drinks, and a **Find a liquor store near me** button that opens Maps.
 - **Drink page**: ingredients with ✓ / ✕ for what you have, amounts in oz or ml, method steps, and an "I have it" button for anything missing. Sensible swaps count automatically (rye for bourbon, sugar for simple syrup).
 - **Drinks**: search all 200 drinks by name, ingredient or description, with "I can make" and base-spirit filters. Every drink has an "About this drink" note.
 - **Pick a drink for me**: a random drink you can make right now, on the Mix screen.
+- **Shopping list**: add missing ingredients from any drink or suggestion, tick them off at the store, move them into My Bar, or share the list.
+- **Ratings and notes**: signed-in users rate drinks 1–5 stars (everyone sees the average); private notes on any drink.
 - **Share and scale**: share any recipe by text or email, and switch "Making for" between 1, 2, 4 and 8 people.
 - **Saved**: your own recipes and favourite drinks.
 - **Your own recipes and ingredients**: tap **+ New** on the Saved tab to write your own drink, or type anything into My Bar search to add your own ingredient. These are saved only on your phone.
@@ -37,6 +39,10 @@ Free accounts are needed to create your own recipes; favourites work without one
 4. Restart `npx expo start`.
 
 Until step 3 is done, the app runs normally and the account screens say accounts are coming soon.
+
+## App store links in shared recipes
+
+Once the app is live, fill in `src/config/storeLinks.ts` with the App Store and Google Play links. Shared recipes then end with "Get Drinks Up" and those links.
 
 ## Privacy policy
 

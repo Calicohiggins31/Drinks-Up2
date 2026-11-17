@@ -1,21 +1,20 @@
 /// <reference types="node" />
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { getIngredient, INGREDIENTS, setCustomIngredients, STARTER_KITS } from '../data/ingredients';
+import { getIngredient, INGREDIENTS, setCustomIngredients } from '../data/ingredients';
 import { RECIPES } from '../data/recipes';
 import { formatAmount, matchAll, matchRecipe, shoppingSuggestions } from './matching';
 
 const ids = new Set(INGREDIENTS.map((i) => i.id));
 const recipe = (id: string) => RECIPES.find((r) => r.id === id)!;
 
-test('every recipe and kit only uses known ingredients', () => {
+test('every recipe only uses known ingredients', () => {
   for (const r of RECIPES) {
     for (const i of r.ingredients) {
       assert.ok(ids.has(i.id), `${r.id} uses unknown ${i.id}`);
       for (const alt of i.alternatives ?? []) assert.ok(ids.has(alt), `${r.id} alt ${alt}`);
     }
   }
-  for (const k of STARTER_KITS) for (const i of k.ingredients) assert.ok(ids.has(i), `${k.id}: ${i}`);
 });
 
 test('recipe and ingredient ids are unique', () => {
@@ -128,4 +127,39 @@ test('among drinks you can make, classics are listed first', () => {
   const ready = all.filter((m) => m.canMake).map((m) => m.recipe.name);
   assert.equal(ready[0], 'Mojito');
   assert.ok(ready.indexOf('Daiquiri') < ready.indexOf('Canchánchara'));
+});
+
+test('shopping list favours classics and everyday items over specialty bottles', () => {
+  const owned = new Set(['vodka', 'tequila', 'white_rum', 'triple_sec', 'simple_syrup', 'cream']);
+  const list = shoppingSuggestions(matchAll(owned)).map((s) => s.ingredientId);
+  assert.equal(list[0], 'lime_juice', 'lime unlocks Margarita and Daiquiri');
+  assert.ok(list.includes('orange_juice'), `orange juice (Screwdriver) should be suggested: ${list}`);
+  assert.ok(list.includes('cranberry_juice'), `cranberry (Cape Codder) should be suggested: ${list}`);
+  const oj = list.indexOf('orange_juice');
+  const coffee = list.indexOf('coffee_liqueur');
+  assert.ok(coffee === -1 || oj < coffee, `orange juice should beat coffee liqueur: ${list}`);
+});
+
+test('the drinks each suggestion unlocks are listed classics first', () => {
+  const owned = new Set(['white_rum', 'simple_syrup', 'mint', 'soda_water', 'tequila', 'triple_sec', 'honey']);
+  const lime = shoppingSuggestions(matchAll(owned)).find((s) => s.ingredientId === 'lime_juice')!;
+  assert.deepEqual(lime.unlocks.slice(0, 3).map((r) => r.name), ['Margarita', 'Mojito', 'Daiquiri']);
+});
+
+test('share text adds app store links only once they are set', async () => {
+  const { recipeShareText } = await import('./shareText');
+  assert.doesNotMatch(recipeShareText(recipe('mojito'), 'oz', 1, { appStore: '', googlePlay: '' }), /Get Drinks Up/);
+  const text = recipeShareText(recipe('mojito'), 'oz', 1, {
+    appStore: 'https://apps.apple.com/app/id123',
+    googlePlay: 'https://play.google.com/store/apps/details?id=com.drinksup.app',
+  });
+  assert.match(text, /Get Drinks Up:\niPhone: https:\/\/apps\.apple\.com\/app\/id123\nAndroid: https:\/\/play\.google\.com/);
+});
+
+test('shopping list share text', async () => {
+  const { shoppingListText } = await import('./shareText');
+  assert.equal(
+    shoppingListText([{ id: 'lime_juice', checked: false }, { id: 'gin', checked: true }]),
+    '🛒 Drinks Up shopping list\n\n☐ Lime juice\n✓ Gin',
+  );
 });

@@ -1,4 +1,5 @@
-import { byFame } from '../data/classics';
+import { byFame, isClassic } from '../data/classics';
+import { getIngredient, type IngredientCategory } from '../data/ingredients';
 import { RECIPES, type Recipe, type RecipeIngredient, type Unit } from '../data/recipes';
 
 export type DrinkMatch = {
@@ -31,8 +32,29 @@ export function matchAll(owned: ReadonlySet<string>, recipes: Recipe[] = RECIPES
 
 export type Suggestion = { ingredientId: string; unlocks: Recipe[] };
 
+/** How much a newly unlocked drink is worth: classics count three times as much. */
+const drinkWeight = (r: Recipe) => (isClassic(r.id) ? 3 : 1);
+
+/** Everyday grocery items are easier to pick up than specialty bottles, so they rank higher. */
+const EASE: Partial<Record<IngredientCategory, number>> = {
+  Juices: 1.5,
+  Mixers: 1.5,
+  'Syrups & Sweeteners': 1.5,
+  'Fresh & Pantry': 1.5,
+  Spirits: 1,
+  Bitters: 0.8,
+  'Liqueurs & Wine': 0.6,
+};
+
+/** Ranking score for buying one ingredient (exported for tests). */
+export function suggestionScore(ingredientId: string, unlocks: Recipe[]): number {
+  const ease = EASE[getIngredient(ingredientId).category] ?? 1;
+  return unlocks.reduce((sum, r) => sum + drinkWeight(r), 0) * ease;
+}
+
 /**
- * Ingredients that would unlock the most new drinks if you bought just that one thing.
+ * The single purchases that unlock the best new drinks: classics count most,
+ * and everyday items (juice, mixers, fruit) beat specialty bottles.
  */
 export function shoppingSuggestions(matches: DrinkMatch[], limit = 5): Suggestion[] {
   const unlocks = new Map<string, Recipe[]>();
@@ -42,9 +64,14 @@ export function shoppingSuggestions(matches: DrinkMatch[], limit = 5): Suggestio
     unlocks.set(id, [...(unlocks.get(id) ?? []), m.recipe]);
   }
   return [...unlocks.entries()]
-    .map(([ingredientId, recipes]) => ({ ingredientId, unlocks: recipes }))
-    .sort((a, b) => b.unlocks.length - a.unlocks.length || a.ingredientId.localeCompare(b.ingredientId))
-    .slice(0, limit);
+    .map(([ingredientId, recipes]) => ({
+      ingredientId,
+      unlocks: [...recipes].sort(byFame),
+      score: suggestionScore(ingredientId, recipes),
+    }))
+    .sort((a, b) => b.score - a.score || b.unlocks.length - a.unlocks.length || a.ingredientId.localeCompare(b.ingredientId))
+    .slice(0, limit)
+    .map(({ ingredientId, unlocks: u }) => ({ ingredientId, unlocks: u }));
 }
 
 export type UnitSystem = 'oz' | 'ml';

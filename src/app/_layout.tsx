@@ -39,6 +39,7 @@ function Gated() {
         <Stack.Screen name="privacy" options={{ title: 'Privacy policy', headerBackTitle: 'Back' }} />
         <Stack.Screen name="account" options={{ title: 'Account', headerBackTitle: 'Back' }} />
         <Stack.Screen name="settings" options={{ title: 'Settings', headerBackTitle: 'Back' }} />
+        <Stack.Screen name="shopping" options={{ title: 'My shopping list', headerBackTitle: 'Back' }} />
       </Stack>
   );
 }
