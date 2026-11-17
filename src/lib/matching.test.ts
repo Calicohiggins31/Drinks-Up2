@@ -101,3 +101,24 @@ test('teaspoons and slices format sensibly', () => {
   assert.equal(formatAmount({ id: 'honey', amount: 2, unit: 'tsp' }, 'ml'), '10 ml');
   assert.equal(formatAmount({ id: 'jalapeno', amount: 2, unit: 'slice' }, 'oz'), '2 slices');
 });
+
+test('scaling for a crowd multiplies measured amounts only', () => {
+  assert.equal(formatAmount({ id: 'gin', amount: 1.5, unit: 'oz' }, 'oz', 4), '6 oz');
+  assert.equal(formatAmount({ id: 'gin', amount: 0.75, unit: 'oz' }, 'oz', 2), '1½ oz');
+  assert.equal(formatAmount({ id: 'gin', amount: 2, unit: 'oz' }, 'ml', 8), '480 ml');
+  assert.equal(formatAmount({ id: 'angostura', amount: 2, unit: 'dash' }, 'oz', 4), '8 dashes');
+  assert.equal(formatAmount({ id: 'mint', amount: 8, unit: 'leaves' }, 'oz', 2), '16 leaves');
+  assert.equal(formatAmount({ id: 'soda_water', unit: 'top' }, 'oz', 8), 'to top');
+  assert.equal(formatAmount({ id: 'salt', unit: 'pinch' }, 'oz', 8), 'a pinch');
+  assert.equal(formatAmount({ id: 'lime', unit: 'wedge' }, 'oz', 4), '4 wedges');
+  assert.equal(formatAmount({ id: 'orange', unit: 'peel' }, 'oz', 2), '2 twists');
+});
+
+test('share text has the ingredients, steps and scaled amounts', async () => {
+  const { recipeShareText } = await import('./shareText');
+  const text = recipeShareText(recipe('daiquiri'), 'oz', 2);
+  assert.match(text, /Daiquiri \(for 2\)/);
+  assert.match(text, /• 4 oz White rum/);
+  assert.match(text, /1\. Shake everything with ice/);
+  assert.match(text, /Shared from Drinks Up/);
+});

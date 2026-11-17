@@ -1,8 +1,10 @@
 import { router, Stack, useLocalSearchParams } from 'expo-router';
-import { Alert, Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useState } from 'react';
+import { Alert, Platform, Pressable, ScrollView, Share, StyleSheet, Text, View } from 'react-native';
 import { BackupPrompt } from '../../components/BackupPrompt';
 import { ingredientName } from '../../data/ingredients';
-import { formatAmount, hasIngredient, matchRecipe, usedIngredient } from '../../lib/matching';
+import { formatAmount, hasIngredient, matchRecipe, SERVING_OPTIONS, usedIngredient } from '../../lib/matching';
+import { recipeShareText } from '../../lib/shareText';
 import { useBar } from '../../state/BarContext';
 import { radius, useTheme } from '../../theme';
 
@@ -11,6 +13,7 @@ export default function DrinkScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { owned, favorites, toggleFavorite, toggleIngredient, units, setUnits, findRecipe, deleteRecipe } = useBar();
   const recipe = findRecipe(id);
+  const [servings, setServings] = useState(1);
 
   if (!recipe) {
     return (
@@ -22,6 +25,10 @@ export default function DrinkScreen() {
 
   const { canMake, missing } = matchRecipe(recipe, owned);
   const isFav = favorites.has(recipe.id);
+
+  const share = () => {
+    Share.share({ title: recipe.name, message: recipeShareText(recipe, units, servings) }).catch(() => {});
+  };
 
   const confirmDelete = () => {
     const remove = () => {
@@ -44,13 +51,18 @@ export default function DrinkScreen() {
         options={{
           title: recipe.name,
           headerRight: () => (
-            <Pressable
-              onPress={() => toggleFavorite(recipe.id)}
-              hitSlop={10}
-              accessibilityLabel={isFav ? 'Remove from saved' : 'Save drink'}
-            >
-              <Text style={{ fontSize: 24, color: t.accent }}>{isFav ? '♥' : '♡'}</Text>
-            </Pressable>
+            <View style={styles.headerBtns}>
+              <Pressable onPress={share} hitSlop={10} accessibilityLabel="Share recipe">
+                <Text style={{ fontSize: 15, fontWeight: '700', color: t.accent }}>Share</Text>
+              </Pressable>
+              <Pressable
+                onPress={() => toggleFavorite(recipe.id)}
+                hitSlop={10}
+                accessibilityLabel={isFav ? 'Remove from saved' : 'Save drink'}
+              >
+                <Text style={{ fontSize: 24, color: t.accent }}>{isFav ? '♥' : '♡'}</Text>
+              </Pressable>
+            </View>
           ),
         }}
       />
@@ -112,6 +124,29 @@ export default function DrinkScreen() {
           </View>
         </View>
 
+        <View style={styles.servingsRow}>
+          <Text style={[styles.servingsLabel, { color: t.textMuted }]}>Making for</Text>
+          <View style={[styles.unitToggle, { backgroundColor: t.surfaceAlt }]}>
+            {SERVING_OPTIONS.map((n) => (
+              <Pressable
+                key={n}
+                onPress={() => setServings(n)}
+                accessibilityRole="button"
+                accessibilityLabel={`Making for ${n}`}
+                accessibilityState={{ selected: servings === n }}
+                style={[styles.unitItem, servings === n && { backgroundColor: t.surface }]}
+              >
+                <Text style={{ color: servings === n ? t.text : t.textMuted, fontWeight: '600' }}>{n}</Text>
+              </Pressable>
+            ))}
+          </View>
+        </View>
+        {servings > 2 && recipe.method === 'Shake' ? (
+          <Text style={[styles.batchTip, { color: t.textMuted }]}>
+            Tip: most shakers hold 2 drinks. Shake in batches, or build in a pitcher and stir with ice.
+          </Text>
+        ) : null}
+
         <View style={[styles.list, { backgroundColor: t.surface, borderColor: t.border }]}>
           {recipe.ingredients.map((item, idx) => {
             const have = hasIngredient(item, owned);
@@ -141,7 +176,7 @@ export default function DrinkScreen() {
                     </Text>
                   ) : null}
                 </View>
-                <Text style={[styles.amount, { color: t.textMuted }]}>{formatAmount(item, units)}</Text>
+                <Text style={[styles.amount, { color: t.textMuted }]}>{formatAmount(item, units, servings)}</Text>
                 {!have ? (
                   <Pressable
                     onPress={() => toggleIngredient(item.id)}
@@ -201,6 +236,10 @@ const styles = StyleSheet.create({
   metaText: { fontSize: 13, fontWeight: '600' },
   banner: { marginTop: 16, padding: 14, borderRadius: radius.md },
   bannerText: { fontSize: 15, fontWeight: '600' },
+  headerBtns: { flexDirection: 'row', alignItems: 'center', gap: 18 },
+  servingsRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 12 },
+  servingsLabel: { fontSize: 15, fontWeight: '600' },
+  batchTip: { fontSize: 13, marginTop: 8, lineHeight: 18 },
   sectionRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 24 },
   sectionTitle: { fontSize: 20, fontWeight: '700' },
   unitToggle: { flexDirection: 'row', padding: 3, borderRadius: radius.sm },

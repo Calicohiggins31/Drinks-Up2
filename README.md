@@ -12,6 +12,7 @@ One codebase runs on **iPhone and Android** (built with [Expo](https://expo.dev)
 - **Drink page**: ingredients with ✓ / ✕ for what you have, amounts in oz or ml, method steps, and an "I have it" button for anything missing. Sensible swaps count automatically (rye for bourbon, sugar for simple syrup).
 - **Drinks**: search all 200 drinks by name, ingredient or description, with "I can make" and base-spirit filters. Every drink has an "About this drink" note.
 - **Pick a drink for me**: a random drink you can make right now, on the Mix screen.
+- **Share and scale**: share any recipe by text or email, and switch "Making for" between 1, 2, 4 and 8 people.
 - **Saved**: your own recipes and favourite drinks.
 - **Your own recipes and ingredients**: tap **+ New** on the Saved tab to write your own drink, or type anything into My Bar search to add your own ingredient. These are saved only on your phone.
 
