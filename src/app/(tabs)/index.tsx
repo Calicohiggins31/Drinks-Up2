@@ -3,13 +3,12 @@ import { useMemo, useRef, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { BaseGroup } from '../../components/BaseGroup';
 import { DrinkCard } from '../../components/DrinkCard';
-import { isClassic } from '../../data/classics';
 import { Screen, SectionTitle } from '../../components/Screen';
 import { ingredientName } from '../../data/ingredients';
 import { findStoresNearby } from '../../features/stores/storeFinder';
 import { groupByBase, type BaseId } from '../../lib/base';
 import { matchAll, shoppingSuggestions, type DrinkMatch } from '../../lib/matching';
-import { pickRandom } from '../../lib/pick';
+import { pickDrinkId } from '../../lib/pickDrink';
 import { useBar } from '../../state/BarContext';
 import { radius, useTheme } from '../../theme';
 
@@ -42,17 +41,13 @@ export default function MixScreen() {
 
   const ready_ = matches.filter((m) => m.canMake);
   const almost = matches.filter((m) => m.missing.length === 1);
-  const suggestions = useMemo(() => shoppingSuggestions(matches, 4), [matches]);
+  const suggestions = useMemo(() => shoppingSuggestions(matches, 5), [matches]);
   const readyGroups = useMemo(() => groupByBase(ready_, (m) => m.recipe), [ready_]);
   const almostGroups = useMemo(() => groupByBase(almost, (m) => m.recipe), [almost]);
 
   // Random pick from the drinks you can make right now (respects the All/Cocktails/Mocktails filter).
   const pickForMe = () => {
-    // Mostly suggest drinks people know: 3 times in 4, pick from the classics you can make.
-    const ids = ready_.map((m) => m.recipe.id);
-    const classics = ids.filter(isClassic);
-    const pool = classics.length > 0 && Math.random() < 0.75 ? classics : ids;
-    const id = pickRandom(pool, lastPick.current);
+    const id = pickDrinkId(ready_.map((m) => m.recipe.id), lastPick.current);
     if (!id) return;
     lastPick.current = id;
     router.push(`/drink/${id}`);

@@ -1,10 +1,12 @@
-import { useMemo, useState } from 'react';
+import { router } from 'expo-router';
+import { useMemo, useRef, useState } from 'react';
 import { FlatList, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { DrinkCard } from '../../components/DrinkCard';
 import { isClassic } from '../../data/classics';
 import { baseOf, BASES, type BaseId } from '../../lib/base';
 import { matchRecipe } from '../../lib/matching';
+import { pickDrinkId } from '../../lib/pickDrink';
 import { searchRecipes } from '../../lib/search';
 import { useBar } from '../../state/BarContext';
 import { radius, useTheme } from '../../theme';
@@ -16,6 +18,7 @@ export default function DrinksScreen() {
   const { recipes, owned, favorites } = useBar();
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState<Filter>('all');
+  const lastPick = useRef<string | undefined>(undefined);
 
   const results = useMemo(() => {
     const matches = searchRecipes(recipes, query).map((r) => matchRecipe(r, owned));
@@ -24,6 +27,14 @@ export default function DrinksScreen() {
     if (filter === 'classics') return matches.filter((m) => isClassic(m.recipe.id));
     return matches.filter((m) => baseOf(m.recipe) === filter);
   }, [recipes, query, owned, filter]);
+
+  // Random drink from whatever the list is showing (search and filter included), mostly classics.
+  const pickForMe = () => {
+    const id = pickDrinkId(results.map((m) => m.recipe.id), lastPick.current);
+    if (!id) return;
+    lastPick.current = id;
+    router.push(`/drink/${id}`);
+  };
 
   const filters: { id: Filter; label: string }[] = [
     { id: 'all', label: 'All' },
@@ -67,6 +78,16 @@ export default function DrinksScreen() {
           );
         })}
       </ScrollView>
+      {results.length > 1 ? (
+        <Pressable
+          onPress={pickForMe}
+          accessibilityRole="button"
+          accessibilityHint="Opens a random drink from this list"
+          style={({ pressed }) => [styles.pick, { borderColor: t.accent, opacity: pressed ? 0.7 : 1 }]}
+        >
+          <Text style={[styles.pickText, { color: t.accent }]}>🎲 Pick a drink for me</Text>
+        </Pressable>
+      ) : null}
     </View>
   );
 
@@ -105,6 +126,8 @@ const styles = StyleSheet.create({
   chips: { gap: 8, paddingVertical: 2 },
   chip: { paddingHorizontal: 12, paddingVertical: 8, borderRadius: radius.pill, borderWidth: 1 },
   chipText: { fontSize: 14, fontWeight: '600' },
+  pick: { borderWidth: 1.5, borderRadius: radius.pill, paddingVertical: 11, alignItems: 'center' },
+  pickText: { fontSize: 16, fontWeight: '700' },
   empty: { padding: 20, borderRadius: radius.md, alignItems: 'center' },
   emptyText: { fontSize: 15, textAlign: 'center' },
 });

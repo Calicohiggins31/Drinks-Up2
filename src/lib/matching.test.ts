@@ -129,3 +129,20 @@ test('among drinks you can make, classics are listed first', () => {
   assert.equal(ready[0], 'Mojito');
   assert.ok(ready.indexOf('Daiquiri') < ready.indexOf('Canchánchara'));
 });
+
+test('shopping list favours classics and everyday items over specialty bottles', () => {
+  const owned = new Set(['vodka', 'tequila', 'white_rum', 'triple_sec', 'simple_syrup', 'cream']);
+  const list = shoppingSuggestions(matchAll(owned)).map((s) => s.ingredientId);
+  assert.equal(list[0], 'lime_juice', 'lime unlocks Margarita and Daiquiri');
+  assert.ok(list.includes('orange_juice'), `orange juice (Screwdriver) should be suggested: ${list}`);
+  assert.ok(list.includes('cranberry_juice'), `cranberry (Cape Codder) should be suggested: ${list}`);
+  const oj = list.indexOf('orange_juice');
+  const coffee = list.indexOf('coffee_liqueur');
+  assert.ok(coffee === -1 || oj < coffee, `orange juice should beat coffee liqueur: ${list}`);
+});
+
+test('the drinks each suggestion unlocks are listed classics first', () => {
+  const owned = new Set(['white_rum', 'simple_syrup', 'mint', 'soda_water', 'tequila', 'triple_sec', 'honey']);
+  const lime = shoppingSuggestions(matchAll(owned)).find((s) => s.ingredientId === 'lime_juice')!;
+  assert.deepEqual(lime.unlocks.slice(0, 3).map((r) => r.name), ['Margarita', 'Mojito', 'Daiquiri']);
+});

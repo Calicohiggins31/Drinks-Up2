@@ -17,3 +17,11 @@ test('every option can come up', () => {
   const seen = new Set([0, 0.34, 0.67, 0.999].map((r) => pickRandom(['a', 'b', 'c'], undefined, () => r)));
   assert.deepEqual([...seen].sort(), ['a', 'b', 'c']);
 });
+
+test('picks favour classics but can still pick anything', async () => {
+  const { pickDrinkId } = await import('./pickDrink');
+  const ids = ['margarita', 'air_mail', 'army_navy'];
+  assert.equal(pickDrinkId(ids, undefined, () => 0.1), 'margarita', 'low roll: from the classics');
+  assert.notEqual(pickDrinkId(ids, undefined, () => 0.9), 'margarita', 'high roll: from the whole list');
+  assert.equal(pickDrinkId([], undefined), undefined);
+});
