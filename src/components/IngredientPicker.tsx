@@ -5,10 +5,10 @@ import { INGREDIENTS } from '../data/ingredients';
 import { useBar } from '../state/BarContext';
 import { radius, useTheme } from '../theme';
 
-type Props = { visible: boolean; onClose: () => void; onPick: (id: string) => void };
+type Props = { visible: boolean; onClose: () => void; onPick: (id: string) => void; title?: string };
 
 /** Full-screen searchable list of every ingredient, with the option to add your own. */
-export function IngredientPicker({ visible, onClose, onPick }: Props) {
+export function IngredientPicker({ visible, onClose, onPick, title = 'Choose ingredient' }: Props) {
   const t = useTheme();
   const { customIngredients, addCustomIngredient } = useBar();
   const [query, setQuery] = useState('');
@@ -27,7 +27,7 @@ export function IngredientPicker({ visible, onClose, onPick }: Props) {
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet" onRequestClose={onClose}>
       <SafeAreaView style={[styles.safe, { backgroundColor: t.background }]}>
         <View style={styles.header}>
-          <Text style={[styles.title, { color: t.text }]}>Choose ingredient</Text>
+          <Text style={[styles.title, { color: t.text }]}>{title}</Text>
           <Pressable onPress={onClose} hitSlop={10}>
             <Text style={[styles.close, { color: t.accent }]}>Cancel</Text>
           </Pressable>

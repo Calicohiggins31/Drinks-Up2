@@ -4,6 +4,7 @@ import { AgeGate } from '../components/AgeGate';
 import { AccountSync } from '../state/AccountSync';
 import { AuthProvider } from '../state/AuthContext';
 import { BarProvider, useBar } from '../state/BarContext';
+import { RatingsProvider } from '../state/RatingsContext';
 import { useTheme } from '../theme';
 
 export default function RootLayout() {
@@ -12,7 +13,9 @@ export default function RootLayout() {
       <AuthProvider>
         <AccountSync />
         <StatusBar style="auto" />
-        <Gated />
+        <RatingsProvider>
+          <Gated />
+        </RatingsProvider>
       </AuthProvider>
     </BarProvider>
   );
