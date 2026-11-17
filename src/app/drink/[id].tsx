@@ -2,6 +2,7 @@ import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Alert, Platform, Pressable, ScrollView, Share, StyleSheet, Text, View } from 'react-native';
 import { BackupPrompt } from '../../components/BackupPrompt';
+import { RatingAndNotes } from '../../components/RatingAndNotes';
 import { ingredientName } from '../../data/ingredients';
 import { formatAmount, hasIngredient, matchRecipe, SERVING_OPTIONS, usedIngredient } from '../../lib/matching';
 import { recipeShareText } from '../../lib/shareText';
@@ -206,6 +207,8 @@ export default function DrinkScreen() {
             <Text style={[styles.stepText, { color: t.text }]}>{step}</Text>
           </View>
         ))}
+
+        <RatingAndNotes key={recipe.id} recipe={recipe} />
 
         {recipe.custom ? (
           <View style={styles.customActions}>

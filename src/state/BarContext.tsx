@@ -22,6 +22,7 @@ type Saved = {
   customRecipes?: Recipe[];
   backupPromptDismissed?: boolean;
   shareUsageStats?: boolean;
+  notes?: Record<string, string>;
 };
 
 type BarContextValue = {
@@ -55,6 +56,10 @@ type BarContextValue = {
   /** "Share anonymous usage stats" setting (on by default). */
   shareUsageStats: boolean;
   setShareUsageStats: (on: boolean) => void;
+  /** Private tasting notes by recipe id. */
+  notes: Readonly<Record<string, string>>;
+  setNote: (recipeId: string, text: string) => void;
+  replaceNotes: (notes: Record<string, string>) => void;
 };
 
 const BarContext = createContext<BarContextValue | null>(null);
@@ -83,6 +88,7 @@ export function BarProvider({ children }: { children: ReactNode }) {
   const [customRecipes, setCustomRecipes] = useState<Recipe[]>([]);
   const [backupPromptDismissed, setBackupPromptDismissed] = useState(false);
   const [shareUsageStats, setShareUsageStats] = useState(true);
+  const [notes, setNotes] = useState<Readonly<Record<string, string>>>({});
   useMemo(() => setUsageEnabled(shareUsageStats), [shareUsageStats]);
 
   // Keep the ingredient name lookup in sync before children render.
@@ -109,6 +115,9 @@ export function BarProvider({ children }: { children: ReactNode }) {
         if (saved.units === 'ml' || saved.units === 'oz') setUnitsState(saved.units);
         setBackupPromptDismissed(!!saved.backupPromptDismissed);
         if (saved.shareUsageStats === false) setShareUsageStats(false);
+        if (saved.notes && typeof saved.notes === 'object') {
+          setNotes(Object.fromEntries(Object.entries(saved.notes).filter(([, v]) => typeof v === 'string' && v.trim())));
+        }
       })
       .catch(() => {})
       .finally(() => setReady(true));
@@ -117,9 +126,9 @@ export function BarProvider({ children }: { children: ReactNode }) {
   // Save whenever something changes (after the first load, so we never overwrite with empty state).
   useEffect(() => {
     if (!ready) return;
-    const data: Saved = { ageGate: ageStatus, owned: [...owned], favorites: [...favorites], units, customIngredients, customRecipes, backupPromptDismissed, shareUsageStats };
+    const data: Saved = { ageGate: ageStatus, owned: [...owned], favorites: [...favorites], units, customIngredients, customRecipes, backupPromptDismissed, shareUsageStats, notes };
     AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(data)).catch(() => {});
-  }, [ready, ageStatus, owned, favorites, units, customIngredients, customRecipes, backupPromptDismissed, shareUsageStats]);
+  }, [ready, ageStatus, owned, favorites, units, customIngredients, customRecipes, backupPromptDismissed, shareUsageStats, notes]);
 
   const toggleIngredient = useCallback((id: string) => {
     tap();
@@ -191,6 +200,17 @@ export function BarProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
+  const setNote = useCallback((recipeId: string, text: string) => {
+    setNotes((prev) => {
+      const next = { ...prev };
+      const clean = text.slice(0, 2000);
+      if (clean.trim()) next[recipeId] = clean;
+      else delete next[recipeId];
+      return next;
+    });
+  }, []);
+  const replaceNotes = useCallback((next: Record<string, string>) => setNotes({ ...next }), []);
+
   const replaceOwned = useCallback((ids: Iterable<string>) => setOwned(new Set(ids)), []);
 
   const replaceFavorites = useCallback((ids: Iterable<string>) => setFavorites(new Set(ids)), []);
@@ -213,14 +233,14 @@ export function BarProvider({ children }: { children: ReactNode }) {
       toggleIngredient, addIngredients, clearBar, toggleFavorite, setUnits: setUnitsState,
       addCustomIngredient, deleteCustomIngredient, saveRecipe, deleteRecipe,
       replaceFavorites, replaceCustom, backupPromptDismissed, dismissBackupPrompt,
-      replaceOwned, shareUsageStats, setShareUsageStats,
+      replaceOwned, shareUsageStats, setShareUsageStats, notes, setNote, replaceNotes,
     }),
     [
       ready, ageStatus, setAgeStatus, owned, favorites, units, recipes, customRecipes, customIngredients, findRecipe,
       toggleIngredient, addIngredients, clearBar, toggleFavorite,
       addCustomIngredient, deleteCustomIngredient, saveRecipe, deleteRecipe,
       replaceFavorites, replaceCustom, backupPromptDismissed, dismissBackupPrompt,
-      replaceOwned, shareUsageStats,
+      replaceOwned, shareUsageStats, notes, setNote, replaceNotes,
     ],
   );
 

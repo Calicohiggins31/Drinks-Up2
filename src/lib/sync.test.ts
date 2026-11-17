@@ -31,3 +31,10 @@ test('usage stats never include people\'s own recipes or ingredients', async () 
   const { usageItems } = await import('./sync');
   assert.deepEqual(usageItems(['vodka', 'custom_ing_grandmas_jam_x1', 'vodka', 'gin', 'Bad Id!']), ['vodka', 'gin']);
 });
+
+test('rating labels', async () => {
+  const { ratingLabel } = await import('./ratingLabel');
+  assert.equal(ratingLabel(null), 'No ratings yet. Be the first!');
+  assert.equal(ratingLabel({ average: 4.25, total: 27 }), '4.3 ★ from 27 ratings');
+  assert.equal(ratingLabel({ average: 5, total: 1 }), '5.0 ★ from 1 rating');
+});

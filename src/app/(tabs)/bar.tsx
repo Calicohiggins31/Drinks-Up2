@@ -1,14 +1,14 @@
 import { useMemo, useState } from 'react';
-import { Alert, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Alert, Platform, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { Chip } from '../../components/Chip';
 import { Screen, SectionTitle } from '../../components/Screen';
-import { CATEGORIES, INGREDIENTS, STARTER_KITS } from '../../data/ingredients';
+import { CATEGORIES, INGREDIENTS } from '../../data/ingredients';
 import { useBar } from '../../state/BarContext';
 import { radius, useTheme } from '../../theme';
 
 export default function BarScreen() {
   const t = useTheme();
-  const { owned, toggleIngredient, addIngredients, clearBar, customIngredients, addCustomIngredient, deleteCustomIngredient } = useBar();
+  const { owned, toggleIngredient, clearBar, customIngredients, addCustomIngredient, deleteCustomIngredient } = useBar();
   const [query, setQuery] = useState('');
 
   const q = query.trim().toLowerCase();
@@ -72,29 +72,10 @@ export default function BarScreen() {
         style={[styles.search, { backgroundColor: t.surfaceAlt, color: t.text }]}
       />
 
-      {query === '' ? (
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.kits}>
-          {STARTER_KITS.map((kit) => (
-            <Pressable
-              key={kit.id}
-              onPress={() => addIngredients(kit.ingredients)}
-              style={({ pressed }) => [
-                styles.kit,
-                { backgroundColor: t.surface, borderColor: t.border, opacity: pressed ? 0.75 : 1 },
-              ]}
-            >
-              <Text style={styles.kitEmoji}>{kit.emoji}</Text>
-              <Text style={[styles.kitName, { color: t.text }]}>{kit.name}</Text>
-              <Text style={[styles.kitHint, { color: t.textMuted }]}>Add {kit.ingredients.length} items</Text>
-            </Pressable>
-          ))}
-        </ScrollView>
-      ) : null}
-
       {q && !exactMatch ? (
         <Pressable onPress={addOwn} style={[styles.addOwn, { backgroundColor: t.accentSoft }]}>
           <Text style={[styles.addOwnText, { color: t.text }]}>+ Add “{query.trim()}” as your own ingredient</Text>
-          <Text style={[styles.kitHint, { color: t.textMuted }]}>Not on the list? Add it and use it in your own recipes.</Text>
+          <Text style={[styles.hint, { color: t.textMuted }]}>Not on the list? Add it and use it in your own recipes.</Text>
         </Pressable>
       ) : null}
 
@@ -134,11 +115,7 @@ export default function BarScreen() {
 const styles = StyleSheet.create({
   clear: { fontSize: 16, fontWeight: '600', paddingBottom: 6 },
   search: { fontSize: 16, paddingHorizontal: 14, paddingVertical: 11, borderRadius: radius.md },
-  kits: { gap: 10, paddingVertical: 4 },
-  kit: { width: 150, padding: 12, borderRadius: radius.md, borderWidth: StyleSheet.hairlineWidth, gap: 2 },
-  kitEmoji: { fontSize: 26 },
-  kitName: { fontSize: 15, fontWeight: '600', marginTop: 4 },
-  kitHint: { fontSize: 12 },
+  hint: { fontSize: 12 },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 8 },
   addOwn: { padding: 14, borderRadius: 14, gap: 4 },
   addOwnText: { fontSize: 15, fontWeight: '600' },

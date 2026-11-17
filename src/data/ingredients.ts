@@ -153,31 +153,3 @@ export function getIngredient(id: string): Ingredient {
 export function ingredientName(id: string): string {
   return getIngredient(id).name;
 }
-
-/** One-tap starter kits on the My Bar screen. */
-export const STARTER_KITS: { id: string; name: string; emoji: string; ingredients: string[] }[] = [
-  {
-    id: 'basics',
-    name: 'Home bar basics',
-    emoji: '🍾',
-    ingredients: [
-      'vodka', 'gin', 'white_rum', 'tequila', 'bourbon', 'triple_sec',
-      'lime_juice', 'lemon_juice', 'simple_syrup', 'soda_water', 'tonic', 'cola', 'angostura',
-    ],
-  },
-  {
-    id: 'italian',
-    name: 'Aperitivo hour',
-    emoji: '🍊',
-    ingredients: ['gin', 'campari', 'aperol', 'sweet_vermouth', 'sparkling_wine', 'soda_water', 'orange'],
-  },
-  {
-    id: 'mocktail',
-    name: 'Mocktail kit',
-    emoji: '🧃',
-    ingredients: [
-      'lime_juice', 'lemon_juice', 'orange_juice', 'pineapple_juice', 'simple_syrup',
-      'grenadine', 'soda_water', 'ginger_beer', 'lemon_lime_soda', 'mint', 'coconut_cream',
-    ],
-  },
-];

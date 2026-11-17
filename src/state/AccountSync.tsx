@@ -6,13 +6,16 @@ import { diffById, diffSets, mergeById, mergeFavorites } from '../lib/sync';
 import { useAuth } from './AuthContext';
 import { useBar } from './BarContext';
 
-type Snapshot = { owned: Set<string>; favorites: Set<string>; recipes: Recipe[]; ingredients: Ingredient[] };
+type Note = { id: string; note: string };
+type Snapshot = { owned: Set<string>; favorites: Set<string>; recipes: Recipe[]; ingredients: Ingredient[]; notes: Note[] };
+
+const toNotes = (rec: Readonly<Record<string, string>>): Note[] => Object.entries(rec).map(([id, note]) => ({ id, note }));
 
 const stripRecipe = ({ custom: _c, ...r }: Recipe) => r as Recipe;
 const stripIngredient = (i: Ingredient) => ({ id: i.id, name: i.name, category: i.category });
 
 /**
- * Keeps My Bar, favourites and the user's own recipes in step with their account.
+ * Keeps My Bar, favourites, private notes and the user's own recipes in step with their account.
  * On sign-in, phone and account data are merged (nothing is lost); after that, every change is uploaded.
  * Renders nothing.
  */
@@ -38,14 +41,15 @@ export function AccountSync() {
     let cancelled = false;
 
     (async () => {
-      const [bar, fav, rec, ing] = await Promise.all([
+      const [bar, fav, rec, ing, nts] = await Promise.all([
         client.from('bar_items').select('ingredient_id'),
         client.from('favorites').select('recipe_id'),
         client.from('custom_recipes').select('recipe'),
         client.from('custom_ingredients').select('id, name'),
+        client.from('notes').select('recipe_id, note'),
       ]);
-      if (cancelled || bar.error || fav.error || rec.error || ing.error) {
-        console.warn('Account sync failed', bar.error ?? fav.error ?? rec.error ?? ing.error);
+      if (cancelled || bar.error || fav.error || rec.error || ing.error || nts.error) {
+        console.warn('Account sync failed', bar.error ?? fav.error ?? rec.error ?? ing.error ?? nts.error);
         prevUser.current = null; // try again next time
         return;
       }
@@ -54,6 +58,8 @@ export function AccountSync() {
       const remoteRec = (rec.data ?? []).map((r) => r.recipe as Recipe);
       const remoteIng = (ing.data ?? []).map((r) => ({ id: r.id as string, name: r.name as string, category: 'Your own' as const }));
 
+      const remoteNotes = (nts.data ?? []).map((r) => ({ id: r.recipe_id as string, note: r.note as string }));
+      const notes = mergeById(toNotes(local.notes), remoteNotes);
       const owned = mergeFavorites(local.owned, remoteBar);
       const favorites = mergeFavorites(local.favorites, remoteFav);
       const recipes = mergeById(local.customRecipes.map(stripRecipe), remoteRec);
@@ -62,11 +68,12 @@ export function AccountSync() {
       // Upload anything that was only on this phone.
       await push(
         userId,
-        { owned: new Set(remoteBar), favorites: new Set(remoteFav), recipes: remoteRec, ingredients: remoteIng },
-        { owned, favorites, recipes, ingredients },
+        { owned: new Set(remoteBar), favorites: new Set(remoteFav), recipes: remoteRec, ingredients: remoteIng, notes: remoteNotes },
+        { owned, favorites, recipes, ingredients, notes },
       );
       if (cancelled) return;
-      synced.current = { owned, favorites, recipes, ingredients };
+      synced.current = { owned, favorites, recipes, ingredients, notes };
+      local.replaceNotes(Object.fromEntries(notes.map((n) => [n.id, n.note])));
       local.replaceOwned(owned);
       local.replaceFavorites(favorites);
       local.replaceCustom(recipes, ingredients);
@@ -86,11 +93,12 @@ export function AccountSync() {
       favorites: new Set(local.favorites),
       recipes: local.customRecipes.map(stripRecipe),
       ingredients: local.customIngredients.map(stripIngredient),
+      notes: toNotes(local.notes),
     };
     const before = synced.current;
     synced.current = next;
     push(userId, before, next).catch((e) => console.warn('Account sync failed', e));
-  }, [userId, local.owned, local.favorites, local.customRecipes, local.customIngredients]);
+  }, [userId, local.owned, local.favorites, local.customRecipes, local.customIngredients, local.notes]);
 
   return null;
 }
@@ -102,6 +110,7 @@ async function push(userId: string, before: Snapshot, after: Snapshot) {
   const fav = diffSets(before.favorites, after.favorites);
   const rec = diffById(before.recipes, after.recipes);
   const ing = diffById(before.ingredients, after.ingredients);
+  const nts = diffById(before.notes, after.notes);
   const jobs: PromiseLike<unknown>[] = [];
   if (bar.added.length) jobs.push(client.from('bar_items').upsert(bar.added.map((ingredient_id) => ({ user_id: userId, ingredient_id }))));
   if (bar.removed.length) jobs.push(client.from('bar_items').delete().eq('user_id', userId).in('ingredient_id', bar.removed));
@@ -116,6 +125,14 @@ async function push(userId: string, before: Snapshot, after: Snapshot) {
       ),
     );
   }
+  if (nts.upsert.length) {
+    jobs.push(
+      client.from('notes').upsert(
+        nts.upsert.map((n) => ({ user_id: userId, recipe_id: n.id, note: n.note, updated_at: new Date().toISOString() })),
+      ),
+    );
+  }
+  if (nts.removed.length) jobs.push(client.from('notes').delete().eq('user_id', userId).in('recipe_id', nts.removed));
   if (rec.removed.length) jobs.push(client.from('custom_recipes').delete().eq('user_id', userId).in('id', rec.removed));
   const results = (await Promise.all(jobs)) as { error?: unknown }[];
   const failed = results.find((r) => r?.error);
