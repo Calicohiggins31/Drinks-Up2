@@ -5,7 +5,8 @@ export type IngredientCategory =
   | 'Juices'
   | 'Syrups & Sweeteners'
   | 'Bitters'
-  | 'Fresh & Pantry';
+  | 'Fresh & Pantry'
+  | 'Your own';
 
 export type Ingredient = {
   id: string;
@@ -21,6 +22,7 @@ export const CATEGORIES: IngredientCategory[] = [
   'Syrups & Sweeteners',
   'Bitters',
   'Fresh & Pantry',
+  'Your own',
 ];
 
 export const INGREDIENTS: Ingredient[] = [
@@ -34,6 +36,12 @@ export const INGREDIENTS: Ingredient[] = [
   { id: 'rye', name: 'Rye whiskey', category: 'Spirits' },
   { id: 'scotch', name: 'Scotch', category: 'Spirits' },
   { id: 'cognac', name: 'Cognac / brandy', category: 'Spirits' },
+  { id: 'mezcal', name: 'Mezcal', category: 'Spirits' },
+  { id: 'cachaca', name: 'Cachaça', category: 'Spirits' },
+  { id: 'pisco', name: 'Pisco', category: 'Spirits' },
+  { id: 'spiced_rum', name: 'Spiced rum', category: 'Spirits' },
+  { id: 'irish_whiskey', name: 'Irish whiskey', category: 'Spirits' },
+  { id: 'absinthe', name: 'Absinthe / pastis', category: 'Spirits' },
 
   // Liqueurs & wine
   { id: 'triple_sec', name: 'Triple sec / Cointreau', category: 'Liqueurs & Wine' },
@@ -44,6 +52,24 @@ export const INGREDIENTS: Ingredient[] = [
   { id: 'coffee_liqueur', name: 'Coffee liqueur', category: 'Liqueurs & Wine' },
   { id: 'amaretto', name: 'Amaretto', category: 'Liqueurs & Wine' },
   { id: 'sparkling_wine', name: 'Prosecco / sparkling wine', category: 'Liqueurs & Wine' },
+  { id: 'red_wine', name: 'Red wine', category: 'Liqueurs & Wine' },
+  { id: 'beer', name: 'Beer / lager', category: 'Liqueurs & Wine' },
+  { id: 'elderflower_liqueur', name: 'Elderflower liqueur (St-Germain)', category: 'Liqueurs & Wine' },
+  { id: 'irish_cream', name: 'Irish cream (Baileys)', category: 'Liqueurs & Wine' },
+  { id: 'maraschino', name: 'Maraschino liqueur', category: 'Liqueurs & Wine' },
+  { id: 'green_chartreuse', name: 'Green Chartreuse', category: 'Liqueurs & Wine' },
+  { id: 'benedictine', name: 'Bénédictine', category: 'Liqueurs & Wine' },
+  { id: 'drambuie', name: 'Drambuie', category: 'Liqueurs & Wine' },
+  { id: 'amaro', name: 'Amaro (Nonino / Montenegro)', category: 'Liqueurs & Wine' },
+  { id: 'lillet_blanc', name: 'Lillet Blanc', category: 'Liqueurs & Wine' },
+  { id: 'blue_curacao', name: 'Blue curaçao', category: 'Liqueurs & Wine' },
+  { id: 'peach_schnapps', name: 'Peach schnapps', category: 'Liqueurs & Wine' },
+  { id: 'melon_liqueur', name: 'Melon liqueur (Midori)', category: 'Liqueurs & Wine' },
+  { id: 'coconut_rum', name: 'Coconut rum (Malibu)', category: 'Liqueurs & Wine' },
+  { id: 'berry_liqueur', name: 'Berry liqueur (Chambord / crème de mûre)', category: 'Liqueurs & Wine' },
+  { id: 'creme_de_cassis', name: 'Crème de cassis', category: 'Liqueurs & Wine' },
+  { id: 'creme_de_menthe', name: 'Crème de menthe', category: 'Liqueurs & Wine' },
+  { id: 'creme_de_cacao', name: 'Crème de cacao', category: 'Liqueurs & Wine' },
 
   // Mixers
   { id: 'soda_water', name: 'Soda water', category: 'Mixers' },
@@ -51,6 +77,10 @@ export const INGREDIENTS: Ingredient[] = [
   { id: 'cola', name: 'Cola', category: 'Mixers' },
   { id: 'ginger_beer', name: 'Ginger beer', category: 'Mixers' },
   { id: 'lemon_lime_soda', name: 'Lemon-lime soda', category: 'Mixers' },
+  { id: 'ginger_ale', name: 'Ginger ale', category: 'Mixers' },
+  { id: 'lemonade', name: 'Lemonade', category: 'Mixers' },
+  { id: 'iced_tea', name: 'Iced tea', category: 'Mixers' },
+  { id: 'coffee', name: 'Hot coffee', category: 'Mixers' },
 
   // Juices
   { id: 'lime_juice', name: 'Lime juice', category: 'Juices' },
@@ -60,6 +90,9 @@ export const INGREDIENTS: Ingredient[] = [
   { id: 'pineapple_juice', name: 'Pineapple juice', category: 'Juices' },
   { id: 'grapefruit_juice', name: 'Grapefruit juice', category: 'Juices' },
   { id: 'tomato_juice', name: 'Tomato juice', category: 'Juices' },
+  { id: 'apple_juice', name: 'Apple juice', category: 'Juices' },
+  { id: 'passion_fruit', name: 'Passion fruit purée', category: 'Juices' },
+  { id: 'peach_puree', name: 'Peach purée', category: 'Juices' },
 
   // Syrups & sweeteners
   { id: 'simple_syrup', name: 'Simple syrup', category: 'Syrups & Sweeteners' },
@@ -67,10 +100,16 @@ export const INGREDIENTS: Ingredient[] = [
   { id: 'honey', name: 'Honey', category: 'Syrups & Sweeteners' },
   { id: 'grenadine', name: 'Grenadine', category: 'Syrups & Sweeteners' },
   { id: 'orgeat', name: 'Orgeat (almond syrup)', category: 'Syrups & Sweeteners' },
+  { id: 'agave_syrup', name: 'Agave syrup', category: 'Syrups & Sweeteners' },
+  { id: 'maple_syrup', name: 'Maple syrup', category: 'Syrups & Sweeteners' },
+  { id: 'ginger_syrup', name: 'Ginger syrup', category: 'Syrups & Sweeteners' },
+  { id: 'vanilla_syrup', name: 'Vanilla syrup', category: 'Syrups & Sweeteners' },
+  { id: 'raspberry_syrup', name: 'Raspberry syrup', category: 'Syrups & Sweeteners' },
 
   // Bitters
   { id: 'angostura', name: 'Angostura bitters', category: 'Bitters' },
   { id: 'orange_bitters', name: 'Orange bitters', category: 'Bitters' },
+  { id: 'peychauds', name: "Peychaud's bitters", category: 'Bitters' },
 
   // Fresh & pantry
   { id: 'mint', name: 'Fresh mint', category: 'Fresh & Pantry' },
@@ -83,14 +122,29 @@ export const INGREDIENTS: Ingredient[] = [
   { id: 'espresso', name: 'Espresso', category: 'Fresh & Pantry' },
   { id: 'worcestershire', name: 'Worcestershire sauce', category: 'Fresh & Pantry' },
   { id: 'salt', name: 'Salt', category: 'Fresh & Pantry' },
+  { id: 'lemon', name: 'Lemons (wedges / peel)', category: 'Fresh & Pantry' },
+  { id: 'cucumber', name: 'Cucumber', category: 'Fresh & Pantry' },
+  { id: 'strawberries', name: 'Strawberries', category: 'Fresh & Pantry' },
+  { id: 'basil', name: 'Fresh basil', category: 'Fresh & Pantry' },
+  { id: 'jalapeno', name: 'Jalapeño', category: 'Fresh & Pantry' },
+  { id: 'olives', name: 'Olives (and brine)', category: 'Fresh & Pantry' },
+  { id: 'milk', name: 'Milk', category: 'Fresh & Pantry' },
+  { id: 'nutmeg', name: 'Nutmeg', category: 'Fresh & Pantry' },
+  { id: 'hot_sauce', name: 'Hot sauce', category: 'Fresh & Pantry' },
 ];
 
 const byId = new Map(INGREDIENTS.map((i) => [i.id, i]));
 
+/** Ingredients the user added themselves. Kept in sync by BarProvider. */
+let customById = new Map<string, Ingredient>();
+
+export function setCustomIngredients(list: Ingredient[]) {
+  customById = new Map(list.map((i) => [i.id, i]));
+}
+
 export function getIngredient(id: string): Ingredient {
-  const found = byId.get(id);
-  if (!found) throw new Error(`Unknown ingredient: ${id}`);
-  return found;
+  // Fall back to a readable name so a deleted custom ingredient can never crash a screen.
+  return byId.get(id) ?? customById.get(id) ?? { id, name: id.replace(/^custom_(ing_)?/, '').replace(/_[a-z0-9]+$/, '').replace(/_/g, ' '), category: 'Your own' };
 }
 
 export function ingredientName(id: string): string {

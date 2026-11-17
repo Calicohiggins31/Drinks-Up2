@@ -1,4 +1,8 @@
-export type Unit = 'oz' | 'dash' | 'leaves' | 'cube' | 'top' | 'pinch' | 'wedge' | 'peel' | 'whole';
+import { ABOUT } from './about';
+import { MORE_RECIPES } from './recipes-more';
+
+export type Unit =
+  | 'oz' | 'dash' | 'tsp' | 'leaves' | 'slice' | 'cube' | 'top' | 'pinch' | 'wedge' | 'peel' | 'whole';
 
 export type RecipeIngredient = {
   id: string;
@@ -19,7 +23,12 @@ export type Recipe = {
   glass: string;
   method: 'Shake' | 'Stir' | 'Build' | 'Muddle' | 'Blend';
   strength: 'None' | 'Light' | 'Medium' | 'Strong';
+  /** One-line tagline shown under the name. */
   description: string;
+  /** A few sentences on taste, history and when to drink it. */
+  about?: string;
+  /** True for recipes the user created themselves. */
+  custom?: boolean;
   ingredients: RecipeIngredient[];
   steps: string[];
 };
@@ -28,7 +37,7 @@ export type Recipe = {
 const SYRUP = { id: 'simple_syrup', alternatives: ['sugar'] } as const;
 const WHISKEY = ['bourbon', 'rye'];
 
-export const RECIPES: Recipe[] = [
+const CLASSICS: Recipe[] = [
   {
     id: 'margarita',
     name: 'Margarita',
@@ -846,8 +855,10 @@ export const RECIPES: Recipe[] = [
   },
 ];
 
+export const RECIPES: Recipe[] = [...CLASSICS, ...MORE_RECIPES].map((r) => ({ ...r, about: ABOUT[r.id] }));
+
 const byId = new Map(RECIPES.map((r) => [r.id, r]));
 
-export function getRecipe(id: string): Recipe | undefined {
+export function getBuiltInRecipe(id: string): Recipe | undefined {
   return byId.get(id);
 }

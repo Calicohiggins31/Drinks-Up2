@@ -1,7 +1,7 @@
 /// <reference types="node" />
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { INGREDIENTS, STARTER_KITS } from '../data/ingredients';
+import { getIngredient, INGREDIENTS, setCustomIngredients, STARTER_KITS } from '../data/ingredients';
 import { RECIPES } from '../data/recipes';
 import { formatAmount, matchAll, matchRecipe, shoppingSuggestions } from './matching';
 
@@ -63,4 +63,41 @@ test('amounts format in oz and ml', () => {
   assert.equal(formatAmount({ id: 'gin', amount: 2, unit: 'oz' }, 'ml'), '60 ml');
   assert.equal(formatAmount({ id: 'gin', amount: 0.75, unit: 'oz' }, 'ml'), '25 ml');
   assert.equal(formatAmount({ id: 'angostura', amount: 2, unit: 'dash' }, 'oz'), '2 dashes');
+});
+
+test('every built-in recipe has an About section and at least one step', () => {
+  assert.ok(RECIPES.length >= 120, `only ${RECIPES.length} recipes`);
+  for (const r of RECIPES) {
+    assert.ok(r.about && r.about.length > 40, `${r.id} has no about text`);
+    assert.ok(r.steps.length > 0, `${r.id} has no steps`);
+    assert.ok(r.ingredients.some((i) => !i.optional), `${r.id} has no required ingredients`);
+  }
+});
+
+test('custom recipes match against custom ingredients', () => {
+  setCustomIngredients([{ id: 'custom_ing_grandmas_jam', name: "Grandma's jam", category: 'Your own' }]);
+  assert.equal(getIngredient('custom_ing_grandmas_jam').name, "Grandma's jam");
+  const mine = {
+    ...recipe('gin_tonic'),
+    id: 'custom_drink_jam_fizz',
+    custom: true,
+    ingredients: [
+      { id: 'gin', amount: 2, unit: 'oz' as const },
+      { id: 'custom_ing_grandmas_jam', amount: 1, unit: 'tsp' as const },
+    ],
+  };
+  const [m] = matchAll(new Set(['gin', 'custom_ing_grandmas_jam']), [mine]);
+  assert.ok(m.canMake);
+  assert.equal(matchRecipe(mine, new Set(['gin'])).missing[0].id, 'custom_ing_grandmas_jam');
+});
+
+test('a deleted custom ingredient still has a readable name', () => {
+  setCustomIngredients([]);
+  assert.equal(getIngredient('custom_ing_old_thing_abc').name, 'old thing');
+});
+
+test('teaspoons and slices format sensibly', () => {
+  assert.equal(formatAmount({ id: 'honey', amount: 1, unit: 'tsp' }, 'oz'), '1 tsp');
+  assert.equal(formatAmount({ id: 'honey', amount: 2, unit: 'tsp' }, 'ml'), '10 ml');
+  assert.equal(formatAmount({ id: 'jalapeno', amount: 2, unit: 'slice' }, 'oz'), '2 slices');
 });

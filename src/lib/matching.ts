@@ -69,6 +69,10 @@ export function formatAmount(item: RecipeIngredient, system: UnitSystem): string
     case 'oz':
       if (n == null) return '';
       return system === 'ml' ? `${Math.round((n * 30) / 5) * 5} ml` : `${ozText(n)} oz`;
+    case 'tsp':
+      return system === 'ml' && n ? `${Math.round(n * 5)} ml` : `${n ?? 1} tsp`;
+    case 'slice':
+      return n ? `${n} ${plural('slice')}` : 'a few slices';
     case 'dash':
       return `${n ?? 1} ${n && n !== 1 ? 'dashes' : 'dash'}`;
     case 'leaves':

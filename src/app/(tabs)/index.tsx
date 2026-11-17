@@ -17,14 +17,14 @@ const FILTERS: { id: Filter; label: string }[] = [
 
 export default function MixScreen() {
   const t = useTheme();
-  const { owned, favorites, ready, addIngredients } = useBar();
+  const { owned, favorites, ready, addIngredients, recipes } = useBar();
   const [filter, setFilter] = useState<Filter>('all');
 
   const matches = useMemo(() => {
-    const all = matchAll(owned);
+    const all = matchAll(owned, recipes);
     if (filter === 'all') return all;
     return all.filter((m) => (m.recipe.strength === 'None') === (filter === 'mocktails'));
-  }, [owned, filter]);
+  }, [owned, filter, recipes]);
 
   const ready_ = matches.filter((m) => m.canMake);
   const almost = matches.filter((m) => m.missing.length === 1);

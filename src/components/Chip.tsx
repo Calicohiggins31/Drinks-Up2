@@ -1,13 +1,14 @@
 import { Pressable, StyleSheet, Text } from 'react-native';
 import { radius, useTheme } from '../theme';
 
-type Props = { label: string; selected: boolean; onPress: () => void };
+type Props = { label: string; selected: boolean; onPress: () => void; onLongPress?: () => void };
 
-export function Chip({ label, selected, onPress }: Props) {
+export function Chip({ label, selected, onPress, onLongPress }: Props) {
   const t = useTheme();
   return (
     <Pressable
       onPress={onPress}
+      onLongPress={onLongPress}
       accessibilityRole="checkbox"
       accessibilityState={{ checked: selected }}
       hitSlop={4}

@@ -30,6 +30,9 @@ export function DrinkCard({ match, favorite }: { match: DrinkMatch; favorite?: b
           <Text style={[styles.name, { color: t.text }]} numberOfLines={1}>
             {recipe.name}
           </Text>
+          {recipe.custom ? (
+            <Text style={[styles.mine, { color: t.accent, backgroundColor: t.accentSoft }]}>YOURS</Text>
+          ) : null}
           {favorite ? <Text style={{ color: t.accent }}>♥</Text> : null}
         </View>
         <Text style={[styles.summary, { color: t.textMuted }]} numberOfLines={1}>
@@ -63,6 +66,7 @@ const styles = StyleSheet.create({
   titleRow: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   name: { fontSize: 17, fontWeight: '600', flexShrink: 1 },
   summary: { fontSize: 13 },
+  mine: { fontSize: 10, fontWeight: '800', paddingHorizontal: 6, paddingVertical: 2, borderRadius: 6, overflow: 'hidden' },
   status: { fontSize: 13, fontWeight: '600', marginTop: 2 },
   chevron: { fontSize: 26, fontWeight: '300' },
 });

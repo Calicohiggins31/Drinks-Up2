@@ -19,6 +19,7 @@ export default function RootLayout() {
       >
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="drink/[id]" options={{ title: '', headerBackTitle: 'Back' }} />
+        <Stack.Screen name="recipe-editor" options={{ title: 'New recipe', headerBackTitle: 'Cancel' }} />
       </Stack>
     </BarProvider>
   );

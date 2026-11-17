@@ -8,16 +8,36 @@ import { radius, useTheme } from '../../theme';
 
 export default function BarScreen() {
   const t = useTheme();
-  const { owned, toggleIngredient, addIngredients, clearBar } = useBar();
+  const { owned, toggleIngredient, addIngredients, clearBar, customIngredients, addCustomIngredient, deleteCustomIngredient } = useBar();
   const [query, setQuery] = useState('');
 
+  const q = query.trim().toLowerCase();
+  const all = useMemo(() => [...INGREDIENTS, ...customIngredients], [customIngredients]);
+  const exactMatch = all.some((i) => i.name.toLowerCase() === q);
+
   const grouped = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    const list = q ? INGREDIENTS.filter((i) => i.name.toLowerCase().includes(q)) : INGREDIENTS;
+    const list = q ? all.filter((i) => i.name.toLowerCase().includes(q)) : all;
     return CATEGORIES.map((c) => ({ category: c, items: list.filter((i) => i.category === c) })).filter(
       (g) => g.items.length > 0,
     );
-  }, [query]);
+  }, [q, all]);
+
+  const addOwn = () => {
+    const id = addCustomIngredient(query);
+    if (!owned.has(id)) toggleIngredient(id);
+    setQuery('');
+  };
+
+  const confirmDeleteOwn = (id: string, name: string) => {
+    if (Platform.OS === 'web') {
+      if (window.confirm(`Delete "${name}"?`)) deleteCustomIngredient(id);
+      return;
+    }
+    Alert.alert(`Delete "${name}"?`, 'It will be removed from your bar. Your recipes that use it will show it as missing.', [
+      { text: 'Cancel', style: 'cancel' },
+      { text: 'Delete', style: 'destructive', onPress: () => deleteCustomIngredient(id) },
+    ]);
+  };
 
   const confirmClear = () => {
     if (Platform.OS === 'web') {
@@ -45,7 +65,7 @@ export default function BarScreen() {
       <TextInput
         value={query}
         onChangeText={setQuery}
-        placeholder="Search ingredients"
+        placeholder="Search, or add your own"
         placeholderTextColor={t.textMuted}
         clearButtonMode="while-editing"
         autoCorrect={false}
@@ -71,20 +91,37 @@ export default function BarScreen() {
         </ScrollView>
       ) : null}
 
-      {grouped.length === 0 ? (
-        <Text style={[styles.noResults, { color: t.textMuted }]}>No ingredients match "{query}".</Text>
+      {q && !exactMatch ? (
+        <Pressable onPress={addOwn} style={[styles.addOwn, { backgroundColor: t.accentSoft }]}>
+          <Text style={[styles.addOwnText, { color: t.text }]}>+ Add “{query.trim()}” as your own ingredient</Text>
+          <Text style={[styles.kitHint, { color: t.textMuted }]}>Not on the list? Add it and use it in your own recipes.</Text>
+        </Pressable>
       ) : null}
 
       {grouped.map((g) => {
         const have = g.items.filter((i) => owned.has(i.id)).length;
         return (
           <View key={g.category}>
-            <SectionTitle hint={have > 0 ? `${have} of ${g.items.length} selected` : undefined}>
+            <SectionTitle
+              hint={
+                g.category === 'Your own'
+                  ? 'Press and hold one to delete it'
+                  : have > 0
+                    ? `${have} of ${g.items.length} selected`
+                    : undefined
+              }
+            >
               {g.category}
             </SectionTitle>
             <View style={styles.chips}>
               {g.items.map((i) => (
-                <Chip key={i.id} label={i.name} selected={owned.has(i.id)} onPress={() => toggleIngredient(i.id)} />
+                <Chip
+                  key={i.id}
+                  label={i.name}
+                  selected={owned.has(i.id)}
+                  onPress={() => toggleIngredient(i.id)}
+                  onLongPress={g.category === 'Your own' ? () => confirmDeleteOwn(i.id, i.name) : undefined}
+                />
               ))}
             </View>
           </View>
@@ -103,5 +140,6 @@ const styles = StyleSheet.create({
   kitName: { fontSize: 15, fontWeight: '600', marginTop: 4 },
   kitHint: { fontSize: 12 },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 8 },
-  noResults: { fontSize: 15, marginTop: 16, textAlign: 'center' },
+  addOwn: { padding: 14, borderRadius: 14, gap: 4 },
+  addOwnText: { fontSize: 15, fontWeight: '600' },
 });
