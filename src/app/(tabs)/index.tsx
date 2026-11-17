@@ -1,11 +1,13 @@
 import { router } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { BaseGroup } from '../../components/BaseGroup';
 import { DrinkCard } from '../../components/DrinkCard';
 import { Screen, SectionTitle } from '../../components/Screen';
 import { ingredientName } from '../../data/ingredients';
 import { findStoresNearby } from '../../features/stores/storeFinder';
-import { matchAll, shoppingSuggestions } from '../../lib/matching';
+import { groupByBase, type BaseId } from '../../lib/base';
+import { matchAll, shoppingSuggestions, type DrinkMatch } from '../../lib/matching';
 import { useBar } from '../../state/BarContext';
 import { radius, useTheme } from '../../theme';
 
@@ -20,6 +22,14 @@ export default function MixScreen() {
   const t = useTheme();
   const { owned, favorites, ready, addIngredients, recipes } = useBar();
   const [filter, setFilter] = useState<Filter>('all');
+  const [open, setOpen] = useState<ReadonlySet<string>>(new Set());
+  const toggle = (key: string) =>
+    setOpen((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
 
   const matches = useMemo(() => {
     const all = matchAll(owned, recipes);
@@ -30,6 +40,28 @@ export default function MixScreen() {
   const ready_ = matches.filter((m) => m.canMake);
   const almost = matches.filter((m) => m.missing.length === 1);
   const suggestions = useMemo(() => shoppingSuggestions(matches, 4), [matches]);
+  const readyGroups = useMemo(() => groupByBase(ready_, (m) => m.recipe), [ready_]);
+  const almostGroups = useMemo(() => groupByBase(almost, (m) => m.recipe), [almost]);
+
+  // Drinks under a foldable header per base spirit. A section with only one group starts open.
+  const renderGroups = (section: string, groups: { id: BaseId; label: string; emoji: string; items: DrinkMatch[] }[]) =>
+    groups.map((g) => {
+      const key = `${section}:${g.id}`;
+      return (
+        <BaseGroup
+          key={key}
+          emoji={g.emoji}
+          label={g.label}
+          count={g.items.length}
+          open={groups.length === 1 || open.has(key)}
+          onToggle={() => toggle(key)}
+        >
+          {g.items.map((m) => (
+            <DrinkCard key={m.recipe.id} match={m} favorite={favorites.has(m.recipe.id)} />
+          ))}
+        </BaseGroup>
+      );
+    });
 
   if (!ready) return <Screen title="Mix">{null}</Screen>;
 
@@ -82,10 +114,8 @@ export default function MixScreen() {
 
       {ready_.length > 0 ? (
         <>
-          <SectionTitle>Ready to mix</SectionTitle>
-          {ready_.map((m) => (
-            <DrinkCard key={m.recipe.id} match={m} favorite={favorites.has(m.recipe.id)} />
-          ))}
+          <SectionTitle hint="Tap a spirit to see its drinks">Ready to mix</SectionTitle>
+          {renderGroups('ready', readyGroups)}
         </>
       ) : null}
 
@@ -131,9 +161,7 @@ export default function MixScreen() {
       {almost.length > 0 ? (
         <>
           <SectionTitle hint="Just one ingredient away">Almost there</SectionTitle>
-          {almost.map((m) => (
-            <DrinkCard key={m.recipe.id} match={m} favorite={favorites.has(m.recipe.id)} />
-          ))}
+          {renderGroups('almost', almostGroups)}
         </>
       ) : null}
     </Screen>
