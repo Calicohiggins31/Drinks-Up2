@@ -1,7 +1,7 @@
-import { Stack, useLocalSearchParams } from 'expo-router';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { router, Stack, useLocalSearchParams } from 'expo-router';
+import { Alert, Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { BackupPrompt } from '../../components/BackupPrompt';
 import { ingredientName } from '../../data/ingredients';
-import { getRecipe } from '../../data/recipes';
 import { formatAmount, hasIngredient, matchRecipe, usedIngredient } from '../../lib/matching';
 import { useBar } from '../../state/BarContext';
 import { radius, useTheme } from '../../theme';
@@ -9,8 +9,8 @@ import { radius, useTheme } from '../../theme';
 export default function DrinkScreen() {
   const t = useTheme();
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { owned, favorites, toggleFavorite, toggleIngredient, units, setUnits } = useBar();
-  const recipe = getRecipe(id);
+  const { owned, favorites, toggleFavorite, toggleIngredient, units, setUnits, findRecipe, deleteRecipe } = useBar();
+  const recipe = findRecipe(id);
 
   if (!recipe) {
     return (
@@ -22,6 +22,21 @@ export default function DrinkScreen() {
 
   const { canMake, missing } = matchRecipe(recipe, owned);
   const isFav = favorites.has(recipe.id);
+
+  const confirmDelete = () => {
+    const remove = () => {
+      deleteRecipe(recipe.id);
+      router.back();
+    };
+    if (Platform.OS === 'web') {
+      if (window.confirm(`Delete ${recipe.name}?`)) remove();
+      return;
+    }
+    Alert.alert(`Delete ${recipe.name}?`, 'This removes your recipe from this phone.', [
+      { text: 'Cancel', style: 'cancel' },
+      { text: 'Delete', style: 'destructive', onPress: remove },
+    ]);
+  };
 
   return (
     <>
@@ -44,6 +59,11 @@ export default function DrinkScreen() {
           <Text style={styles.heroEmoji}>{recipe.emoji}</Text>
         </View>
 
+        {recipe.custom ? (
+          <View style={[styles.yours, { backgroundColor: t.accentSoft }]}>
+            <Text style={[styles.yoursText, { color: t.accent }]}>🔒 Your recipe</Text>
+          </View>
+        ) : null}
         <Text style={[styles.name, { color: t.text }]}>{recipe.name}</Text>
         <Text style={[styles.description, { color: t.textMuted }]}>{recipe.description}</Text>
 
@@ -56,6 +76,15 @@ export default function DrinkScreen() {
             ),
           )}
         </View>
+
+        {isFav ? <View style={{ marginTop: 16 }}><BackupPrompt /></View> : null}
+
+        {recipe.about ? (
+          <View style={[styles.aboutBox, { backgroundColor: t.surface, borderColor: t.border }]}>
+            <Text style={[styles.aboutTitle, { color: t.text }]}>About this drink</Text>
+            <Text style={[styles.aboutText, { color: t.text }]}>{recipe.about}</Text>
+          </View>
+        ) : null}
 
         <View
           style={[styles.banner, { backgroundColor: canMake ? t.successSoft : t.warningSoft }]}
@@ -138,6 +167,20 @@ export default function DrinkScreen() {
           </View>
         ))}
 
+        {recipe.custom ? (
+          <View style={styles.customActions}>
+            <Pressable
+              onPress={() => router.push({ pathname: '/recipe-editor', params: { id: recipe.id } })}
+              style={[styles.actionBtn, { backgroundColor: t.accent }]}
+            >
+              <Text style={{ color: t.onAccent, fontWeight: '700', fontSize: 16 }}>Edit recipe</Text>
+            </Pressable>
+            <Pressable onPress={confirmDelete} style={[styles.actionBtn, { borderWidth: 1, borderColor: t.warning }]}>
+              <Text style={{ color: t.warning, fontWeight: '700', fontSize: 16 }}>Delete</Text>
+            </Pressable>
+          </View>
+        ) : null}
+
         <Text style={[styles.footnote, { color: t.textMuted }]}>
           Ice and water are assumed. Please drink responsibly.
         </Text>
@@ -172,5 +215,12 @@ const styles = StyleSheet.create({
   step: { flexDirection: 'row', gap: 12, marginTop: 12, alignItems: 'flex-start' },
   stepNum: { width: 28, height: 28, borderRadius: 14, alignItems: 'center', justifyContent: 'center' },
   stepText: { flex: 1, fontSize: 16, lineHeight: 23, paddingTop: 3 },
+  yours: { alignSelf: 'flex-start', marginTop: 16, paddingHorizontal: 10, paddingVertical: 4, borderRadius: radius.pill },
+  yoursText: { fontSize: 13, fontWeight: '700' },
+  aboutBox: { marginTop: 16, padding: 14, borderRadius: radius.md, borderWidth: StyleSheet.hairlineWidth, gap: 6 },
+  aboutTitle: { fontSize: 16, fontWeight: '700' },
+  aboutText: { fontSize: 15, lineHeight: 22 },
+  customActions: { flexDirection: 'row', gap: 10, marginTop: 28 },
+  actionBtn: { flex: 1, paddingVertical: 13, borderRadius: radius.pill, alignItems: 'center' },
   footnote: { fontSize: 12, marginTop: 28, textAlign: 'center' },
 });

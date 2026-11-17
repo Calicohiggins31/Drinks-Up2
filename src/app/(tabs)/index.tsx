@@ -4,6 +4,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { DrinkCard } from '../../components/DrinkCard';
 import { Screen, SectionTitle } from '../../components/Screen';
 import { ingredientName } from '../../data/ingredients';
+import { findStoresNearby } from '../../features/stores/storeFinder';
 import { matchAll, shoppingSuggestions } from '../../lib/matching';
 import { useBar } from '../../state/BarContext';
 import { radius, useTheme } from '../../theme';
@@ -17,14 +18,14 @@ const FILTERS: { id: Filter; label: string }[] = [
 
 export default function MixScreen() {
   const t = useTheme();
-  const { owned, favorites, ready, addIngredients } = useBar();
+  const { owned, favorites, ready, addIngredients, recipes } = useBar();
   const [filter, setFilter] = useState<Filter>('all');
 
   const matches = useMemo(() => {
-    const all = matchAll(owned);
+    const all = matchAll(owned, recipes);
     if (filter === 'all') return all;
     return all.filter((m) => (m.recipe.strength === 'None') === (filter === 'mocktails'));
-  }, [owned, filter]);
+  }, [owned, filter, recipes]);
 
   const ready_ = matches.filter((m) => m.canMake);
   const almost = matches.filter((m) => m.missing.length === 1);
@@ -39,7 +40,7 @@ export default function MixScreen() {
           <Text style={styles.emptyEmoji}>🍸</Text>
           <Text style={[styles.emptyTitle, { color: t.text }]}>Your bar is empty</Text>
           <Text style={[styles.emptyText, { color: t.textMuted }]}>
-            Tell Drinks Up which bottles, mixers and fruit you have, and we'll show every drink you
+            Tell Drinks Up which bottles, mixers and fruit you have, and we’ll show every drink you
             can mix right now.
           </Text>
           <Pressable
@@ -88,9 +89,11 @@ export default function MixScreen() {
         </>
       ) : null}
 
+      <SectionTitle hint={suggestions.length > 0 ? 'Pick up one thing and unlock more drinks' : undefined}>
+        Shopping list
+      </SectionTitle>
       {suggestions.length > 0 ? (
         <>
-          <SectionTitle hint="Pick up one thing and unlock more drinks">Shopping list</SectionTitle>
           <View style={styles.suggestions}>
             {suggestions.map((s) => (
               <View
@@ -115,6 +118,15 @@ export default function MixScreen() {
           </View>
         </>
       ) : null}
+      <Pressable
+        onPress={() => findStoresNearby().catch(() => {})}
+        accessibilityRole="link"
+        accessibilityHint="Opens your maps app"
+        style={({ pressed }) => [styles.storeBtn, { borderColor: t.accent, opacity: pressed ? 0.7 : 1 }]}
+      >
+        <Text style={[styles.storeBtnText, { color: t.accent }]}>📍 Find a liquor store near me</Text>
+        <Text style={[styles.storeBtnHint, { color: t.textMuted }]}>Opens Maps. Drinks Up doesn’t see your location.</Text>
+      </Pressable>
 
       {almost.length > 0 ? (
         <>
@@ -150,5 +162,8 @@ const styles = StyleSheet.create({
   suggestionName: { fontSize: 16, fontWeight: '600' },
   suggestionHint: { fontSize: 13, marginTop: 2 },
   addBtn: { minWidth: 48, paddingHorizontal: 12, paddingVertical: 8, borderRadius: radius.pill, alignItems: 'center' },
+  storeBtn: { borderWidth: 1.5, borderRadius: radius.md, padding: 14, alignItems: 'center', gap: 2, marginTop: 4 },
+  storeBtnText: { fontSize: 16, fontWeight: '700' },
+  storeBtnHint: { fontSize: 12 },
   addBtnText: { fontSize: 15, fontWeight: '700' },
 });

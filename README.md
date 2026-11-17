@@ -7,11 +7,13 @@ One codebase runs on **iPhone and Android** (built with [Expo](https://expo.dev)
 ## What it does
 
 - **My Bar**: tap the bottles, mixers, juices and fresh things you have. Search, or add a whole starter kit (home bar basics, aperitivo, mocktails) in one tap.
-- **Mix**: every drink you can make now, filtered by cocktails or mocktails. It also shows drinks that are **one ingredient away**, plus a **shopping list** of the single purchases that unlock the most new drinks.
+- **Age gate**: date of birth on first launch; under-21s are blocked.
+- **Mix**: every drink you can make now, filtered by cocktails or mocktails. It also shows drinks that are **one ingredient away**, plus a **shopping list** of the single purchases that unlock the most new drinks, and a **Find a liquor store near me** button that opens Maps.
 - **Drink page**: ingredients with ✓ / ✕ for what you have, amounts in oz or ml, method steps, and an "I have it" button for anything missing. Sensible swaps count automatically (rye for bourbon, sugar for simple syrup).
-- **Saved**: favourite drinks plus the full recipe list (48 drinks, 47 ingredients).
+- **Saved**: your own recipes, favourite drinks and the full list (200 drinks, 96 ingredients). Every drink has an "About this drink" note.
+- **Your own recipes and ingredients**: tap **+ New** on the Saved tab to write your own drink, or type anything into My Bar search to add your own ingredient. These are saved only on your phone.
 
-Your bar and favourites are saved on the device.
+Your bar, favourites and your own recipes are saved on the device.
 
 ## Run it
 
@@ -21,6 +23,21 @@ npx expo start
 ```
 
 Then scan the QR code with the **Expo Go** app on your phone (iOS or Android), or press `i` / `a` to open a simulator. Press `w` for a browser preview.
+
+## Accounts (Supabase)
+
+Free accounts are needed to create your own recipes; favourites work without one and can be backed up by signing in.
+
+1. Create a free project at supabase.com.
+2. In the project, open **SQL Editor → New query**, paste everything from `supabase/schema.sql`, and click **Run**.
+3. Copy `.env.example` to `.env` and fill in the **Project URL** and **anon / publishable key** from **Project Settings → API**.
+4. Restart `npx expo start`.
+
+Until step 3 is done, the app runs normally and the account screens say accounts are coming soon.
+
+## Privacy policy
+
+The policy lives in `src/content/privacyPolicy.ts` (shown in the app) and is exported to `docs/privacy-policy.md` with `npm run privacy:md`. Fill in the `[BRACKETED]` placeholders before publishing, and update it before shipping location or analytics features.
 
 ## Checks
 
