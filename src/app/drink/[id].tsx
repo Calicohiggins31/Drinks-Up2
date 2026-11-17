@@ -1,0 +1,176 @@
+import { Stack, useLocalSearchParams } from 'expo-router';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ingredientName } from '../../data/ingredients';
+import { getRecipe } from '../../data/recipes';
+import { formatAmount, hasIngredient, matchRecipe, usedIngredient } from '../../lib/matching';
+import { useBar } from '../../state/BarContext';
+import { radius, useTheme } from '../../theme';
+
+export default function DrinkScreen() {
+  const t = useTheme();
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const { owned, favorites, toggleFavorite, toggleIngredient, units, setUnits } = useBar();
+  const recipe = getRecipe(id);
+
+  if (!recipe) {
+    return (
+      <View style={[styles.center, { backgroundColor: t.background }]}>
+        <Text style={{ color: t.textMuted }}>That drink could not be found.</Text>
+      </View>
+    );
+  }
+
+  const { canMake, missing } = matchRecipe(recipe, owned);
+  const isFav = favorites.has(recipe.id);
+
+  return (
+    <>
+      <Stack.Screen
+        options={{
+          title: recipe.name,
+          headerRight: () => (
+            <Pressable
+              onPress={() => toggleFavorite(recipe.id)}
+              hitSlop={10}
+              accessibilityLabel={isFav ? 'Remove from saved' : 'Save drink'}
+            >
+              <Text style={{ fontSize: 24, color: t.accent }}>{isFav ? '♥' : '♡'}</Text>
+            </Pressable>
+          ),
+        }}
+      />
+      <ScrollView style={{ backgroundColor: t.background }} contentContainerStyle={styles.content}>
+        <View style={[styles.hero, { backgroundColor: recipe.color + '33' }]}>
+          <Text style={styles.heroEmoji}>{recipe.emoji}</Text>
+        </View>
+
+        <Text style={[styles.name, { color: t.text }]}>{recipe.name}</Text>
+        <Text style={[styles.description, { color: t.textMuted }]}>{recipe.description}</Text>
+
+        <View style={styles.meta}>
+          {[recipe.glass, recipe.method, recipe.strength === 'None' ? 'Alcohol-free' : `${recipe.strength} strength`].map(
+            (m) => (
+              <View key={m} style={[styles.metaPill, { backgroundColor: t.surfaceAlt }]}>
+                <Text style={[styles.metaText, { color: t.text }]}>{m}</Text>
+              </View>
+            ),
+          )}
+        </View>
+
+        <View
+          style={[styles.banner, { backgroundColor: canMake ? t.successSoft : t.warningSoft }]}
+          accessibilityLiveRegion="polite"
+        >
+          <Text style={[styles.bannerText, { color: canMake ? t.success : t.warning }]}>
+            {canMake
+              ? '✓ You have everything for this one'
+              : `Missing ${missing.length}: ${missing.map((m) => ingredientName(m.id)).join(', ')}`}
+          </Text>
+        </View>
+
+        <View style={styles.sectionRow}>
+          <Text style={[styles.sectionTitle, { color: t.text }]}>Ingredients</Text>
+          <View style={[styles.unitToggle, { backgroundColor: t.surfaceAlt }]}>
+            {(['oz', 'ml'] as const).map((u) => (
+              <Pressable
+                key={u}
+                onPress={() => setUnits(u)}
+                style={[styles.unitItem, units === u && { backgroundColor: t.surface }]}
+              >
+                <Text style={{ color: units === u ? t.text : t.textMuted, fontWeight: '600' }}>{u}</Text>
+              </Pressable>
+            ))}
+          </View>
+        </View>
+
+        <View style={[styles.list, { backgroundColor: t.surface, borderColor: t.border }]}>
+          {recipe.ingredients.map((item, idx) => {
+            const have = hasIngredient(item, owned);
+            const using = usedIngredient(item, owned);
+            const swapped = using && using !== item.id;
+            return (
+              <View
+                key={item.id}
+                style={[
+                  styles.row,
+                  idx > 0 && { borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: t.border },
+                ]}
+              >
+                <Text style={[styles.mark, { color: have ? t.success : item.optional ? t.textMuted : t.warning }]}>
+                  {have ? '✓' : item.optional ? '○' : '✕'}
+                </Text>
+                <View style={{ flex: 1 }}>
+                  <Text style={[styles.ingName, { color: t.text }]}>
+                    {ingredientName(swapped ? using : item.id)}
+                    {item.optional ? <Text style={{ color: t.textMuted }}> (optional)</Text> : null}
+                  </Text>
+                  {swapped ? (
+                    <Text style={[styles.ingNote, { color: t.textMuted }]}>Instead of {ingredientName(item.id)}</Text>
+                  ) : item.alternatives?.length && !have ? (
+                    <Text style={[styles.ingNote, { color: t.textMuted }]}>
+                      or {item.alternatives.map(ingredientName).join(' / ')}
+                    </Text>
+                  ) : null}
+                </View>
+                <Text style={[styles.amount, { color: t.textMuted }]}>{formatAmount(item, units)}</Text>
+                {!have ? (
+                  <Pressable
+                    onPress={() => toggleIngredient(item.id)}
+                    hitSlop={8}
+                    accessibilityLabel={`I have ${ingredientName(item.id)}`}
+                    style={[styles.haveBtn, { borderColor: t.accent }]}
+                  >
+                    <Text style={{ color: t.accent, fontWeight: '700', fontSize: 13 }}>I have it</Text>
+                  </Pressable>
+                ) : null}
+              </View>
+            );
+          })}
+        </View>
+
+        <Text style={[styles.sectionTitle, { color: t.text, marginTop: 24 }]}>Method</Text>
+        {recipe.steps.map((step, i) => (
+          <View key={i} style={styles.step}>
+            <View style={[styles.stepNum, { backgroundColor: t.accent }]}>
+              <Text style={{ color: t.onAccent, fontWeight: '700' }}>{i + 1}</Text>
+            </View>
+            <Text style={[styles.stepText, { color: t.text }]}>{step}</Text>
+          </View>
+        ))}
+
+        <Text style={[styles.footnote, { color: t.textMuted }]}>
+          Ice and water are assumed. Please drink responsibly.
+        </Text>
+      </ScrollView>
+    </>
+  );
+}
+
+const styles = StyleSheet.create({
+  center: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+  content: { padding: 16, paddingBottom: 48 },
+  hero: { height: 160, borderRadius: radius.lg, alignItems: 'center', justifyContent: 'center' },
+  heroEmoji: { fontSize: 84 },
+  name: { fontSize: 30, fontWeight: '800', marginTop: 16, letterSpacing: -0.5 },
+  description: { fontSize: 16, marginTop: 4, lineHeight: 22 },
+  meta: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 14 },
+  metaPill: { paddingHorizontal: 12, paddingVertical: 6, borderRadius: radius.pill },
+  metaText: { fontSize: 13, fontWeight: '600' },
+  banner: { marginTop: 16, padding: 14, borderRadius: radius.md },
+  bannerText: { fontSize: 15, fontWeight: '600' },
+  sectionRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 24 },
+  sectionTitle: { fontSize: 20, fontWeight: '700' },
+  unitToggle: { flexDirection: 'row', padding: 3, borderRadius: radius.sm },
+  unitItem: { paddingHorizontal: 12, paddingVertical: 4, borderRadius: radius.sm - 2 },
+  list: { marginTop: 10, borderRadius: radius.md, borderWidth: StyleSheet.hairlineWidth },
+  row: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 14, paddingVertical: 12, gap: 10 },
+  mark: { fontSize: 16, fontWeight: '700', width: 18, textAlign: 'center' },
+  ingName: { fontSize: 16 },
+  ingNote: { fontSize: 12, marginTop: 1 },
+  amount: { fontSize: 15 },
+  haveBtn: { borderWidth: 1, borderRadius: radius.pill, paddingHorizontal: 10, paddingVertical: 4 },
+  step: { flexDirection: 'row', gap: 12, marginTop: 12, alignItems: 'flex-start' },
+  stepNum: { width: 28, height: 28, borderRadius: 14, alignItems: 'center', justifyContent: 'center' },
+  stepText: { flex: 1, fontSize: 16, lineHeight: 23, paddingTop: 3 },
+  footnote: { fontSize: 12, marginTop: 28, textAlign: 'center' },
+});
