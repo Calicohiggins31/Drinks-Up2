@@ -1,5 +1,6 @@
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { Alert, Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { BackupPrompt } from '../../components/BackupPrompt';
 import { ingredientName } from '../../data/ingredients';
 import { formatAmount, hasIngredient, matchRecipe, usedIngredient } from '../../lib/matching';
 import { useBar } from '../../state/BarContext';
@@ -75,6 +76,8 @@ export default function DrinkScreen() {
             ),
           )}
         </View>
+
+        {isFav ? <View style={{ marginTop: 16 }}><BackupPrompt /></View> : null}
 
         {recipe.about ? (
           <View style={[styles.aboutBox, { backgroundColor: t.surface, borderColor: t.border }]}>

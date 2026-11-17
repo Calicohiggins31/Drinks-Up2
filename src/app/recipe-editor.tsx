@@ -5,6 +5,7 @@ import { Chip } from '../components/Chip';
 import { IngredientPicker } from '../components/IngredientPicker';
 import { ingredientName } from '../data/ingredients';
 import type { Recipe, Unit } from '../data/recipes';
+import { useAuth } from '../state/AuthContext';
 import { makeId, useBar } from '../state/BarContext';
 import { radius, useTheme } from '../theme';
 
@@ -24,6 +25,7 @@ export default function RecipeEditor() {
   const t = useTheme();
   const { id } = useLocalSearchParams<{ id?: string }>();
   const { findRecipe, saveRecipe, units } = useBar();
+  const { userId, loading } = useAuth();
   const existing = id ? findRecipe(id) : undefined;
   const ml = units === 'ml';
 
@@ -86,6 +88,25 @@ export default function RecipeEditor() {
     if (existing) router.back();
     else router.replace(`/drink/${recipeId}`);
   };
+
+  // Creating or editing your own recipes needs a free account.
+  if (!loading && !userId) {
+    return (
+      <View style={[styles.gate, { backgroundColor: t.background }]}>
+        <Text style={{ fontSize: 48 }}>🔒</Text>
+        <Text style={[styles.gateTitle, { color: t.text }]}>Free account needed</Text>
+        <Text style={[styles.gateBody, { color: t.textMuted }]}>
+          Create a free account to save your own recipes. They're kept safe in your account and only you can see them.
+        </Text>
+        <Pressable
+          onPress={() => router.replace({ pathname: '/account', params: { reason: 'recipe' } })}
+          style={[styles.saveBtn, { backgroundColor: t.accent, alignSelf: 'stretch' }]}
+        >
+          <Text style={{ color: t.onAccent, fontWeight: '700', fontSize: 17 }}>Create free account or sign in</Text>
+        </Pressable>
+      </View>
+    );
+  }
 
   const label = (text: string) => <Text style={[styles.label, { color: t.textMuted }]}>{text}</Text>;
   const inputStyle = [styles.input, { backgroundColor: t.surface, borderColor: t.border, color: t.text }];
@@ -222,6 +243,9 @@ export default function RecipeEditor() {
 
 const styles = StyleSheet.create({
   content: { padding: 16, paddingBottom: 60, gap: 8 },
+  gate: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 28, gap: 10 },
+  gateTitle: { fontSize: 22, fontWeight: '800' },
+  gateBody: { fontSize: 15, lineHeight: 21, textAlign: 'center' },
   private: { fontSize: 13, marginBottom: 4 },
   label: { fontSize: 13, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0.5, marginTop: 14 },
   input: { fontSize: 16, paddingHorizontal: 14, paddingVertical: 11, borderRadius: radius.md, borderWidth: StyleSheet.hairlineWidth },

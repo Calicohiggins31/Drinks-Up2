@@ -19,6 +19,7 @@ type Saved = {
   units: UnitSystem;
   customIngredients?: Ingredient[];
   customRecipes?: Recipe[];
+  backupPromptDismissed?: boolean;
 };
 
 type BarContextValue = {
@@ -43,6 +44,11 @@ type BarContextValue = {
   deleteCustomIngredient: (id: string) => void;
   saveRecipe: (recipe: Recipe) => void;
   deleteRecipe: (id: string) => void;
+  /** Used by account sync to replace local data with the merged copy. */
+  replaceFavorites: (ids: Iterable<string>) => void;
+  replaceCustom: (recipes: Recipe[], ingredients: Ingredient[]) => void;
+  backupPromptDismissed: boolean;
+  dismissBackupPrompt: () => void;
 };
 
 const BarContext = createContext<BarContextValue | null>(null);
@@ -69,6 +75,7 @@ export function BarProvider({ children }: { children: ReactNode }) {
   const [units, setUnitsState] = useState<UnitSystem>('oz');
   const [customIngredients, setCustomIngredientsState] = useState<Ingredient[]>([]);
   const [customRecipes, setCustomRecipes] = useState<Recipe[]>([]);
+  const [backupPromptDismissed, setBackupPromptDismissed] = useState(false);
 
   // Keep the ingredient name lookup in sync before children render.
   useMemo(() => setCustomIngredients(customIngredients), [customIngredients]);
@@ -92,6 +99,7 @@ export function BarProvider({ children }: { children: ReactNode }) {
         setOwned(new Set((saved.owned ?? []).filter((id) => knownIngredients.has(id))));
         setFavorites(new Set((saved.favorites ?? []).filter((id) => knownRecipes.has(id))));
         if (saved.units === 'ml' || saved.units === 'oz') setUnitsState(saved.units);
+        setBackupPromptDismissed(!!saved.backupPromptDismissed);
       })
       .catch(() => {})
       .finally(() => setReady(true));
@@ -100,9 +108,9 @@ export function BarProvider({ children }: { children: ReactNode }) {
   // Save whenever something changes (after the first load, so we never overwrite with empty state).
   useEffect(() => {
     if (!ready) return;
-    const data: Saved = { ageGate: ageStatus, owned: [...owned], favorites: [...favorites], units, customIngredients, customRecipes };
+    const data: Saved = { ageGate: ageStatus, owned: [...owned], favorites: [...favorites], units, customIngredients, customRecipes, backupPromptDismissed };
     AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(data)).catch(() => {});
-  }, [ready, ageStatus, owned, favorites, units, customIngredients, customRecipes]);
+  }, [ready, ageStatus, owned, favorites, units, customIngredients, customRecipes, backupPromptDismissed]);
 
   const toggleIngredient = useCallback((id: string) => {
     tap();
@@ -168,6 +176,17 @@ export function BarProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
+  const replaceFavorites = useCallback((ids: Iterable<string>) => setFavorites(new Set(ids)), []);
+
+  const replaceCustom = useCallback((nextRecipes: Recipe[], nextIngredients: Ingredient[]) => {
+    const ingredients = nextIngredients.map((i) => ({ ...i, category: 'Your own' as const }));
+    setCustomIngredients(ingredients);
+    setCustomIngredientsState(ingredients);
+    setCustomRecipes(nextRecipes.filter(isValidRecipe).map((r) => ({ ...r, custom: true })));
+  }, []);
+
+  const dismissBackupPrompt = useCallback(() => setBackupPromptDismissed(true), []);
+
   const recipes = useMemo(() => [...customRecipes, ...RECIPES], [customRecipes]);
   const findRecipe = useCallback((id: string) => recipes.find((r) => r.id === id), [recipes]);
 
@@ -176,11 +195,13 @@ export function BarProvider({ children }: { children: ReactNode }) {
       ready, ageStatus, setAgeStatus, owned, favorites, units, recipes, customRecipes, customIngredients, findRecipe,
       toggleIngredient, addIngredients, clearBar, toggleFavorite, setUnits: setUnitsState,
       addCustomIngredient, deleteCustomIngredient, saveRecipe, deleteRecipe,
+      replaceFavorites, replaceCustom, backupPromptDismissed, dismissBackupPrompt,
     }),
     [
       ready, ageStatus, setAgeStatus, owned, favorites, units, recipes, customRecipes, customIngredients, findRecipe,
       toggleIngredient, addIngredients, clearBar, toggleFavorite,
       addCustomIngredient, deleteCustomIngredient, saveRecipe, deleteRecipe,
+      replaceFavorites, replaceCustom, backupPromptDismissed, dismissBackupPrompt,
     ],
   );
 
