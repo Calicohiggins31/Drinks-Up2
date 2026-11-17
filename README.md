@@ -8,9 +8,12 @@ One codebase runs on **iPhone and Android** (built with [Expo](https://expo.dev)
 
 - **My Bar**: tap the bottles, mixers, juices and fresh things you have. Search, or add a whole starter kit (home bar basics, aperitivo, mocktails) in one tap.
 - **Age gate**: date of birth on first launch; under-21s are blocked.
-- **Mix**: every drink you can make now, filtered by cocktails or mocktails. It also shows drinks that are **one ingredient away**, plus a **shopping list** of the single purchases that unlock the most new drinks, and a **Find a liquor store near me** button that opens Maps.
+- **Mix**: every drink you can make now, grouped under foldable base-spirit headers (Vodka, Gin, Rum…), filtered by cocktails or mocktails. It also shows drinks that are **one ingredient away**, plus a **shopping list** of the single purchases that unlock the most new drinks, and a **Find a liquor store near me** button that opens Maps.
 - **Drink page**: ingredients with ✓ / ✕ for what you have, amounts in oz or ml, method steps, and an "I have it" button for anything missing. Sensible swaps count automatically (rye for bourbon, sugar for simple syrup).
-- **Saved**: your own recipes, favourite drinks and the full list (200 drinks, 96 ingredients). Every drink has an "About this drink" note.
+- **Drinks**: search all 200 drinks by name, ingredient or description, with "I can make" and base-spirit filters. Every drink has an "About this drink" note.
+- **Pick a drink for me**: a random drink you can make right now, on the Mix screen.
+- **Share and scale**: share any recipe by text or email, and switch "Making for" between 1, 2, 4 and 8 people.
+- **Saved**: your own recipes and favourite drinks.
 - **Your own recipes and ingredients**: tap **+ New** on the Saved tab to write your own drink, or type anything into My Bar search to add your own ingredient. These are saved only on your phone.
 
 Your bar, favourites and your own recipes are saved on the device.

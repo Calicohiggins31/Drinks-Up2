@@ -49,7 +49,7 @@ export const MORE_RECIPES: Recipe[] = [
   },
   {
     id: 'rusty_nail', name: 'Rusty Nail', emoji: '🔩', color: '#B5651D', glass: 'Rocks', method: 'Build', strength: 'Strong',
-    description: 'Scotch softened with honeyed Drambuie.',
+    description: 'Scotch softened with a honeyed whisky liqueur.',
     ingredients: [oz('scotch', 1.5), oz('drambuie', 0.75)],
     steps: ['Build over ice and stir.'],
   },
@@ -124,7 +124,7 @@ export const MORE_RECIPES: Recipe[] = [
   // Gin
   {
     id: 'last_word', name: 'Last Word', emoji: '🗝️', color: '#9CC069', glass: 'Coupe', method: 'Shake', strength: 'Strong',
-    description: 'Equal parts gin, Chartreuse, maraschino and lime.',
+    description: 'Equal parts gin, green herbal liqueur, maraschino and lime.',
     ingredients: [oz('gin', 0.75), oz('green_chartreuse', 0.75), oz('maraschino', 0.75), oz('lime_juice', 0.75)],
     steps: ['Shake everything with ice.', 'Strain into a chilled coupe.'],
   },
@@ -148,7 +148,7 @@ export const MORE_RECIPES: Recipe[] = [
   },
   {
     id: 'vesper', name: 'Vesper', emoji: '🕶️', color: '#C9D6DF', glass: 'Martini', method: 'Stir', strength: 'Strong',
-    description: 'Gin, vodka and Lillet. Very strong.',
+    description: 'Gin, vodka and blanc aperitif wine. Very strong.',
     ingredients: [oz('gin', 2), oz('vodka', 0.5), oz('lillet_blanc', 0.5), opt(u('lemon', 'peel'))],
     steps: ['Stir with ice until very cold.', 'Strain and garnish with a lemon peel.'],
   },
@@ -287,7 +287,7 @@ export const MORE_RECIPES: Recipe[] = [
   },
   {
     id: 'jungle_bird', name: 'Jungle Bird', emoji: '🦜', color: '#E76F51', glass: 'Rocks', method: 'Shake', strength: 'Medium',
-    description: 'Tiki with a bitter Campari twist.',
+    description: 'Tiki with a bitter aperitivo twist.',
     ingredients: [oz('dark_rum', 1.5), oz('campari', 0.75), oz('pineapple_juice', 1.5), oz('lime_juice', 0.5), oz('simple_syrup', 0.5, { alternatives: SYRUP })],
     steps: ['Shake with ice.', 'Strain over fresh ice.'],
   },
@@ -298,7 +298,7 @@ export const MORE_RECIPES: Recipe[] = [
     steps: ['Blend with a cup of ice, or shake hard and pour over ice.'],
   },
   {
-    id: 'bay_breeze', name: 'Malibu Bay Breeze', emoji: '🌴', color: '#F48498', glass: 'Highball', method: 'Build', strength: 'Light',
+    id: 'bay_breeze', name: 'Coconut Bay Breeze', emoji: '🌴', color: '#F48498', glass: 'Highball', method: 'Build', strength: 'Light',
     description: 'Coconut rum, pineapple and cranberry.',
     ingredients: [oz('coconut_rum', 1.5), oz('pineapple_juice', 2), oz('cranberry_juice', 2)],
     steps: ['Build over ice and stir.'],
@@ -365,11 +365,11 @@ export const MORE_RECIPES: Recipe[] = [
     id: 'negroni_sbagliato', name: 'Negroni Sbagliato', emoji: '🥂', color: '#D1495B', glass: 'Rocks', method: 'Build', strength: 'Light',
     description: 'The "mistaken" Negroni, with prosecco instead of gin.',
     ingredients: [oz('campari', 1), oz('sweet_vermouth', 1), oz('sparkling_wine', 1.5), opt(u('orange', 'peel'))],
-    steps: ['Build Campari and vermouth over ice.', 'Top with prosecco and stir gently.'],
+    steps: ['Build red bitter aperitivo and vermouth over ice.', 'Top with prosecco and stir gently.'],
   },
   {
     id: 'garibaldi', name: 'Garibaldi', emoji: '🍊', color: '#F3722C', glass: 'Highball', method: 'Build', strength: 'Light',
-    description: 'Campari and orange juice.',
+    description: 'Red bitter aperitivo and orange juice.',
     ingredients: [oz('campari', 1.5), oz('orange_juice', 4)],
     steps: ['Build over ice. Whisk or blend the juice first for a fluffy texture.'],
   },
@@ -380,7 +380,7 @@ export const MORE_RECIPES: Recipe[] = [
     steps: ['Build over ice and stir.'],
   },
   {
-    id: 'midori_sour', name: 'Midori Sour', emoji: '🍈', color: '#7DDE5B', glass: 'Rocks', method: 'Shake', strength: 'Light',
+    id: 'midori_sour', name: 'Melon Sour', emoji: '🍈', color: '#7DDE5B', glass: 'Rocks', method: 'Shake', strength: 'Light',
     description: 'Bright green melon sour.',
     ingredients: [oz('melon_liqueur', 1.5), oz('vodka', 0.5), oz('lemon_juice', 0.75), opt(u('soda_water', 'top'))],
     steps: ['Shake melon liqueur, vodka and lemon with ice.', 'Strain over ice and top with a splash of soda.'],

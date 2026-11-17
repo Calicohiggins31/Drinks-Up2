@@ -341,7 +341,7 @@ const CLASSICS: Recipe[] = [
   },
   {
     id: 'aperol_spritz',
-    name: 'Aperol Spritz',
+    name: 'Classic Spritz',
     emoji: '🥂',
     color: '#FF7F11',
     glass: 'Wine glass',
@@ -354,7 +354,7 @@ const CLASSICS: Recipe[] = [
       { id: 'soda_water', amount: 1, unit: 'oz' },
       { id: 'orange', unit: 'peel', optional: true },
     ],
-    steps: ['Fill a wine glass with ice.', 'Add prosecco, then Aperol, then a splash of soda.'],
+    steps: ['Fill a wine glass with ice.', 'Add prosecco, then orange aperitivo, then a splash of soda.'],
   },
   {
     id: 'espresso_martini',
@@ -514,14 +514,14 @@ const CLASSICS: Recipe[] = [
     glass: 'Highball',
     method: 'Build',
     strength: 'Light',
-    description: 'Campari and vermouth, lengthened with soda.',
+    description: 'Red bitter aperitivo and vermouth, lengthened with soda.',
     ingredients: [
       { id: 'campari', amount: 1.5, unit: 'oz' },
       { id: 'sweet_vermouth', amount: 1.5, unit: 'oz' },
       { id: 'soda_water', unit: 'top' },
       { id: 'orange', unit: 'peel', optional: true },
     ],
-    steps: ['Build Campari and vermouth over ice.', 'Top with soda and stir.'],
+    steps: ['Build red bitter aperitivo and vermouth over ice.', 'Top with soda and stir.'],
   },
   {
     id: 'sea_breeze',

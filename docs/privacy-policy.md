@@ -12,7 +12,7 @@ We do not knowingly collect information from anyone under 21. If you believe som
 
 ## Information stored only on your phone
 
-Without an account, everything stays on your device: the ingredients in your bar, your favourite drinks, and your unit preference (oz or ml). We cannot see this information. Deleting the app deletes it.
+Without an account, your bar, your favourite drinks and your settings are saved only on your device. We cannot see them. Deleting the app deletes them. (Anonymous usage counts are described under "Usage statistics" below.)
 
 ## Information we collect if you create an account
 
@@ -20,7 +20,7 @@ An account is optional and free. It is required to create your own recipes, and 
 
 When you create an account we collect your name, email address, city and state, and a password (stored securely by our provider; we cannot see it).
 
-While you are signed in we store the recipes you create, any ingredients you add yourself, and your favourite drinks, so they can be backed up and synced.
+While you are signed in we store the ingredients in your bar, the recipes you create, any ingredients you add yourself, and your favourite drinks, so they can be backed up and synced.
 
 We use this information to run your account, sync your data, respond to you, and understand at a city/state level where the app is used. We do not sell your personal information.
 
@@ -30,9 +30,15 @@ This version of Drinks Up does not access your location. When you tap "Find a li
 
 If a future version offers an in-app list of nearby stores, it will ask for your approximate (not precise) location only when you tap that button and only while the app is open. We will update this policy before that version is released.
 
-## Analytics
+## Usage statistics
 
-This version of Drinks Up does not use advertising or analytics tracking. If we later count which recipes are viewed, we will only keep anonymous totals grouped by broad area, never linked to your name or email, and we will update this policy first.
+To learn which ingredients and drinks are popular, the app adds to daily totals when you add an ingredient to your bar, open a drink, or favourite a drink. Without an account these counts contain no name, email, device ID, location or other identifier; we only see totals such as "vodka was added 120 times today".
+
+If you are signed in, these totals are also grouped by the city and state on your account. We may share these totals, never your name or email, with partners such as stores or brands.
+
+Your own recipes and ingredients are never counted. You can turn usage statistics off at any time in Settings → Share anonymous usage stats.
+
+Drinks Up does not use advertising identifiers or track you across other apps or websites.
 
 ## Service providers
 

@@ -26,3 +26,8 @@ test('states and emails are checked on sign-up', async () => {
   assert.ok(isValidEmail('a.person@example.com'));
   assert.ok(!isValidEmail('not-an-email'));
 });
+
+test('usage stats never include people\'s own recipes or ingredients', async () => {
+  const { usageItems } = await import('./sync');
+  assert.deepEqual(usageItems(['vodka', 'custom_ing_grandmas_jam_x1', 'vodka', 'gin', 'Bad Id!']), ['vodka', 'gin']);
+});

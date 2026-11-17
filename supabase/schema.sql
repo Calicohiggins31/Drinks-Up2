@@ -86,3 +86,54 @@ $$;
 
 revoke all on function public.delete_account() from public, anon;
 grant execute on function public.delete_account() to authenticated;
+
+-- ─── Usage stats (added in v3) ───────────────────────────────────────────────
+-- Anonymous daily totals: no user id, device id or location is stored.
+-- When the person is signed in, the row is tagged with their profile's city and state instead of ''.
+create table if not exists public.usage_counts (
+  day date not null default current_date,
+  kind text not null check (kind in ('stocked', 'viewed', 'favorited')),
+  item text not null,
+  city text not null default '',
+  state text not null default '',
+  count integer not null default 0,
+  primary key (day, kind, item, city, state)
+);
+
+-- Nobody can read or write the table directly from the app; only the function below can add to it.
+-- You can see the totals in the Supabase dashboard (Table Editor → usage_counts).
+alter table public.usage_counts enable row level security;
+
+create or replace function public.bump_usage(p_kind text, p_items text[])
+returns void language plpgsql security definer set search_path = '' as $$
+declare
+  v_city text := '';
+  v_state text := '';
+begin
+  if p_kind not in ('stocked', 'viewed', 'favorited') then return; end if;
+  if p_items is null or cardinality(p_items) = 0 or cardinality(p_items) > 50 then return; end if;
+  if auth.uid() is not null then
+    select coalesce(p.city, ''), coalesce(p.state, '') into v_city, v_state
+    from public.profiles p where p.id = auth.uid();
+  end if;
+  insert into public.usage_counts as u (day, kind, item, city, state, count)
+  select current_date, p_kind, left(i, 80), coalesce(v_city, ''), coalesce(v_state, ''), 1
+  from unnest(p_items) as i
+  where i ~ '^[a-z0-9_]+$'
+  on conflict (day, kind, item, city, state) do update set count = u.count + 1;
+end;
+$$;
+
+revoke all on function public.bump_usage(text, text[]) from public;
+grant execute on function public.bump_usage(text, text[]) to anon, authenticated;
+
+-- Signed-in users' bars, so they sync across devices (and you can see what an account has stocked).
+create table if not exists public.bar_items (
+  user_id uuid not null references auth.users (id) on delete cascade,
+  ingredient_id text not null,
+  primary key (user_id, ingredient_id)
+);
+alter table public.bar_items enable row level security;
+drop policy if exists "own bar" on public.bar_items;
+create policy "own bar" on public.bar_items
+  for all using (auth.uid() = user_id) with check (auth.uid() = user_id);

@@ -12,7 +12,7 @@ export const ABOUT: Record<string, string> = {
   old_fashioned:
     'Whiskey sweetened just slightly and seasoned with bitters, so the spirit stays front and centre: rich, warming and smooth. It is one of the oldest cocktails, dating to the early 1800s. A slow sipper for the end of the day.',
   negroni:
-    'Bitter Campari, herbal sweet vermouth and dry gin in equal measure: bold, bittersweet and orangey. The story goes that Count Camillo Negroni asked a Florence bartender to strengthen his Americano with gin around 1919. Classic before-dinner drink.',
+    'Red bitter aperitivo, herbal sweet vermouth and dry gin in equal measure: bold, bittersweet and orangey. The story goes that Count Camillo Negroni asked a Florence bartender to strengthen his Americano with gin around 1919. Classic before-dinner drink.',
   martini:
     'Cold, crisp and bracing, with gin botanicals softened by a little dry vermouth. Its exact origin is debated, but it became the defining American cocktail in the early 20th century. Stir it until it is ice cold.',
   manhattan:
@@ -38,7 +38,7 @@ export const ABOUT: Record<string, string> = {
   tequila_sunrise:
     'Orange juice and tequila with grenadine sinking to the bottom for a sunrise effect: sweet and fruity. Made famous by rock stars in the 1970s. Very photogenic.',
   aperol_spritz:
-    'Bittersweet orange Aperol with bubbly prosecco and soda: light, low in alcohol and very refreshing. The go-to aperitivo in northern Italy, enjoyed before dinner in the sun.',
+    'Bittersweet orange aperitivo with bubbly prosecco and soda: light, low in alcohol and very refreshing. The go-to aperitivo in northern Italy, enjoyed before dinner in the sun.',
   espresso_martini:
     'Rich coffee, a little sweetness and a velvety foam: wakes you up and winds you down at once. It was created in London in the 1980s by bartender Dick Bradsell. A popular after-dinner drink.',
   white_russian:
@@ -58,7 +58,7 @@ export const ABOUT: Record<string, string> = {
   boulevardier:
     'A Negroni with whiskey instead of gin: warmer, rounder and richer, still bittersweet. Created in 1920s Paris for the writer Erskine Gwynne. A perfect autumn drink.',
   americano:
-    'Campari and sweet vermouth topped with soda: bittersweet, light and fizzy. It was the precursor to the Negroni and was popular with Americans visiting Italy. A gentle aperitivo.',
+    'Red bitter aperitivo and sweet vermouth topped with soda: bittersweet, light and fizzy. It was the precursor to the Negroni and was popular with Americans visiting Italy. A gentle aperitivo.',
   sea_breeze:
     'Vodka with tart cranberry and grapefruit: dry-ish, fruity and refreshing. A 1980s favourite. Light enough for daytime sipping.',
   cape_codder:
@@ -103,13 +103,13 @@ export const ABOUT: Record<string, string> = {
   penicillin:
     'Scotch with honey, ginger and lemon: soothing, spicy and gently smoky. Created in New York in 2005, it is a modern classic.',
   paper_plane:
-    'Bourbon, Aperol, amaro and lemon in equal parts: bittersweet, citrusy and very balanced. Created in 2007 and named after a pop song.',
+    'Bourbon, orange aperitivo, amaro and lemon in equal parts: bittersweet, citrusy and very balanced. Created in 2007 and named after a pop song.',
   sazerac:
-    "Rye with sugar, Peychaud's bitters and an absinthe rinse: aromatic, spicy and strong. One of America's oldest cocktails, it is the official drink of New Orleans.",
+    "Rye with sugar, Creole-style bitters and an absinthe rinse: aromatic, spicy and strong. One of America's oldest cocktails, it is the official drink of New Orleans.",
   vieux_carre:
-    'Rye, cognac, vermouth and Bénédictine: rich, spicy and complex. Named after the French Quarter of New Orleans, where it was created in the 1930s.',
+    'Rye, cognac, vermouth and herbal honey liqueur: rich, spicy and complex. Named after the French Quarter of New Orleans, where it was created in the 1930s.',
   rusty_nail:
-    'Scotch softened with honeyed, herbal Drambuie: warming and smooth. A 1960s favourite and a classic nightcap.',
+    'Scotch softened with a honeyed, herbal whisky liqueur: warming and smooth. A 1960s favourite and a classic nightcap.',
   irish_coffee:
     'Hot coffee, Irish whiskey and sugar under a layer of cold cream: warming and indulgent. Created at Foynes airport in Ireland in the 1940s to warm travellers.',
   hot_toddy:
@@ -131,7 +131,7 @@ export const ABOUT: Record<string, string> = {
   brandy_alexander:
     'Cognac, chocolate liqueur and cream: rich and dessert-like. Popular since the early 20th century. Grate nutmeg on top.',
   last_word:
-    'Gin, Green Chartreuse, maraschino and lime in equal parts: herbal, sweet and sharp. A Prohibition-era drink from Detroit that was rediscovered in the 2000s.',
+    'Gin, green herbal liqueur, maraschino and lime in equal parts: herbal, sweet and sharp. A Prohibition-era drink from Detroit that was rediscovered in the 2000s.',
   bramble:
     'A gin sour over crushed ice with blackberry liqueur drizzled through it: tart, fruity and pretty. Created in London in the 1980s.',
   clover_club:
@@ -139,11 +139,11 @@ export const ABOUT: Record<string, string> = {
   southside:
     'Gin, lime, sugar and mint shaken and served straight up: fresh and herbal. Linked to Prohibition-era Chicago and New York.',
   vesper:
-    'Gin, vodka and Lillet: bone-dry, crisp and very strong. James Bond orders it in the 1953 novel Casino Royale.',
+    'Gin, vodka and blanc aperitif wine: bone-dry, crisp and very strong. James Bond orders it in the 1953 novel Casino Royale.',
   dirty_martini:
     'A martini with olive brine: salty, savoury and bracing. Ask for it "extra dirty" for more brine.',
   corpse_reviver:
-    'Gin, Lillet, orange liqueur and lemon with a hint of absinthe: bright and zesty. Originally meant as a "hair of the dog" morning drink.',
+    'Gin, blanc aperitif wine, orange liqueur and lemon with a hint of absinthe: bright and zesty. Originally meant as a "hair of the dog" morning drink.',
   gin_fizz:
     'Gin, lemon and sugar shaken and topped with soda: bubbly, light and tart. Add egg white for a frothy top.',
   gin_basil_smash:
@@ -181,7 +181,7 @@ export const ABOUT: Record<string, string> = {
   hurricane:
     'Two rums with passion fruit and citrus: fruity, sweet and strong. Famous at Pat O\'Brien\'s bar in New Orleans since the 1940s.',
   jungle_bird:
-    'Dark rum, Campari, pineapple and lime: tropical with a bitter edge. Created in Kuala Lumpur in the 1970s.',
+    'Dark rum, red bitter aperitivo, pineapple and lime: tropical with a bitter edge. Created in Kuala Lumpur in the 1970s.',
   blue_hawaiian:
     'Rum, blue curaçao, pineapple and coconut: a bright blue, tropical piña colada.',
   bay_breeze:
@@ -205,9 +205,9 @@ export const ABOUT: Record<string, string> = {
   kir_royale:
     'Sparkling wine with blackcurrant liqueur: fruity, elegant and festive. A French classic named after a mayor of Dijon.',
   negroni_sbagliato:
-    'Campari and vermouth topped with prosecco instead of gin: lighter and bubbly. "Sbagliato" means "mistaken"; legend says a bartender grabbed the wrong bottle.',
+    'Red bitter aperitivo and vermouth topped with prosecco instead of gin: lighter and bubbly. "Sbagliato" means "mistaken"; legend says a bartender grabbed the wrong bottle.',
   garibaldi:
-    'Campari and orange juice: bittersweet and juicy. Whisk the juice first for the fluffy version served in Milan.',
+    'Red bitter aperitivo and orange juice: bittersweet and juicy. Whisk the juice first for the fluffy version served in Milan.',
   fuzzy_navel:
     'Peach schnapps and orange juice: sweet and fruity. A 1980s classic.',
   midori_sour:
@@ -252,7 +252,7 @@ export const ABOUT: Record<string, string> = {
   gin_sour:
     'The sour formula applied to gin: tart, crisp and botanical, with a silky foam if you add egg white. A simple, refreshing classic.',
   pink_gin:
-    'Gin with a few dashes of Angostura bitters, which turn it pale pink and add spice. Associated with the British Royal Navy, where bitters were taken as a stomach remedy.',
+    'Gin with a few dashes of aromatic bitters, which turn it pale pink and add spice. Associated with the British Royal Navy, where bitters were taken as a stomach remedy.',
   white_lady:
     'Gin, orange liqueur and lemon: zesty, dry and elegant. Linked to Harry MacElhone and the Savoy in London in the 1920s.',
   army_navy:
@@ -262,11 +262,11 @@ export const ABOUT: Record<string, string> = {
   elderflower_gt:
     'A gin and tonic with a splash of elderflower liqueur: softer, floral and summery. Cucumber makes it extra refreshing.',
   bijou:
-    'Equal parts gin, sweet vermouth and green Chartreuse: herbal, sweet and powerful. Its three colours were said to look like gems: diamond, ruby and emerald.',
+    'Equal parts gin, sweet vermouth and green herbal liqueur: herbal, sweet and powerful. Its three colours were said to look like gems: diamond, ruby and emerald.',
   twentieth_century:
-    'Gin, Lillet, chocolate liqueur and lemon: surprisingly bright, with a hint of cocoa. Named after a famous New York–Chicago train in the 1930s.',
+    'Gin, blanc aperitif wine, chocolate liqueur and lemon: surprisingly bright, with a hint of cocoa. Named after a famous New York–Chicago train in the 1930s.',
   lillet_tonic:
-    'Fruity, floral Lillet with tonic over lots of ice: light, bittersweet and low in alcohol. A popular French aperitif.',
+    'Fruity, floral blanc aperitif wine with tonic over lots of ice: light, bittersweet and low in alcohol. A popular French aperitif.',
   gin_and_juice:
     'Gin with orange and grapefruit juice: easy, fruity and refreshing. Made famous by the 1990s hip-hop song.',
   greyhound:
@@ -294,7 +294,7 @@ export const ABOUT: Record<string, string> = {
   champagne_cocktail:
     'A sugar cube soaked in bitters, topped with bubbles: dry, spiced and elegant. One of the oldest recorded cocktails, from the mid-1800s.',
   campari_spritz:
-    'A spritz made with Campari instead of Aperol: more bitter, deeper red and less sweet. A favourite in Milan.',
+    'A spritz made with red bitter aperitivo instead of orange aperitivo: more bitter, deeper red and less sweet. A favourite in Milan.',
   st_germain_cocktail:
     'Elderflower liqueur with sparkling wine and soda: floral, light and refreshing.',
   death_in_the_afternoon:
@@ -304,7 +304,7 @@ export const ABOUT: Record<string, string> = {
   wine_spritzer:
     'White wine lengthened with soda: light, crisp and low in alcohol. Good for hot afternoons.',
   bicicletta:
-    'Campari and white wine with soda: bittersweet, light and fizzy. The name means "bicycle" in Italian, supposedly after older men wobbling home on their bikes.',
+    'Red bitter aperitivo and white wine with soda: bittersweet, light and fizzy. The name means "bicycle" in Italian, supposedly after older men wobbling home on their bikes.',
   white_sangria:
     'White wine with peach, apple and fresh fruit: light, fruity and refreshing. Make a big jug ahead for a party.',
   mulled_wine:
@@ -336,13 +336,13 @@ export const ABOUT: Record<string, string> = {
   mezcal_mule:
     'Smoky mezcal with lime and ginger beer: spicy, smoky and refreshing. A modern favourite.',
   siesta:
-    'Tequila, Campari, grapefruit and lime: bittersweet, tart and refreshing. Created in New York in 2006.',
+    'Tequila, red bitter aperitivo, grapefruit and lime: bittersweet, tart and refreshing. Created in New York in 2006.',
   cantarito:
     'Tequila with orange, grapefruit and lime, topped with soda: fruity, salty and refreshing. Traditionally served in a clay pot in Jalisco, Mexico.',
   ward_eight:
     'Rye with lemon, orange and grenadine: tart, fruity and gently spicy. Created in Boston in 1898 and named after a political ward.',
   bobby_burns:
-    'Scotch, sweet vermouth and a touch of Bénédictine: rich, herbal and smooth. Named after the Scottish poet Robert Burns.',
+    'Scotch, sweet vermouth and a touch of herbal honey liqueur: rich, herbal and smooth. Named after the Scottish poet Robert Burns.',
   black_manhattan:
     'A Manhattan made with amaro instead of vermouth: darker, more bitter and complex. Created in San Francisco in the 2000s.',
   perfect_manhattan:
@@ -360,7 +360,7 @@ export const ABOUT: Record<string, string> = {
   between_the_sheets:
     'Cognac, rum, orange liqueur and lemon: strong, citrusy and smooth. A cousin of the Sidecar from the 1920s.',
   champs_elysees:
-    'Cognac with Chartreuse, lemon and bitters: herbal, tart and elegant. Named after the famous avenue in Paris.',
+    'Cognac with green herbal liqueur, lemon and bitters: herbal, tart and elegant. Named after the famous avenue in Paris.',
   brandy_old_fashioned:
     'Brandy with muddled orange, cherry, sugar and bitters, topped with soda: sweet, fruity and easy. It is the signature drink of Wisconsin.',
   chilcano:

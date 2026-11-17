@@ -1,3 +1,4 @@
+import { byFame } from '../data/classics';
 import { RECIPES, type Recipe, type RecipeIngredient, type Unit } from '../data/recipes';
 
 export type DrinkMatch = {
@@ -25,7 +26,7 @@ export function matchRecipe(recipe: Recipe, owned: ReadonlySet<string>): DrinkMa
 export function matchAll(owned: ReadonlySet<string>, recipes: Recipe[] = RECIPES): DrinkMatch[] {
   return recipes
     .map((r) => matchRecipe(r, owned))
-    .sort((a, b) => a.missing.length - b.missing.length || a.recipe.name.localeCompare(b.recipe.name));
+    .sort((a, b) => a.missing.length - b.missing.length || byFame(a.recipe, b.recipe));
 }
 
 export type Suggestion = { ingredientId: string; unlocks: Recipe[] };
@@ -61,33 +62,41 @@ function ozText(n: number): string {
   return whole === 0 ? frac : `${whole}${frac}`;
 }
 
-export function formatAmount(item: RecipeIngredient, system: UnitSystem): string {
-  const n = item.amount;
-  const plural = (word: string) => (n && n !== 1 ? `${word}s` : word);
+/** Servings options for "scale for a crowd". */
+export const SERVING_OPTIONS = [1, 2, 4, 8] as const;
+
+/**
+ * Human-readable amount, multiplied for the number of servings.
+ * Garnish-style amounts ("to top", "a pinch", "a twist") stay as they are.
+ */
+export function formatAmount(item: RecipeIngredient, system: UnitSystem, servings = 1): string {
+  const n = item.amount == null ? undefined : item.amount * servings;
+  const count = (fallback = 1) => n ?? fallback * servings;
+  const plural = (word: string, c: number) => (c !== 1 ? `${word}s` : word);
   const unit: Unit = item.unit;
   switch (unit) {
     case 'oz':
       if (n == null) return '';
       return system === 'ml' ? `${Math.round((n * 30) / 5) * 5} ml` : `${ozText(n)} oz`;
     case 'tsp':
-      return system === 'ml' && n ? `${Math.round(n * 5)} ml` : `${n ?? 1} tsp`;
+      return system === 'ml' ? `${Math.round(count() * 5)} ml` : `${trimNumber(count())} tsp`;
     case 'slice':
-      return n ? `${n} ${plural('slice')}` : 'a few slices';
+      return n ? `${trimNumber(n)} ${plural('slice', n)}` : 'a few slices';
     case 'dash':
-      return `${n ?? 1} ${n && n !== 1 ? 'dashes' : 'dash'}`;
+      return `${trimNumber(count())} ${count() !== 1 ? 'dashes' : 'dash'}`;
     case 'leaves':
-      return n ? `${n} leaves` : 'a few leaves';
+      return n ? `${trimNumber(n)} leaves` : 'a few leaves';
     case 'cube':
-      return `${n ?? 1} ${plural('cube')}`;
+      return `${trimNumber(count())} ${plural('cube', count())}`;
     case 'top':
       return 'to top';
     case 'pinch':
       return 'a pinch';
     case 'wedge':
-      return n ? `${n} ${plural('wedge')}` : 'a wedge';
+      return n || servings > 1 ? `${trimNumber(count())} ${plural('wedge', count())}` : 'a wedge';
     case 'peel':
-      return 'a twist';
+      return servings > 1 ? `${servings} twists` : 'a twist';
     case 'whole':
-      return n ? `${n}` : '1';
+      return `${trimNumber(count())}`;
   }
 }
