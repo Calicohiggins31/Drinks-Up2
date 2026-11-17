@@ -53,6 +53,7 @@ export const INGREDIENTS: Ingredient[] = [
   { id: 'amaretto', name: 'Amaretto', category: 'Liqueurs & Wine' },
   { id: 'sparkling_wine', name: 'Prosecco / sparkling wine', category: 'Liqueurs & Wine' },
   { id: 'red_wine', name: 'Red wine', category: 'Liqueurs & Wine' },
+  { id: 'white_wine', name: 'White wine', category: 'Liqueurs & Wine' },
   { id: 'beer', name: 'Beer / lager', category: 'Liqueurs & Wine' },
   { id: 'elderflower_liqueur', name: 'Elderflower liqueur (St-Germain)', category: 'Liqueurs & Wine' },
   { id: 'irish_cream', name: 'Irish cream (Baileys)', category: 'Liqueurs & Wine' },
@@ -90,7 +91,7 @@ export const INGREDIENTS: Ingredient[] = [
   { id: 'pineapple_juice', name: 'Pineapple juice', category: 'Juices' },
   { id: 'grapefruit_juice', name: 'Grapefruit juice', category: 'Juices' },
   { id: 'tomato_juice', name: 'Tomato juice', category: 'Juices' },
-  { id: 'apple_juice', name: 'Apple juice', category: 'Juices' },
+  { id: 'apple_juice', name: 'Apple juice / cider', category: 'Juices' },
   { id: 'passion_fruit', name: 'Passion fruit purée', category: 'Juices' },
   { id: 'peach_puree', name: 'Peach purée', category: 'Juices' },
 
@@ -130,6 +131,8 @@ export const INGREDIENTS: Ingredient[] = [
   { id: 'olives', name: 'Olives (and brine)', category: 'Fresh & Pantry' },
   { id: 'milk', name: 'Milk', category: 'Fresh & Pantry' },
   { id: 'nutmeg', name: 'Nutmeg', category: 'Fresh & Pantry' },
+  { id: 'cinnamon', name: 'Cinnamon', category: 'Fresh & Pantry' },
+  { id: 'whole_egg', name: 'Egg (whole)', category: 'Fresh & Pantry' },
   { id: 'hot_sauce', name: 'Hot sauce', category: 'Fresh & Pantry' },
 ];
 
