@@ -10,7 +10,10 @@ const STORAGE_KEY = 'drinksup:v1';
 const BUILT_IN_INGREDIENTS = new Set(INGREDIENTS.map((i) => i.id));
 const BUILT_IN_RECIPES = new Set(RECIPES.map((r) => r.id));
 
+export type AgeStatus = 'unknown' | 'verified' | 'denied';
+
 type Saved = {
+  ageGate?: AgeStatus;
   owned: string[];
   favorites: string[];
   units: UnitSystem;
@@ -20,6 +23,8 @@ type Saved = {
 
 type BarContextValue = {
   ready: boolean;
+  ageStatus: AgeStatus;
+  setAgeStatus: (status: AgeStatus) => void;
   owned: ReadonlySet<string>;
   favorites: ReadonlySet<string>;
   units: UnitSystem;
@@ -58,6 +63,7 @@ function isValidRecipe(r: unknown): r is Recipe {
 
 export function BarProvider({ children }: { children: ReactNode }) {
   const [ready, setReady] = useState(false);
+  const [ageStatus, setAgeStatus] = useState<AgeStatus>('unknown');
   const [owned, setOwned] = useState<ReadonlySet<string>>(new Set());
   const [favorites, setFavorites] = useState<ReadonlySet<string>>(new Set());
   const [units, setUnitsState] = useState<UnitSystem>('oz');
@@ -73,6 +79,7 @@ export function BarProvider({ children }: { children: ReactNode }) {
       .then((raw) => {
         if (!raw) return;
         const saved = JSON.parse(raw) as Partial<Saved>;
+        if (saved.ageGate === 'verified' || saved.ageGate === 'denied') setAgeStatus(saved.ageGate);
         const ingredients = (saved.customIngredients ?? []).filter(
           (i) => i && typeof i.id === 'string' && typeof i.name === 'string',
         );
@@ -93,9 +100,9 @@ export function BarProvider({ children }: { children: ReactNode }) {
   // Save whenever something changes (after the first load, so we never overwrite with empty state).
   useEffect(() => {
     if (!ready) return;
-    const data: Saved = { owned: [...owned], favorites: [...favorites], units, customIngredients, customRecipes };
+    const data: Saved = { ageGate: ageStatus, owned: [...owned], favorites: [...favorites], units, customIngredients, customRecipes };
     AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(data)).catch(() => {});
-  }, [ready, owned, favorites, units, customIngredients, customRecipes]);
+  }, [ready, ageStatus, owned, favorites, units, customIngredients, customRecipes]);
 
   const toggleIngredient = useCallback((id: string) => {
     tap();
@@ -166,12 +173,12 @@ export function BarProvider({ children }: { children: ReactNode }) {
 
   const value = useMemo(
     () => ({
-      ready, owned, favorites, units, recipes, customRecipes, customIngredients, findRecipe,
+      ready, ageStatus, setAgeStatus, owned, favorites, units, recipes, customRecipes, customIngredients, findRecipe,
       toggleIngredient, addIngredients, clearBar, toggleFavorite, setUnits: setUnitsState,
       addCustomIngredient, deleteCustomIngredient, saveRecipe, deleteRecipe,
     }),
     [
-      ready, owned, favorites, units, recipes, customRecipes, customIngredients, findRecipe,
+      ready, ageStatus, setAgeStatus, owned, favorites, units, recipes, customRecipes, customIngredients, findRecipe,
       toggleIngredient, addIngredients, clearBar, toggleFavorite,
       addCustomIngredient, deleteCustomIngredient, saveRecipe, deleteRecipe,
     ],

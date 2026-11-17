@@ -1,13 +1,24 @@
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { BarProvider } from '../state/BarContext';
+import { AgeGate } from '../components/AgeGate';
+import { BarProvider, useBar } from '../state/BarContext';
 import { useTheme } from '../theme';
 
 export default function RootLayout() {
-  const t = useTheme();
   return (
     <BarProvider>
       <StatusBar style="auto" />
+      <Gated />
+    </BarProvider>
+  );
+}
+
+/** Nothing in the app is reachable until the age gate is passed. */
+function Gated() {
+  const t = useTheme();
+  const { ageStatus } = useBar();
+  if (ageStatus !== 'verified') return <AgeGate />;
+  return (
       <Stack
         screenOptions={{
           headerStyle: { backgroundColor: t.background },
@@ -21,6 +32,5 @@ export default function RootLayout() {
         <Stack.Screen name="drink/[id]" options={{ title: '', headerBackTitle: 'Back' }} />
         <Stack.Screen name="recipe-editor" options={{ title: 'New recipe', headerBackTitle: 'Cancel' }} />
       </Stack>
-    </BarProvider>
   );
 }
