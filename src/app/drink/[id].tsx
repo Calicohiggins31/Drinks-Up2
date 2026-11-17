@@ -2,7 +2,7 @@ import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Alert, Platform, Pressable, ScrollView, Share, StyleSheet, Text, View } from 'react-native';
 import { BackupPrompt } from '../../components/BackupPrompt';
-import { RatingAndNotes } from '../../components/RatingAndNotes';
+import { PrivateNotes, RatingBar } from '../../components/RatingAndNotes';
 import { ingredientName } from '../../data/ingredients';
 import { formatAmount, hasIngredient, matchRecipe, SERVING_OPTIONS, usedIngredient } from '../../lib/matching';
 import { recipeShareText } from '../../lib/shareText';
@@ -97,6 +97,8 @@ export default function DrinkScreen() {
             ),
           )}
         </View>
+
+        <RatingBar key={`rating-${recipe.id}`} recipe={recipe} />
 
         {isFav ? <View style={{ marginTop: 16 }}><BackupPrompt /></View> : null}
 
@@ -235,7 +237,7 @@ export default function DrinkScreen() {
           </View>
         ))}
 
-        <RatingAndNotes key={recipe.id} recipe={recipe} />
+        <PrivateNotes key={recipe.id} recipe={recipe} />
 
         {recipe.custom ? (
           <View style={styles.customActions}>

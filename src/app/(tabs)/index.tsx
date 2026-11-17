@@ -2,11 +2,14 @@ import { router } from 'expo-router';
 import { useMemo, useRef, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { BaseGroup } from '../../components/BaseGroup';
+import { MixHero } from '../../components/MixHero';
 import { DrinkCard } from '../../components/DrinkCard';
 import { Screen, SectionTitle } from '../../components/Screen';
+import { isClassic } from '../../data/classics';
 import { ingredientName } from '../../data/ingredients';
 import { findStoresNearby } from '../../features/stores/storeFinder';
 import { groupByBase, type BaseId } from '../../lib/base';
+import { dailyPick, greeting } from '../../lib/daily';
 import { matchAll, shoppingSuggestions, type DrinkMatch } from '../../lib/matching';
 import { pickDrinkId } from '../../lib/pickDrink';
 import { useBar } from '../../state/BarContext';
@@ -40,8 +43,19 @@ export default function MixScreen() {
     return all.filter((m) => (m.recipe.strength === 'None') === (filter === 'mocktails'));
   }, [owned, filter, recipes]);
 
-  const ready_ = matches.filter((m) => m.canMake);
-  const almost = matches.filter((m) => m.missing.length === 1);
+  const ready_ = useMemo(() => matches.filter((m) => m.canMake), [matches]);
+  const almost = useMemo(() => matches.filter((m) => m.missing.length === 1), [matches]);
+
+  // Today's featured drink: a classic you can make, else anything you can make,
+  // else a classic you're one ingredient away from. Stays the same all day.
+  const featured = useMemo(() => {
+    const classicsReady = ready_.filter((m) => isClassic(m.recipe.id));
+    const pool = classicsReady.length ? classicsReady : ready_.length ? ready_ : almost.filter((m) => isClassic(m.recipe.id));
+    return dailyPick([...pool].sort((a, b) => a.recipe.id.localeCompare(b.recipe.id)));
+  }, [ready_, almost]);
+  const now = new Date();
+  const hour = now.getHours();
+  const featuredLabel = hour >= 17 || hour < 5 ? 'Tonight’s pick' : 'Today’s pick';
   const suggestions = useMemo(() => shoppingSuggestions(matches, 5), [matches]);
   const readyGroups = useMemo(() => groupByBase(ready_, (m) => m.recipe), [ready_]);
   const almostGroups = useMemo(() => groupByBase(almost, (m) => m.recipe), [almost]);
@@ -78,21 +92,8 @@ export default function MixScreen() {
 
   if (owned.size === 0) {
     return (
-      <Screen title="Mix" subtitle="Find out what you can make">
-        <View style={[styles.empty, { backgroundColor: t.surface, borderColor: t.border }]}>
-          <Text style={styles.emptyEmoji}>🍸</Text>
-          <Text style={[styles.emptyTitle, { color: t.text }]}>Your bar is empty</Text>
-          <Text style={[styles.emptyText, { color: t.textMuted }]}>
-            Tell Drinks Up which bottles, mixers and fruit you have, and we’ll show every drink you
-            can mix right now.
-          </Text>
-          <Pressable
-            onPress={() => router.navigate('/bar')}
-            style={({ pressed }) => [styles.cta, { backgroundColor: t.accent, opacity: pressed ? 0.8 : 1 }]}
-          >
-            <Text style={[styles.ctaText, { color: t.onAccent }]}>Stock my bar</Text>
-          </Pressable>
-        </View>
+      <Screen title="Mix" hero={<MixHero greeting={greeting(now)} readyCount={0} featuredLabel={featuredLabel} barEmpty />}>
+        {null}
       </Screen>
     );
   }
@@ -100,10 +101,15 @@ export default function MixScreen() {
   return (
     <Screen
       title="Mix"
-      subtitle={
-        ready_.length === 0
-          ? 'Nothing quite yet, but you are close'
-          : `You can make ${ready_.length} ${ready_.length === 1 ? 'drink' : 'drinks'}`
+      hero={
+        <MixHero
+          greeting={greeting(now)}
+          readyCount={ready_.length}
+          featured={featured}
+          featuredLabel={featuredLabel}
+          barEmpty={false}
+          onSurprise={ready_.length > 0 ? pickForMe : undefined}
+        />
       }
     >
       <View style={[styles.segment, { backgroundColor: t.surfaceAlt }]}>
@@ -124,24 +130,13 @@ export default function MixScreen() {
       </View>
 
       {ready_.length > 0 ? (
-        <Pressable
-          onPress={pickForMe}
-          accessibilityRole="button"
-          accessibilityHint="Opens a random drink you can make right now"
-          style={({ pressed }) => [styles.pick, { backgroundColor: t.accent, opacity: pressed ? 0.85 : 1 }]}
-        >
-          <Text style={[styles.pickText, { color: t.onAccent }]}>🎲 Pick a drink for me</Text>
-        </Pressable>
-      ) : null}
-
-      {ready_.length > 0 ? (
         <>
           <SectionTitle hint="Tap a spirit to see its drinks">Ready to mix</SectionTitle>
           {renderGroups('ready', readyGroups)}
         </>
       ) : null}
 
-      <SectionTitle hint={suggestions.length > 0 ? 'Pick up one thing and unlock more drinks' : undefined}>
+      <SectionTitle hint={suggestions.length > 0 ? 'Buy one of these to unlock more drinks' : undefined}>
         Shopping list
       </SectionTitle>
       {suggestions.length > 0 ? (
@@ -160,20 +155,30 @@ export default function MixScreen() {
                 </View>
                 <View style={styles.suggestionBtns}>
                   <Pressable
-                    onPress={() => addIngredients([s.ingredientId])}
-                    accessibilityLabel={`I have ${ingredientName(s.ingredientId)}`}
-                    style={({ pressed }) => [styles.addBtn, { backgroundColor: t.accent, opacity: pressed ? 0.8 : 1 }]}
+                    onPress={() => (listed.has(s.ingredientId) ? router.push('/shopping') : addToShopping([s.ingredientId]))}
+                    accessibilityLabel={
+                      listed.has(s.ingredientId)
+                        ? `${ingredientName(s.ingredientId)} is on your shopping list`
+                        : `Add ${ingredientName(s.ingredientId)} to shopping list`
+                    }
+                    style={({ pressed }) => [
+                      styles.addBtn,
+                      listed.has(s.ingredientId)
+                        ? { backgroundColor: t.successSoft }
+                        : { backgroundColor: t.accent },
+                      { opacity: pressed ? 0.8 : 1 },
+                    ]}
                   >
-                    <Text style={[styles.addBtnText, { color: t.onAccent }]}>I have it</Text>
+                    <Text style={[styles.addBtnText, { color: listed.has(s.ingredientId) ? t.success : t.onAccent }]}>
+                      {listed.has(s.ingredientId) ? '✓ On list' : '🛒 Add to list'}
+                    </Text>
                   </Pressable>
                   <Pressable
-                    onPress={() => (listed.has(s.ingredientId) ? router.push('/shopping') : addToShopping([s.ingredientId]))}
-                    accessibilityLabel={`Add ${ingredientName(s.ingredientId)} to shopping list`}
+                    onPress={() => addIngredients([s.ingredientId])}
+                    accessibilityLabel={`I already have ${ingredientName(s.ingredientId)}`}
                     hitSlop={6}
                   >
-                    <Text style={[styles.listBtnText, { color: listed.has(s.ingredientId) ? t.success : t.accent }]}>
-                      {listed.has(s.ingredientId) ? '✓ Listed' : '+ List'}
-                    </Text>
+                    <Text style={[styles.listBtnText, { color: t.textMuted }]}>I have it</Text>
                   </Pressable>
                 </View>
               </View>
