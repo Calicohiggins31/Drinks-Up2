@@ -18,6 +18,7 @@ export default function ShoppingListScreen() {
     <IngredientPicker
       visible={picking}
       title="Add to shopping list"
+      allowCustom={false}
       onClose={() => setPicking(false)}
       onPick={(id) => {
         addToShopping([id]);
@@ -54,7 +55,7 @@ export default function ShoppingListScreen() {
         <Text style={{ fontSize: 48 }}>🛒</Text>
         <Text style={[styles.title, { color: t.text }]}>{moved ? `Added ${moved} to My Bar` : 'Your list is empty'}</Text>
         <Text style={[styles.body, { color: t.textMuted }]}>
-          Add anything you need below, or tap “Add to list” on the Mix screen or next to a missing ingredient on any drink.
+          Add drink ingredients below, or tap “Add to list” on the Mix screen or next to a missing ingredient on any drink.
         </Text>
         <View style={{ alignSelf: 'stretch', marginTop: 12 }}>{addButton}</View>
         {picker}

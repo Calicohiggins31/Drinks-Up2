@@ -1,6 +1,7 @@
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { AgeGate } from '../components/AgeGate';
+import { QuickSetup } from '../components/QuickSetup';
 import { AccountSync } from '../state/AccountSync';
 import { AuthProvider } from '../state/AuthContext';
 import { BarProvider, useBar } from '../state/BarContext';
@@ -24,8 +25,10 @@ export default function RootLayout() {
 /** Nothing in the app is reachable until the age gate is passed. */
 function Gated() {
   const t = useTheme();
-  const { ageStatus } = useBar();
+  const { ageStatus, setupDone, owned } = useBar();
   if (ageStatus !== 'verified') return <AgeGate />;
+  // First launch: help people fill their bar before they see an empty Mix screen.
+  if (!setupDone && owned.size === 0) return <QuickSetup />;
   return (
       <Stack
         screenOptions={{

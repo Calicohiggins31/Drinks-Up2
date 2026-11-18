@@ -4,6 +4,7 @@ import { FlatList, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput,
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { DrinkCard } from '../../components/DrinkCard';
 import { isClassic } from '../../data/classics';
+import { hasOccasion, isEasy, OCCASIONS, type OccasionId } from '../../data/occasions';
 import { baseOf, BASES, type BaseId } from '../../lib/base';
 import { matchRecipe } from '../../lib/matching';
 import { pickDrinkId } from '../../lib/pickDrink';
@@ -13,7 +14,7 @@ import { useRatings } from '../../state/RatingsContext';
 import { useBar } from '../../state/BarContext';
 import { radius, useTheme } from '../../theme';
 
-type Filter = 'all' | 'classics' | 'top-rated' | 'can-make' | BaseId;
+type Filter = 'all' | 'classics' | 'top-rated' | 'easy' | 'can-make' | BaseId | `occasion:${OccasionId}`;
 
 export default function DrinksScreen() {
   const t = useTheme();
@@ -27,6 +28,11 @@ export default function DrinksScreen() {
     const matches = searchRecipes(recipes, query).map((r) => matchRecipe(r, owned));
     if (filter === 'all') return matches;
     if (filter === 'can-make') return matches.filter((m) => m.canMake);
+    if (filter === 'easy') return matches.filter((m) => isEasy(m.recipe));
+    if (filter.startsWith('occasion:')) {
+      const occasion = filter.slice('occasion:'.length) as OccasionId;
+      return matches.filter((m) => hasOccasion(m.recipe.id, occasion));
+    }
     if (filter === 'classics') return matches.filter((m) => isClassic(m.recipe.id));
     if (filter === 'top-rated') {
       // Best first, ignoring the search ordering.
@@ -48,7 +54,9 @@ export default function DrinksScreen() {
     { id: 'all', label: 'All' },
     { id: 'classics', label: 'Classics' },
     ...(ratings.size > 0 ? [{ id: 'top-rated' as const, label: '★ Top rated' }] : []),
+    { id: 'easy', label: '⚡ Easy (3 or fewer)' },
     { id: 'can-make', label: '✓ I can make' },
+    ...OCCASIONS.map((o) => ({ id: `occasion:${o.id}` as const, label: `${o.emoji} ${o.label}` })),
     ...BASES.map((b) => ({ id: b.id, label: `${b.emoji} ${b.label}` })),
   ];
 

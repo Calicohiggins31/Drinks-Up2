@@ -24,6 +24,7 @@ type Saved = {
   shareUsageStats?: boolean;
   notes?: Record<string, string>;
   shopping?: ShoppingItem[];
+  setupDone?: boolean;
 };
 
 /** One line on the shopping list. `checked` means bought. */
@@ -72,6 +73,9 @@ type BarContextValue = {
   moveCheckedToBar: () => number;
   clearShopping: () => void;
   replaceShopping: (items: ShoppingItem[]) => void;
+  /** True once the first-launch quick setup was finished or skipped. */
+  setupDone: boolean;
+  completeSetup: (ids: string[]) => void;
 };
 
 const BarContext = createContext<BarContextValue | null>(null);
@@ -102,6 +106,7 @@ export function BarProvider({ children }: { children: ReactNode }) {
   const [shareUsageStats, setShareUsageStats] = useState(true);
   const [notes, setNotes] = useState<Readonly<Record<string, string>>>({});
   const [shopping, setShopping] = useState<ShoppingItem[]>([]);
+  const [setupDone, setSetupDone] = useState(false);
   useMemo(() => setUsageEnabled(shareUsageStats), [shareUsageStats]);
 
   // Keep the ingredient name lookup in sync before children render.
@@ -128,6 +133,8 @@ export function BarProvider({ children }: { children: ReactNode }) {
         if (saved.units === 'ml' || saved.units === 'oz') setUnitsState(saved.units);
         setBackupPromptDismissed(!!saved.backupPromptDismissed);
         if (saved.shareUsageStats === false) setShareUsageStats(false);
+        // People who used the app before quick setup existed already have a bar; don't show it to them.
+        setSetupDone(!!saved.setupDone || (saved.owned ?? []).length > 0);
         if (Array.isArray(saved.shopping)) {
           setShopping(saved.shopping.filter((i) => i && typeof i.id === 'string').map((i) => ({ id: i.id, checked: !!i.checked })));
         }
@@ -142,9 +149,9 @@ export function BarProvider({ children }: { children: ReactNode }) {
   // Save whenever something changes (after the first load, so we never overwrite with empty state).
   useEffect(() => {
     if (!ready) return;
-    const data: Saved = { ageGate: ageStatus, owned: [...owned], favorites: [...favorites], units, customIngredients, customRecipes, backupPromptDismissed, shareUsageStats, notes, shopping };
+    const data: Saved = { ageGate: ageStatus, owned: [...owned], favorites: [...favorites], units, customIngredients, customRecipes, backupPromptDismissed, shareUsageStats, notes, shopping, setupDone };
     AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(data)).catch(() => {});
-  }, [ready, ageStatus, owned, favorites, units, customIngredients, customRecipes, backupPromptDismissed, shareUsageStats, notes, shopping]);
+  }, [ready, ageStatus, owned, favorites, units, customIngredients, customRecipes, backupPromptDismissed, shareUsageStats, notes, shopping, setupDone]);
 
   const toggleIngredient = useCallback((id: string) => {
     tap();
@@ -248,6 +255,15 @@ export function BarProvider({ children }: { children: ReactNode }) {
     return bought.length;
   }, [shopping, owned]);
 
+  const completeSetup = useCallback(
+    (ids: string[]) => {
+      trackUsage('stocked', ids.filter((id) => !owned.has(id)));
+      setOwned((prev) => new Set([...prev, ...ids]));
+      setSetupDone(true);
+    },
+    [owned],
+  );
+
   const replaceNotes = useCallback((next: Record<string, string>) => setNotes({ ...next }), []);
 
   const replaceOwned = useCallback((ids: Iterable<string>) => setOwned(new Set(ids)), []);
@@ -274,6 +290,7 @@ export function BarProvider({ children }: { children: ReactNode }) {
       replaceFavorites, replaceCustom, backupPromptDismissed, dismissBackupPrompt,
       replaceOwned, shareUsageStats, setShareUsageStats, notes, setNote, replaceNotes,
       shopping, addToShopping, toggleShoppingChecked, removeFromShopping, moveCheckedToBar, clearShopping, replaceShopping,
+      setupDone, completeSetup,
     }),
     [
       ready, ageStatus, setAgeStatus, owned, favorites, units, recipes, customRecipes, customIngredients, findRecipe,
@@ -282,6 +299,7 @@ export function BarProvider({ children }: { children: ReactNode }) {
       replaceFavorites, replaceCustom, backupPromptDismissed, dismissBackupPrompt,
       replaceOwned, shareUsageStats, notes, setNote, replaceNotes,
       shopping, addToShopping, toggleShoppingChecked, removeFromShopping, moveCheckedToBar, clearShopping, replaceShopping,
+      setupDone, completeSetup,
     ],
   );
 

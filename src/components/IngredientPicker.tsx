@@ -5,10 +5,17 @@ import { INGREDIENTS } from '../data/ingredients';
 import { useBar } from '../state/BarContext';
 import { radius, useTheme } from '../theme';
 
-type Props = { visible: boolean; onClose: () => void; onPick: (id: string) => void; title?: string };
+type Props = {
+  visible: boolean;
+  onClose: () => void;
+  onPick: (id: string) => void;
+  title?: string;
+  /** Offer "Add … as your own ingredient" for anything not on the list (default true). */
+  allowCustom?: boolean;
+};
 
 /** Full-screen searchable list of every ingredient, with the option to add your own. */
-export function IngredientPicker({ visible, onClose, onPick, title = 'Choose ingredient' }: Props) {
+export function IngredientPicker({ visible, onClose, onPick, title = 'Choose ingredient', allowCustom = true }: Props) {
   const t = useTheme();
   const { customIngredients, addCustomIngredient } = useBar();
   const [query, setQuery] = useState('');
@@ -35,13 +42,13 @@ export function IngredientPicker({ visible, onClose, onPick, title = 'Choose ing
         <TextInput
           value={query}
           onChangeText={setQuery}
-          placeholder="Search or type a new ingredient"
+          placeholder={allowCustom ? 'Search or type a new ingredient' : 'Search ingredients'}
           placeholderTextColor={t.textMuted}
           autoFocus
           autoCorrect={false}
           style={[styles.search, { backgroundColor: t.surfaceAlt, color: t.text }]}
         />
-        {q && !exact ? (
+        {allowCustom && q && !exact ? (
           <Pressable
             onPress={() => pick(addCustomIngredient(query))}
             style={[styles.addNew, { backgroundColor: t.accentSoft }]}

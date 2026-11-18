@@ -4,6 +4,7 @@ import { Alert, Platform, Pressable, ScrollView, Share, StyleSheet, Text, View }
 import { BackupPrompt } from '../../components/BackupPrompt';
 import { PrivateNotes, RatingBar } from '../../components/RatingAndNotes';
 import { ingredientName } from '../../data/ingredients';
+import { isEasy, occasionsOf } from '../../data/occasions';
 import { formatAmount, hasIngredient, matchRecipe, SERVING_OPTIONS, usedIngredient } from '../../lib/matching';
 import { recipeShareText } from '../../lib/shareText';
 import { trackView } from '../../lib/usage';
@@ -89,7 +90,13 @@ export default function DrinkScreen() {
         <Text style={[styles.description, { color: t.textMuted }]}>{recipe.description}</Text>
 
         <View style={styles.meta}>
-          {[recipe.glass, recipe.method, recipe.strength === 'None' ? 'Alcohol-free' : `${recipe.strength} strength`].map(
+          {[
+            ...(isEasy(recipe) ? ['⚡ Easy'] : []),
+            recipe.glass,
+            recipe.method,
+            recipe.strength === 'None' ? 'Alcohol-free' : `${recipe.strength} strength`,
+            ...occasionsOf(recipe.id).map((o) => `${o.emoji} ${o.label}`),
+          ].map(
             (m) => (
               <View key={m} style={[styles.metaPill, { backgroundColor: t.surfaceAlt }]}>
                 <Text style={[styles.metaText, { color: t.text }]}>{m}</Text>
