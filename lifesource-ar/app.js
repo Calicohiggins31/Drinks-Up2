@@ -117,6 +117,11 @@ function renderDetail(pkg) {
         </model-viewer>
         <div class="hint">Drag to spin · pinch to zoom</div>
       </div>
+      <div class="pipe-toggle" role="radiogroup" aria-label="Pipe type">
+        <span>Pipe:</span>
+        <button role="radio" data-pipe="pvc">PVC</button>
+        <button role="radio" data-pipe="copper">Copper</button>
+      </div>
       <button class="ar-btn" id="ar-btn">${AR_ICON} View in your garage</button>
       <p class="no-ar" id="no-ar" hidden>Open this page on a phone to see it in a real room.</p>
 
@@ -143,6 +148,17 @@ function renderDetail(pkg) {
   const mv = document.getElementById('mv');
   const arBtn = document.getElementById('ar-btn');
   const noAr = document.getElementById('no-ar');
+
+  // PVC / copper: each has its own model file so AR shows it on every phone.
+  const pipeBtns = app.querySelectorAll('[data-pipe]');
+  const setPipe = (kind) => {
+    const src = `models/${pkg.id}${kind === 'copper' ? '-copper' : ''}.glb`;
+    if (mv.getAttribute('src') !== src) mv.setAttribute('src', src);
+    pipeBtns.forEach(b => b.setAttribute('aria-checked', String(b.dataset.pipe === kind)));
+    store('pipe', kind);
+  };
+  pipeBtns.forEach(b => b.addEventListener('click', () => setPipe(b.dataset.pipe)));
+  setPipe(store('pipe') === 'copper' ? 'copper' : 'pvc');
 
   arBtn.addEventListener('click', () => {
     if (mv.canActivateAR) mv.activateAR();

@@ -4,6 +4,7 @@ A home-screen web app that lets staff place LifeSource water systems in a garage
 
 - **Packages:** Ultimate (Filter + ScaleSolver + ApaPure12), Power (Filter + ScaleSolver), Essential (Filter + ApaPure12), Filter Only
 - **AR:** iPhone uses Apple's AR Quick Look; Android uses Chrome's WebXR, falling back to Google Scene Viewer. Models are at true scale (`ar-scale="fixed"`).
+- **Pipe:** each package has a PVC model (`models/<id>.glb`) and a copper model (`models/<id>-copper.glb`). Staff switch between them on the package screen.
 - **Offline:** `sw.js` saves every file on the phone on first visit. After that the app opens with no signal.
 - **No build step.** It's plain static files.
 

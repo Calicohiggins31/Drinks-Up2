@@ -1,6 +1,6 @@
 // Saves the whole app on the phone so it works with no signal.
 // Bump VERSION whenever any file changes so phones pick up the update.
-const VERSION = 'lifesource-ar-v1';
+const VERSION = 'lifesource-ar-v2';
 const FILES = [
   './',
   'index.html',
@@ -21,6 +21,10 @@ const FILES = [
   'models/power.glb',
   'models/essential.glb',
   'models/filter.glb',
+  'models/ultimate-copper.glb',
+  'models/power-copper.glb',
+  'models/essential-copper.glb',
+  'models/filter-copper.glb',
 ];
 
 self.addEventListener('install', (event) => {
