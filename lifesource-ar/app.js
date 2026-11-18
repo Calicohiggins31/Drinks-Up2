@@ -20,12 +20,12 @@ const PRODUCTS = {
   },
 };
 
-// width = approx. wall space including plumbing, in inches
+// width = approx. floor width of the tanks, in inches (from the models)
 const PACKAGES = [
-  { id: 'ultimate', name: 'Ultimate', full: 'Ultimate Protection Package', items: ['filter', 'scale', 'apa'], width: 39, badge: 'Best' },
-  { id: 'power', name: 'Power Package', full: 'Power Package', items: ['filter', 'scale'], width: 32 },
-  { id: 'essential', name: 'Essential Package', full: 'Essential Package', items: ['filter', 'apa'], width: 27 },
-  { id: 'filter', name: 'Filter Only', full: 'Filter Only', items: ['filter'], width: 20 },
+  { id: 'ultimate', name: 'Ultimate', full: 'Ultimate Protection Package', items: ['filter', 'scale', 'apa'], width: 30, badge: 'Best' },
+  { id: 'power', name: 'Power Package', full: 'Power Package', items: ['filter', 'scale'], width: 25 },
+  { id: 'essential', name: 'Essential Package', full: 'Essential Package', items: ['filter', 'apa'], width: 18 },
+  { id: 'filter', name: 'Filter Only', full: 'Filter Only', items: ['filter'], width: 11 },
 ];
 
 const SHORT = { filter: 'Filter', scale: 'ScaleSolver', apa: 'ApaPure12' };
@@ -117,11 +117,11 @@ function renderDetail(pkg) {
         </model-viewer>
         <div class="hint">Drag to spin · pinch to zoom</div>
       </div>
-      <div class="pipe-toggle" role="radiogroup" aria-label="Pipe type">
-        <span>Pipe:</span>
-        <button role="radio" data-pipe="pvc">PVC</button>
-        <button role="radio" data-pipe="copper">Copper</button>
-      </div>
+      <label class="sizes-toggle">
+        <input type="checkbox" id="sizes" checked>
+        <span class="switch" aria-hidden="true"></span>
+        <span>Show sizes on the tanks</span>
+      </label>
       <button class="ar-btn" id="ar-btn">${AR_ICON} View in your garage</button>
       <p class="no-ar" id="no-ar" hidden>Open this page on a phone to see it in a real room.</p>
 
@@ -149,16 +149,17 @@ function renderDetail(pkg) {
   const arBtn = document.getElementById('ar-btn');
   const noAr = document.getElementById('no-ar');
 
-  // PVC / copper: each has its own model file so AR shows it on every phone.
-  const pipeBtns = app.querySelectorAll('[data-pipe]');
-  const setPipe = (kind) => {
-    const src = `models/${pkg.id}${kind === 'copper' ? '-copper' : ''}.glb`;
+  // Sizes on/off: each package has a version with floating size cards
+  // built into the model, so they show in AR and in saved photos.
+  const sizes = document.getElementById('sizes');
+  const setSizes = (on) => {
+    sizes.checked = on;
+    const src = `models/${pkg.id}${on ? '-sizes' : ''}.glb`;
     if (mv.getAttribute('src') !== src) mv.setAttribute('src', src);
-    pipeBtns.forEach(b => b.setAttribute('aria-checked', String(b.dataset.pipe === kind)));
-    store('pipe', kind);
+    store('sizes', on ? '1' : '0');
   };
-  pipeBtns.forEach(b => b.addEventListener('click', () => setPipe(b.dataset.pipe)));
-  setPipe(store('pipe') === 'copper' ? 'copper' : 'pvc');
+  sizes.addEventListener('change', () => setSizes(sizes.checked));
+  setSizes(store('sizes') !== '0');
 
   arBtn.addEventListener('click', () => {
     if (mv.canActivateAR) mv.activateAR();
