@@ -38,6 +38,11 @@
         }
       ]
     ],
-    "scheme": "drinksup"
+    "scheme": "drinksup",
+    "extra": {
+      "eas": {
+        "projectId": "b7568a0e-c6b5-4767-94a4-6771b7501278"
+      }
+    }
   }
 }

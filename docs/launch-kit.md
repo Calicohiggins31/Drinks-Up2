@@ -24,7 +24,7 @@ Links used throughout:
 ### First real build (Android test copy you can install now, no store needed)
 Open the project folder, type `cmd` in the address bar, then:
 1. `npx eas-cli@latest login`: sign in with your Expo account.
-2. `npx eas-cli@latest init`: links the project to your Expo account. **Send Claude the "project ID" it prints** so it can be saved in the app's settings.
+2. Already done: the project is linked to your Expo account (project ID `b7568a0e-c6b5-4767-94a4-6771b7501278`, saved in `app.json`).
 3. `npx eas-cli@latest build --platform android --profile preview`: builds in the cloud (about 10–20 minutes). When done it shows a link and QR code; open it on your Android phone to install the real Drinks Up app, with its icon, no Expo Go needed.
 
 ### iPhone build → TestFlight → App Store
