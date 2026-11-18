@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Alert, Platform, Pressable, ScrollView, Share, StyleSheet, Text, View } from 'react-native';
 import { IngredientPicker } from '../components/IngredientPicker';
-import { ingredientName } from '../data/ingredients';
+import { ingredientName, LIST_ITEM_PREFIX } from '../data/ingredients';
 import { findStoresNearby } from '../features/stores/storeFinder';
 import { shoppingListText } from '../lib/shareText';
 import { useAuth } from '../state/AuthContext';
@@ -18,7 +18,12 @@ export default function ShoppingListScreen() {
     <IngredientPicker
       visible={picking}
       title="Add to shopping list"
-      allowCustom={false}
+      customHint="to your list"
+      onAddCustom={(name) => {
+        addToShopping([`${LIST_ITEM_PREFIX}${name.slice(0, 60)}`]);
+        setMoved(0);
+        setPicking(false);
+      }}
       onClose={() => setPicking(false)}
       onPick={(id) => {
         addToShopping([id]);
@@ -55,7 +60,7 @@ export default function ShoppingListScreen() {
         <Text style={{ fontSize: 48 }}>🛒</Text>
         <Text style={[styles.title, { color: t.text }]}>{moved ? `Added ${moved} to My Bar` : 'Your list is empty'}</Text>
         <Text style={[styles.body, { color: t.textMuted }]}>
-          Add drink ingredients below, or tap “Add to list” on the Mix screen or next to a missing ingredient on any drink.
+          Add anything you need below, or tap “Add to list” on the Mix screen or next to a missing ingredient on any drink.
         </Text>
         <View style={{ alignSelf: 'stretch', marginTop: 12 }}>{addButton}</View>
         {picker}
@@ -111,7 +116,7 @@ export default function ShoppingListScreen() {
         style={[styles.primary, { backgroundColor: t.accent, opacity: ticked === 0 ? 0.4 : 1 }]}
       >
         <Text style={[styles.primaryText, { color: t.onAccent }]}>
-          {ticked === 0 ? 'Tick what you bought' : `Move ${ticked} to My Bar`}
+          {ticked === 0 ? 'Tick what you bought' : `Done: add ${ticked} ticked to My Bar`}
         </Text>
       </Pressable>
       {moved ? <Text style={[styles.done, { color: t.success }]}>✓ Added {moved} to My Bar</Text> : null}

@@ -163,3 +163,12 @@ test('shopping list share text', async () => {
     '🛒 Drinks Up shopping list\n\n☐ Lime juice\n✓ Gin',
   );
 });
+
+test('typed-in shopping items show their name and are never real ingredients', async () => {
+  const { isListOnlyItem } = await import('../data/ingredients');
+  assert.equal(getIngredient('item:Cocktail napkins').name, 'Cocktail napkins');
+  assert.ok(isListOnlyItem('item:Ice'));
+  assert.ok(!isListOnlyItem('lime_juice'));
+  const { usageItems } = await import('./sync');
+  assert.deepEqual(usageItems(['item:Ice', 'gin']), ['gin'], 'never counted in usage stats');
+});

@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Haptics from 'expo-haptics';
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { Platform } from 'react-native';
-import { INGREDIENTS, setCustomIngredients, type Ingredient } from '../data/ingredients';
+import { INGREDIENTS, isListOnlyItem, setCustomIngredients, type Ingredient } from '../data/ingredients';
 import { RECIPES, type Recipe } from '../data/recipes';
 import type { UnitSystem } from '../lib/matching';
 import { setUsageEnabled, trackUsage } from '../lib/usage';
@@ -247,13 +247,15 @@ export function BarProvider({ children }: { children: ReactNode }) {
   const clearShopping = useCallback(() => setShopping([]), []);
   const replaceShopping = useCallback((items: ShoppingItem[]) => setShopping(items.map((i) => ({ ...i }))), []);
   const moveCheckedToBar = useCallback(() => {
-    const bought = shopping.filter((i) => i.checked).map((i) => i.id);
-    if (bought.length === 0) return 0;
+    const ticked = shopping.filter((i) => i.checked).map((i) => i.id);
+    if (ticked.length === 0) return 0;
+    const bought = ticked.filter((id) => !isListOnlyItem(id));
     trackUsage('stocked', bought.filter((id) => !owned.has(id)));
     setOwned((prev) => new Set([...prev, ...bought]));
     setShopping((prev) => prev.filter((i) => !i.checked));
     return bought.length;
   }, [shopping, owned]);
+  // (Typed-in items like "napkins" are simply crossed off; they never go into My Bar.)
 
   const completeSetup = useCallback(
     (ids: string[]) => {
