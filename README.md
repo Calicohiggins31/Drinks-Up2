@@ -61,6 +61,8 @@ npm test            # matching logic and recipe data tests
 
 ## Ship to the App Store and Google Play
 
+See **docs/launch-kit.md** for the full step-by-step, store text and questionnaire answers.
+
 Builds happen in the cloud with EAS; no Mac or Android Studio required:
 
 ```bash
