@@ -44,9 +44,13 @@ Until step 3 is done, the app runs normally and the account screens say accounts
 
 Once the app is live, fill in `src/config/storeLinks.ts` with the App Store and Google Play links. Shared recipes then end with "Get Drinks Up" and those links.
 
+## App icon and launch screen
+
+The icon is drawn in `assets/brand/glyph.svg`. After editing it, run `node scripts/make-icons.js` to regenerate every size in `assets/`.
+
 ## Privacy policy
 
-The policy lives in `src/content/privacyPolicy.ts` (shown in the app) and is exported to `docs/privacy-policy.md` with `npm run privacy:md`. Fill in the `[BRACKETED]` placeholders before publishing, and update it before shipping location or analytics features.
+The policy lives in `src/content/privacyPolicy.ts` (shown in the app) and is exported to `docs/privacy-policy.md` and `docs/privacy-policy.html` (ready to paste into a website) with `npm run privacy:md`. Update it before shipping location features.
 
 ## Checks
 
@@ -65,7 +69,7 @@ npx eas-cli@latest submit --platform ios      # needs an Apple Developer account
 npx eas-cli@latest submit --platform android  # needs a Google Play Console account
 ```
 
-Change `ios.bundleIdentifier` and `android.package` in `app.json` (currently `com.drinksup.app`) to an id you own before the first store build, and replace the placeholder icons in `assets/`.
+The app id is `com.adhiggins.drinksup` (in `app.json`). It cannot change after the first store release.
 
 ## Project layout
 

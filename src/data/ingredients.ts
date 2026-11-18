@@ -145,7 +145,12 @@ export function setCustomIngredients(list: Ingredient[]) {
   customById = new Map(list.map((i) => [i.id, i]));
 }
 
+/** Shopping-list-only entries typed by the user, e.g. "item:Cocktail napkins". */
+export const LIST_ITEM_PREFIX = 'item:';
+export const isListOnlyItem = (id: string) => id.startsWith(LIST_ITEM_PREFIX);
+
 export function getIngredient(id: string): Ingredient {
+  if (isListOnlyItem(id)) return { id, name: id.slice(LIST_ITEM_PREFIX.length), category: 'Your own' };
   // Fall back to a readable name so a deleted custom ingredient can never crash a screen.
   return byId.get(id) ?? customById.get(id) ?? { id, name: id.replace(/^custom_(ing_)?/, '').replace(/_[a-z0-9]+$/, '').replace(/_/g, ' '), category: 'Your own' };
 }

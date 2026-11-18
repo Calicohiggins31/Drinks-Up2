@@ -5,6 +5,7 @@ import type { Recipe } from '../data/recipes';
 import { fetchMyRating, fetchRatingSummary, ratingLabel, saveMyRating, type RatingSummary } from '../lib/ratings';
 import { useAuth } from '../state/AuthContext';
 import { useBar } from '../state/BarContext';
+import { useRatings } from '../state/RatingsContext';
 import { radius, useTheme } from '../theme';
 
 /**
@@ -15,6 +16,7 @@ export function RatingBar({ recipe }: { recipe: Recipe }) {
   const t = useTheme();
   const { configured, userId } = useAuth();
   const canRate = configured && !recipe.custom;
+  const { refresh: refreshAll } = useRatings();
 
   const [summary, setSummary] = useState<RatingSummary | null>(null);
   const [mine, setMine] = useState<number | null>(null);
@@ -43,6 +45,7 @@ export function RatingBar({ recipe }: { recipe: Recipe }) {
     try {
       await saveMyRating(userId, recipe.id, stars);
       setSummary(await fetchRatingSummary(recipe.id));
+      refreshAll(); // update the stars shown on drink cards
     } catch {
       setMine(previous);
       setError('Couldn\u2019t save your rating. Check your connection and try again.');

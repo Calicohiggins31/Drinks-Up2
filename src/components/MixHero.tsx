@@ -2,6 +2,8 @@ import { router } from 'expo-router';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { ingredientName } from '../data/ingredients';
 import type { DrinkMatch } from '../lib/matching';
+import { shortRating } from '../lib/ratingLabel';
+import { useRatings } from '../state/RatingsContext';
 import { radius, useTheme } from '../theme';
 
 type Props = {
@@ -19,6 +21,8 @@ type Props = {
 /** The banner at the top of Mix: greeting, headline and today's featured drink. */
 export function MixHero({ greeting, readyCount, featured, featuredLabel, barEmpty, onSurprise }: Props) {
   const t = useTheme();
+  const { ratings } = useRatings();
+  const featuredRating = featured ? shortRating(ratings.get(featured.recipe.id)) : '';
   const headline = barEmpty
     ? 'What’s in your bar?'
     : readyCount === 0
@@ -54,7 +58,10 @@ export function MixHero({ greeting, readyCount, featured, featuredLabel, barEmpt
         </>
       ) : featured ? (
         <View style={[styles.card, { backgroundColor: t.surface }]}>
-          <Text style={[styles.label, { color: t.accent }]}>{featuredLabel.toUpperCase()}</Text>
+          <View style={styles.labelRow}>
+            <Text style={[styles.label, { color: t.accent }]}>{featuredLabel.toUpperCase()}</Text>
+            {featuredRating ? <Text style={[styles.label, { color: t.accent }]}>★ {featuredRating}</Text> : null}
+          </View>
           <Pressable
             onPress={() => router.push(`/drink/${featured.recipe.id}`)}
             style={styles.featuredRow}
@@ -112,6 +119,7 @@ const styles = StyleSheet.create({
   ctaLight: { alignSelf: 'flex-start', marginTop: 10, paddingHorizontal: 22, paddingVertical: 12, borderRadius: radius.pill },
   ctaLightText: { fontSize: 16, fontWeight: '800' },
   card: { marginTop: 12, borderRadius: radius.lg, padding: 14, gap: 10 },
+  labelRow: { flexDirection: 'row', justifyContent: 'space-between' },
   label: { fontSize: 12, fontWeight: '800', letterSpacing: 0.8 },
   featuredRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   tile: { width: 64, height: 64, borderRadius: radius.md, alignItems: 'center', justifyContent: 'center' },

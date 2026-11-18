@@ -4,18 +4,22 @@ import { FlatList, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput,
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { DrinkCard } from '../../components/DrinkCard';
 import { isClassic } from '../../data/classics';
+import { hasOccasion, isEasy, OCCASIONS, type OccasionId } from '../../data/occasions';
 import { baseOf, BASES, type BaseId } from '../../lib/base';
 import { matchRecipe } from '../../lib/matching';
 import { pickDrinkId } from '../../lib/pickDrink';
+import { topRatedIds } from '../../lib/ratingLabel';
 import { searchRecipes } from '../../lib/search';
+import { useRatings } from '../../state/RatingsContext';
 import { useBar } from '../../state/BarContext';
 import { radius, useTheme } from '../../theme';
 
-type Filter = 'all' | 'classics' | 'can-make' | BaseId;
+type Filter = 'all' | 'classics' | 'top-rated' | 'easy' | 'can-make' | BaseId | `occasion:${OccasionId}`;
 
 export default function DrinksScreen() {
   const t = useTheme();
   const { recipes, owned, favorites } = useBar();
+  const { ratings } = useRatings();
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState<Filter>('all');
   const lastPick = useRef<string | undefined>(undefined);
@@ -24,9 +28,19 @@ export default function DrinksScreen() {
     const matches = searchRecipes(recipes, query).map((r) => matchRecipe(r, owned));
     if (filter === 'all') return matches;
     if (filter === 'can-make') return matches.filter((m) => m.canMake);
+    if (filter === 'easy') return matches.filter((m) => isEasy(m.recipe));
+    if (filter.startsWith('occasion:')) {
+      const occasion = filter.slice('occasion:'.length) as OccasionId;
+      return matches.filter((m) => hasOccasion(m.recipe.id, occasion));
+    }
     if (filter === 'classics') return matches.filter((m) => isClassic(m.recipe.id));
+    if (filter === 'top-rated') {
+      // Best first, ignoring the search ordering.
+      const order = new Map(topRatedIds(ratings).map((id, i) => [id, i]));
+      return matches.filter((m) => order.has(m.recipe.id)).sort((a, b) => order.get(a.recipe.id)! - order.get(b.recipe.id)!);
+    }
     return matches.filter((m) => baseOf(m.recipe) === filter);
-  }, [recipes, query, owned, filter]);
+  }, [recipes, query, owned, filter, ratings]);
 
   // Random drink from whatever the list is showing (search and filter included), mostly classics.
   const pickForMe = () => {
@@ -38,8 +52,11 @@ export default function DrinksScreen() {
 
   const filters: { id: Filter; label: string }[] = [
     { id: 'all', label: 'All' },
-    { id: 'classics', label: '★ Classics' },
+    { id: 'classics', label: 'Classics' },
+    ...(ratings.size > 0 ? [{ id: 'top-rated' as const, label: '★ Top rated' }] : []),
+    { id: 'easy', label: '⚡ Easy (3 or fewer)' },
     { id: 'can-make', label: '✓ I can make' },
+    ...OCCASIONS.map((o) => ({ id: `occasion:${o.id}` as const, label: `${o.emoji} ${o.label}` })),
     ...BASES.map((b) => ({ id: b.id, label: `${b.emoji} ${b.label}` })),
   ];
 

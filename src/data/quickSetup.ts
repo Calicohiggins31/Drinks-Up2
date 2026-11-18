@@ -1,0 +1,21 @@
+/** The most common things people keep at home, shown on the first-launch quick setup. */
+export const QUICK_SETUP: { id: string; emoji: string }[] = [
+  { id: 'vodka', emoji: '🍸' },
+  { id: 'gin', emoji: '🌿' },
+  { id: 'white_rum', emoji: '🏝️' },
+  { id: 'tequila', emoji: '🌵' },
+  { id: 'bourbon', emoji: '🥃' },
+  { id: 'triple_sec', emoji: '🍊' },
+  { id: 'sparkling_wine', emoji: '🥂' },
+  { id: 'beer', emoji: '🍺' },
+  { id: 'lime_juice', emoji: '🍈' },
+  { id: 'lemon_juice', emoji: '🍋' },
+  { id: 'orange_juice', emoji: '🧃' },
+  { id: 'cranberry_juice', emoji: '🫐' },
+  { id: 'simple_syrup', emoji: '🍯' },
+  { id: 'soda_water', emoji: '🫧' },
+  { id: 'tonic', emoji: '💧' },
+  { id: 'cola', emoji: '🥤' },
+  { id: 'ginger_beer', emoji: '🫚' },
+  { id: 'mint', emoji: '🌱' },
+];

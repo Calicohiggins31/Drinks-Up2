@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Alert, Platform, Pressable, ScrollView, Share, StyleSheet, Text, View } from 'react-native';
-import { ingredientName } from '../data/ingredients';
+import { IngredientPicker } from '../components/IngredientPicker';
+import { ingredientName, LIST_ITEM_PREFIX } from '../data/ingredients';
 import { findStoresNearby } from '../features/stores/storeFinder';
 import { shoppingListText } from '../lib/shareText';
 import { useAuth } from '../state/AuthContext';
@@ -9,9 +10,37 @@ import { radius, useTheme } from '../theme';
 
 export default function ShoppingListScreen() {
   const t = useTheme();
-  const { shopping, toggleShoppingChecked, removeFromShopping, moveCheckedToBar, clearShopping } = useBar();
+  const { shopping, toggleShoppingChecked, removeFromShopping, moveCheckedToBar, clearShopping, addToShopping } = useBar();
   const { userId } = useAuth();
   const [moved, setMoved] = useState(0);
+  const [picking, setPicking] = useState(false);
+  const picker = (
+    <IngredientPicker
+      visible={picking}
+      title="Add to shopping list"
+      customHint="to your list"
+      onAddCustom={(name) => {
+        addToShopping([`${LIST_ITEM_PREFIX}${name.slice(0, 60)}`]);
+        setMoved(0);
+        setPicking(false);
+      }}
+      onClose={() => setPicking(false)}
+      onPick={(id) => {
+        addToShopping([id]);
+        setMoved(0);
+        setPicking(false);
+      }}
+    />
+  );
+  const addButton = (
+    <Pressable
+      onPress={() => setPicking(true)}
+      accessibilityRole="button"
+      style={({ pressed }) => [styles.addItem, { borderColor: t.accent, opacity: pressed ? 0.7 : 1 }]}
+    >
+      <Text style={[styles.secondaryText, { color: t.accent }]}>+ Add item</Text>
+    </Pressable>
+  );
   const ticked = shopping.filter((i) => i.checked).length;
 
   const confirmClear = () => {
@@ -31,8 +60,10 @@ export default function ShoppingListScreen() {
         <Text style={{ fontSize: 48 }}>🛒</Text>
         <Text style={[styles.title, { color: t.text }]}>{moved ? `Added ${moved} to My Bar` : 'Your list is empty'}</Text>
         <Text style={[styles.body, { color: t.textMuted }]}>
-          Tap “+ List” next to a missing ingredient on any drink, or on the Mix screen’s suggestions.
+          Add anything you need below, or tap “Add to list” on the Mix screen or next to a missing ingredient on any drink.
         </Text>
+        <View style={{ alignSelf: 'stretch', marginTop: 12 }}>{addButton}</View>
+        {picker}
       </View>
     );
   }
@@ -77,13 +108,15 @@ export default function ShoppingListScreen() {
         ))}
       </View>
 
+      {addButton}
+
       <Pressable
         onPress={() => setMoved(moveCheckedToBar())}
         disabled={ticked === 0}
         style={[styles.primary, { backgroundColor: t.accent, opacity: ticked === 0 ? 0.4 : 1 }]}
       >
         <Text style={[styles.primaryText, { color: t.onAccent }]}>
-          {ticked === 0 ? 'Tick what you bought' : `Move ${ticked} to My Bar`}
+          {ticked === 0 ? 'Tick what you bought' : `Done: add ${ticked} ticked to My Bar`}
         </Text>
       </Pressable>
       {moved ? <Text style={[styles.done, { color: t.success }]}>✓ Added {moved} to My Bar</Text> : null}
@@ -103,6 +136,7 @@ export default function ShoppingListScreen() {
       <Pressable onPress={confirmClear} style={styles.clear}>
         <Text style={{ color: t.warning, fontWeight: '600' }}>Clear list</Text>
       </Pressable>
+      {picker}
     </ScrollView>
   );
 }
@@ -124,5 +158,6 @@ const styles = StyleSheet.create({
   actions: { flexDirection: 'row', gap: 10 },
   secondary: { flex: 1, borderWidth: 1.5, borderRadius: radius.pill, paddingVertical: 12, alignItems: 'center' },
   secondaryText: { fontSize: 15, fontWeight: '700' },
+  addItem: { borderWidth: 1.5, borderStyle: 'dashed', borderRadius: radius.md, paddingVertical: 13, alignItems: 'center' },
   clear: { alignItems: 'center', paddingVertical: 8 },
 });

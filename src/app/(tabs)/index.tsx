@@ -6,6 +6,7 @@ import { MixHero } from '../../components/MixHero';
 import { DrinkCard } from '../../components/DrinkCard';
 import { Screen, SectionTitle } from '../../components/Screen';
 import { isClassic } from '../../data/classics';
+import { isEasy } from '../../data/occasions';
 import { ingredientName } from '../../data/ingredients';
 import { findStoresNearby } from '../../features/stores/storeFinder';
 import { groupByBase, type BaseId } from '../../lib/base';
@@ -27,6 +28,7 @@ export default function MixScreen() {
   const { owned, favorites, ready, addIngredients, recipes, shopping, addToShopping } = useBar();
   const listed = new Set(shopping.map((i) => i.id));
   const [filter, setFilter] = useState<Filter>('all');
+  const [easyOnly, setEasyOnly] = useState(false);
   const [open, setOpen] = useState<ReadonlySet<string>>(new Set());
   const lastPick = useRef<string | undefined>(undefined);
   const toggle = (key: string) =>
@@ -38,10 +40,10 @@ export default function MixScreen() {
     });
 
   const matches = useMemo(() => {
-    const all = matchAll(owned, recipes);
+    const all = matchAll(owned, recipes).filter((m) => !easyOnly || isEasy(m.recipe));
     if (filter === 'all') return all;
     return all.filter((m) => (m.recipe.strength === 'None') === (filter === 'mocktails'));
-  }, [owned, filter, recipes]);
+  }, [owned, filter, recipes, easyOnly]);
 
   const ready_ = useMemo(() => matches.filter((m) => m.canMake), [matches]);
   const almost = useMemo(() => matches.filter((m) => m.missing.length === 1), [matches]);
@@ -128,6 +130,19 @@ export default function MixScreen() {
           );
         })}
       </View>
+      <Pressable
+        onPress={() => setEasyOnly((v) => !v)}
+        accessibilityRole="switch"
+        accessibilityState={{ checked: easyOnly }}
+        style={[
+          styles.easy,
+          { backgroundColor: easyOnly ? t.accent : t.surface, borderColor: easyOnly ? t.accent : t.border },
+        ]}
+      >
+        <Text style={[styles.easyText, { color: easyOnly ? t.onAccent : t.text }]}>
+          {easyOnly ? '✓ ' : ''}⚡ Easy only (3 ingredients or fewer)
+        </Text>
+      </Pressable>
 
       {ready_.length > 0 ? (
         <>
@@ -229,6 +244,8 @@ const styles = StyleSheet.create({
   emptyText: { fontSize: 15, textAlign: 'center', lineHeight: 21 },
   cta: { marginTop: 8, paddingHorizontal: 24, paddingVertical: 14, borderRadius: radius.pill },
   ctaText: { fontSize: 16, fontWeight: '700' },
+  easy: { alignSelf: 'flex-start', paddingHorizontal: 14, paddingVertical: 8, borderRadius: radius.pill, borderWidth: 1 },
+  easyText: { fontSize: 14, fontWeight: '600' },
   segment: { flexDirection: 'row', padding: 3, borderRadius: radius.sm + 2 },
   segmentItem: { flex: 1, paddingVertical: 8, borderRadius: radius.sm, alignItems: 'center' },
   segmentText: { fontSize: 14, fontWeight: '600' },

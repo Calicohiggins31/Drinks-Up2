@@ -1,5 +1,6 @@
 import { writeFileSync } from 'node:fs';
-import { privacyPolicyMarkdown } from '../src/content/privacyPolicy';
+import { privacyPolicyHtml, privacyPolicyMarkdown } from '../src/content/privacyPolicy';
 
 writeFileSync('docs/privacy-policy.md', privacyPolicyMarkdown());
-console.log('Wrote docs/privacy-policy.md');
+writeFileSync('docs/privacy-policy.html', privacyPolicyHtml() + '\n');
+console.log('Wrote docs/privacy-policy.md and docs/privacy-policy.html');

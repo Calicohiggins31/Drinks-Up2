@@ -2,7 +2,7 @@
 
 ## Who we are
 
-Drinks Up is operated by [COMPANY OR OWNER NAME]. If you have questions about this policy or your data, contact us at [CONTACT EMAIL].
+Drinks Up is operated by Andrew Higgins. If you have questions about this policy or your data, contact us at AD@AD-Higgins.com.
 
 ## Age requirement
 
@@ -62,4 +62,4 @@ Data sent between the app and our servers is encrypted. Each account can only re
 
 If we change this policy we will update the date below and, for significant changes, tell you in the app.
 
-Effective date: [EFFECTIVE DATE]
+Effective date: November 18, 2026

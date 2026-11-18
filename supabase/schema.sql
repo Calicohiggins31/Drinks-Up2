@@ -187,3 +187,16 @@ alter table public.shopping_items enable row level security;
 drop policy if exists "own shopping list" on public.shopping_items;
 create policy "own shopping list" on public.shopping_items
   for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+
+-- ─── Ratings on drink cards (added in v6) ────────────────────────────────────
+-- Every rated drink's average and count in one call, so lists can show "★ 4.6 (12)".
+-- Returns no names or user ids.
+create or replace function public.all_recipe_ratings()
+returns table (recipe_id text, average numeric, total bigint)
+language sql stable security definer set search_path = '' as $$
+  select r.recipe_id, round(avg(r.stars)::numeric, 1), count(*)
+  from public.ratings r
+  group by r.recipe_id;
+$$;
+revoke all on function public.all_recipe_ratings() from public;
+grant execute on function public.all_recipe_ratings() to anon, authenticated;

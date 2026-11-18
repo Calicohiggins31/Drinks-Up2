@@ -38,3 +38,17 @@ test('rating labels', async () => {
   assert.equal(ratingLabel({ average: 4.25, total: 27 }), '4.3 ★ from 27 ratings');
   assert.equal(ratingLabel({ average: 5, total: 1 }), '5.0 ★ from 1 rating');
 });
+
+test('card ratings and top rated', async () => {
+  const { shortRating, topRatedIds } = await import('./ratingLabel');
+  assert.equal(shortRating(undefined), '');
+  assert.equal(shortRating({ average: null, total: 0 }), '');
+  assert.equal(shortRating({ average: 4.56, total: 12 }), '4.6 (12)');
+  const all = new Map([
+    ['mojito', { average: 4.2, total: 30 }],
+    ['margarita', { average: 4.8, total: 52 }],
+    ['negroni', { average: 4.8, total: 9 }],
+    ['kamikaze', { average: 3.1, total: 40 }],
+  ]);
+  assert.deepEqual(topRatedIds(all), ['margarita', 'negroni', 'mojito']);
+});
