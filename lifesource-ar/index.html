@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>LifeSource AR</title>
+  <meta name="description" content="See LifeSource water systems in your garage, at real size.">
+  <meta name="theme-color" content="#007236">
+  <meta name="color-scheme" content="light">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="LifeSource AR">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="img/icon-192.png">
+  <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+  <link rel="stylesheet" href="styles.css">
+  <script type="module" src="vendor/model-viewer.min.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <button class="back" id="back" hidden aria-label="Back to all packages">&#8249; Back</button>
+    <a href="#/" class="brand" aria-label="LifeSource home"><img src="img/logo.png" alt="LifeSource Water Systems" width="261" height="146"></a>
+    <span class="status" id="status" hidden>&#10003; Works offline</span>
+  </header>
+
+  <div class="install" id="install" hidden>
+    <div>
+      <strong>Add this to your home screen</strong>
+      <span id="install-text"></span>
+    </div>
+    <button id="install-btn" hidden>Install</button>
+    <button class="close" id="install-close" aria-label="Dismiss">&times;</button>
+  </div>
+
+  <main id="app"></main>
+
+  <script src="app.js"></script>
+</body>
+</html>
