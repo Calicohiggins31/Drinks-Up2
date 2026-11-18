@@ -2,13 +2,13 @@
  * Single source for the privacy policy: shown in the app (Settings → Privacy policy)
  * and exported to docs/privacy-policy.md with `npm run privacy:md` for the store listings.
  *
- * Before publishing: replace the [BRACKETED] placeholders and have it reviewed.
+ * Update PRIVACY_EFFECTIVE_DATE whenever the policy changes, and have it reviewed before launch.
  * When location or analytics features ship, update the "Location" and "Analytics"
  * sections BEFORE releasing that version.
  */
-export const PRIVACY_EFFECTIVE_DATE = '[EFFECTIVE DATE]';
-export const PRIVACY_CONTACT = '[CONTACT EMAIL]';
-export const PRIVACY_OWNER = '[COMPANY OR OWNER NAME]';
+export const PRIVACY_EFFECTIVE_DATE = 'November 18, 2026';
+export const PRIVACY_CONTACT = 'AD@AD-Higgins.com';
+export const PRIVACY_OWNER = 'Andrew Higgins';
 
 export type PolicySection = { heading: string; body: string[] };
 
@@ -90,6 +90,15 @@ export const PRIVACY_POLICY: PolicySection[] = [
     ],
   },
 ];
+
+/** Same policy as a simple web page, ready to paste into a website. */
+export function privacyPolicyHtml(): string {
+  const esc = (x: string) => x.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  return [
+    '<h1>Drinks Up Privacy Policy</h1>',
+    ...PRIVACY_POLICY.flatMap((s) => [`<h2>${esc(s.heading)}</h2>`, ...s.body.map((p) => `<p>${esc(p)}</p>`)]),
+  ].join('\n');
+}
 
 export function privacyPolicyMarkdown(): string {
   return [

@@ -1,0 +1,22 @@
+<!-- Drinks Up mark: a coupe glass with a lime wheel. Drawn on a 1024 canvas, centred. -->
+<g id="glyph">
+  <!-- lime wheel on the rim -->
+  <g transform="translate(694 318)">
+    <circle r="112" fill="#FFFFFF"/>
+    <circle r="92" fill="#A9E34B"/>
+    <circle r="70" fill="#D8F5A2"/>
+    <g stroke="#A9E34B" stroke-width="12" stroke-linecap="round">
+      <line x1="0" y1="-62" x2="0" y2="62"/>
+      <line x1="-54" y1="-31" x2="54" y2="31"/>
+      <line x1="-54" y1="31" x2="54" y2="-31"/>
+    </g>
+  </g>
+  <!-- bowl -->
+  <path d="M232 330 H792 L548 590 Q512 628 476 590 Z" fill="#FFFFFF"/>
+  <!-- drink inside the bowl -->
+  <path d="M300 372 H724 L540 566 Q512 594 484 566 Z" fill="#FFD43B"/>
+  <path d="M300 372 H724 L700 398 H324 Z" fill="#FFE8A1"/>
+  <!-- stem and foot -->
+  <rect x="494" y="600" width="36" height="200" rx="14" fill="#FFFFFF"/>
+  <ellipse cx="512" cy="812" rx="128" ry="30" fill="#FFFFFF"/>
+</g>
