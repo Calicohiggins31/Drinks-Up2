@@ -1,40 +1,17 @@
 'use strict';
 
-// ---- Product data -------------------------------------------------------
-// Dimensions from the 1620S Ultimate Protection Package spec sheet.
-const PRODUCTS = {
-  filter: {
-    name: '1620S Elite Water Filter',
-    dim: '10" × 62.5"',
-    note: 'Needs an outlet within 5 ft. Leave 4" above for the valve cover.',
-  },
-  scale: {
-    name: '5544 ScaleSolver',
-    dim: '10" × 59.75"',
-    note: 'No backwash, no electricity needed.',
-  },
-  apa: {
-    name: 'ApaPure12 Disinfection',
-    dim: '3" × 10"',
-    note: 'Mounts on the cold water main (20" of pipe).',
-  },
-};
-
-// width = approx. floor width of the tanks, in inches (from the models)
-const PACKAGES = [
-  { id: 'ultimate', name: 'Ultimate', full: 'Ultimate Protection Package', items: ['filter', 'scale', 'apa'], width: 30, badge: 'Best' },
-  { id: 'power', name: 'Power Package', full: 'Power Package', items: ['filter', 'scale'], width: 25 },
-  { id: 'essential', name: 'Essential Package', full: 'Essential Package', items: ['filter', 'apa'], width: 18 },
-  { id: 'filter', name: 'Filter Only', full: 'Filter Only', items: ['filter'], width: 11 },
-];
-
-const SHORT = { filter: 'Filter', scale: 'ScaleSolver', apa: 'ApaPure12' };
+const C = window.CATALOG;
+const SIZES = window.MODEL_SIZES || {};
 
 // ---- Platform helpers ---------------------------------------------------
 const ua = navigator.userAgent;
 const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 const isAndroid = /Android/.test(ua);
 const isStandalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+// On iPhone only Safari (or the home-screen icon) can hand the model to Apple's AR viewer.
+// Chrome, Firefox, Google app and in-app browsers (Facebook, Gmail, etc.) silently fail.
+const isIOSNonSafari = isIOS && !isStandalone &&
+  (/CriOS|FxiOS|EdgiOS|OPiOS|GSA\/|DuckDuckGo|FBAN|FBAV|Instagram|Line\/|LinkedInApp|Snapchat|GoogleApp/.test(ua) || !/Safari\//.test(ua));
 
 function store(key, value) {
   try {
@@ -62,45 +39,85 @@ function photoSteps() {
     <li>Open <strong>Photos</strong> (or Gallery) and share it by text or email.</li>`;
 }
 
+// ---- Catalog helpers ----------------------------------------------------
+const pipeById = (id) => C.PIPE_SIZES.find(p => p.id === id);
+function currentPipe() { return pipeById(store('pipe')) || C.PIPE_SIZES[0]; }
+
+// Everything in one system, as display rows.
+function itemsFor(spec) {
+  const f = C.FILTERS[spec.filter];
+  const rows = [{ name: f.name, dim: f.dim, note: C.FILTER_NOTE }];
+  if (spec.scale) rows.push({ name: C.SCALES[spec.scale].name, dim: C.SCALES[spec.scale].dim, note: C.SCALE_NOTE });
+  if (spec.apa) rows.push({ name: C.APA.name + (spec.apa > 1 ? ` × ${spec.apa}` : ''), dim: C.APA.dim + (spec.apa > 1 ? ' each' : ''), note: C.APA.note });
+  return rows;
+}
+function summary(spec) {
+  const parts = [C.FILTERS[spec.filter].short.split(' ')[0] + ' Filter'];
+  if (spec.scale) parts.push(spec.scale + ' ScaleSolver');
+  if (spec.apa) parts.push('ApaPure12' + (spec.apa > 1 ? ' ×' + spec.apa : ''));
+  return parts.join(' + ');
+}
+
 // ---- Screens ------------------------------------------------------------
 function renderHome() {
   backBtn.hidden = true;
   document.title = 'LifeSource AR';
+  const pipe = currentPipe();
   app.innerHTML = `
     <section class="intro">
       <h1>See it in your garage</h1>
-      <p>Pick a package, then point your phone at the floor. The system appears at its real size.</p>
+      <p>Choose the home's main water line size, pick a system, then point your phone at the floor. It appears at real size.</p>
     </section>
-    <div class="grid">
-      ${PACKAGES.map(p => `
-        <a class="card" href="#/${p.id}">
-          ${p.badge ? `<span class="badge">${p.badge}</span>` : ''}
-          <div class="thumb"><img src="img/${p.id}.png" alt="" loading="lazy"></div>
-          <h2>${p.name}</h2>
-          <p>${p.items.map(i => SHORT[i]).join(' + ')}</p>
-        </a>`).join('')}
+    <div class="pipe-pick" role="radiogroup" aria-label="Main water line size">
+      <span class="pipe-label">Pipe size</span>
+      <div class="seg">
+        ${C.PIPE_SIZES.map(p => `<button role="radio" data-pipe="${p.id}" aria-checked="${p.id === pipe.id}">${p.label}</button>`).join('')}
+      </div>
     </div>
+    ${pipe.filters.map(fid => `
+      <section class="family">
+        <h2 class="family-title">${C.FILTERS[fid].short} <span>${C.FILTERS[fid].dim} filter</span></h2>
+        <div class="grid">
+          ${C.PACKAGES.map(pkg => {
+            const spec = C.specFor(pipe, fid, pkg);
+            return `
+            <a class="card" href="#/${pipe.id}/${fid}/${pkg.id}">
+              ${pkg.badge ? `<span class="badge">${pkg.badge}</span>` : ''}
+              <div class="thumb"><img src="img/${C.modelKey(spec)}.png" alt="" loading="lazy"></div>
+              <h3>${pkg.name}</h3>
+              <p>${summary(spec)}</p>
+            </a>`;
+          }).join('')}
+        </div>
+      </section>`).join('')}
     <section class="howto">
       <h3>Saving a photo for the customer</h3>
       <ol>${photoSteps()}</ol>
       <p class="note">Works best in a well-lit space with a plain floor. No signal needed once the app has loaded here once.</p>
     </section>`;
-  window.scrollTo(0, 0);
+  app.querySelectorAll('[data-pipe]').forEach(b => b.addEventListener('click', () => {
+    store('pipe', b.dataset.pipe);
+    const y = window.scrollY; renderHome(); window.scrollTo(0, y);
+  }));
 }
 
-function renderDetail(pkg) {
+function renderDetail(pipe, fid, pkg) {
   backBtn.hidden = false;
-  document.title = `${pkg.full} · LifeSource AR`;
+  const spec = C.specFor(pipe, fid, pkg);
+  const key = C.modelKey(spec);
+  const size = SIZES[key] || {};
+  const title = `${pkg.full} | ${C.FILTERS[fid].short.split(' ')[0]}`;
+  document.title = `${title} · LifeSource AR`;
   app.innerHTML = `
     <section class="detail">
-      <h1>${pkg.full}</h1>
-      <p class="sub">${pkg.items.map(i => SHORT[i]).join(' + ')}</p>
+      <h1>${title}</h1>
+      <p class="sub">${summary(spec)} · for ${pipe.label} pipe</p>
       <div class="viewer">
         <model-viewer
           id="mv"
-          src="models/${pkg.id}.glb"
-          poster="img/${pkg.id}.png"
-          alt="3D model of the LifeSource ${pkg.full}"
+          src="models/${key}.glb"
+          poster="img/${key}.png"
+          alt="3D model of the LifeSource ${title}"
           ar
           ar-modes="webxr scene-viewer quick-look"
           ar-placement="floor"
@@ -122,19 +139,21 @@ function renderDetail(pkg) {
         <span class="switch" aria-hidden="true"></span>
         <span>Show sizes on the tanks</span>
       </label>
+      <p class="safari-warn" id="safari-warn" ${isIOSNonSafari ? '' : 'hidden'}>To use <strong>View in your garage</strong> on iPhone, open this page in <strong>Safari</strong> (or from the LifeSource home-screen icon).</p>
       <button class="ar-btn" id="ar-btn">${AR_ICON} View in your garage</button>
       <p class="no-ar" id="no-ar" hidden>Open this page on a phone to see it in a real room.</p>
 
       <div class="section">
-        <div class="space"><span>Space needed:</span><strong>about ${pkg.width}" wide × 63" tall</strong></div>
+        <div class="space"><span>Space needed:</span><strong>about ${size.w || '?'}" wide × ${size.h || '?'}" tall</strong></div>
       </div>
+      ${spec.apa ? `<div class="section"><p class="placement">${C.APA_PLACEMENT}</p></div>` : ''}
 
       <div class="section">
         <h3>What's included</h3>
         <ul class="items">
-          ${pkg.items.map(i => `
-            <li><span class="dim">${PRODUCTS[i].dim}</span><span class="name">${PRODUCTS[i].name}</span>
-            <span class="note">${PRODUCTS[i].note}</span></li>`).join('')}
+          ${itemsFor(spec).map(it => `
+            <li><span class="dim">${it.dim}</span><span class="name">${it.name}</span>
+            <span class="note">${it.note}</span></li>`).join('')}
         </ul>
       </div>
 
@@ -148,13 +167,14 @@ function renderDetail(pkg) {
   const mv = document.getElementById('mv');
   const arBtn = document.getElementById('ar-btn');
   const noAr = document.getElementById('no-ar');
+  const safariWarn = document.getElementById('safari-warn');
 
-  // Sizes on/off: each package has a version with floating size cards
+  // Sizes on/off: each system has a version with floating size cards
   // built into the model, so they show in AR and in saved photos.
   const sizes = document.getElementById('sizes');
   const setSizes = (on) => {
     sizes.checked = on;
-    const src = `models/${pkg.id}${on ? '-sizes' : ''}.glb`;
+    const src = `models/${key}${on ? '-sizes' : ''}.glb`;
     if (mv.getAttribute('src') !== src) mv.setAttribute('src', src);
     store('sizes', on ? '1' : '0');
   };
@@ -162,6 +182,7 @@ function renderDetail(pkg) {
   setSizes(store('sizes') !== '0');
 
   arBtn.addEventListener('click', () => {
+    if (isIOSNonSafari) { safariWarn.hidden = false; safariWarn.scrollIntoView({ block: 'center', behavior: 'smooth' }); return; }
     if (mv.canActivateAR) mv.activateAR();
     else { noAr.hidden = false; }
   });
@@ -174,9 +195,16 @@ function renderDetail(pkg) {
 }
 
 function route() {
-  const id = location.hash.replace(/^#\/?/, '');
-  const pkg = PACKAGES.find(p => p.id === id);
-  if (pkg) renderDetail(pkg); else renderHome();
+  const [pipeId, fid, pkgId] = location.hash.replace(/^#\/?/, '').split('/');
+  const pipe = pipeById(pipeId);
+  const pkg = C.PACKAGES.find(p => p.id === pkgId);
+  if (pipe && pkg && pipe.filters.includes(fid)) {
+    store('pipe', pipe.id);
+    renderDetail(pipe, fid, pkg);
+  } else {
+    renderHome();
+    window.scrollTo(0, 0);
+  }
 }
 window.addEventListener('hashchange', route);
 route();
@@ -223,7 +251,7 @@ if ('serviceWorker' in navigator) {
       const keys = await caches.keys();
       for (const k of keys) {
         const c = await caches.open(k);
-        if (await c.match('models/ultimate.glb')) { status.hidden = false; break; }
+        if (await c.match('models/4140-a3-sizes.glb')) { status.hidden = false; break; }
       }
     } catch (e) { /* ignore */ }
   });

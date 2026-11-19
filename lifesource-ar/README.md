@@ -2,7 +2,8 @@
 
 A home-screen web app that lets staff place LifeSource water systems in a garage at real size using the phone's camera, then save a photo to send to the customer.
 
-- **Packages:** Ultimate (Filter + ScaleSolver + ApaPure12), Power (Filter + ScaleSolver), Essential (Filter + ApaPure12), Filter Only
+- **Pipe size first:** staff pick 1", 1¼", 1½" or 2". That decides the filters (1620S, 2250S, 4140LE), the ScaleSolver (5544 or 6633) and how many ApaPure12 units (1–3). The rules live in `catalog.js`.
+- **Packages per filter:** Ultimate (Filter + ScaleSolver + ApaPure12), Power (Filter + ScaleSolver), Essential (Filter + ApaPure12), Filter Only
 - **AR:** iPhone uses Apple's AR Quick Look; Android uses Chrome's WebXR, falling back to Google Scene Viewer. Models are at true scale (`ar-scale="fixed"`).
 - **Sizes:** each package also has a version with floating size cards (`models/<id>-sizes.glb`), switched with "Show sizes on the tanks" (on by default). The cards are part of the model, so they appear in AR and in photos.
 - **Offline:** `sw.js` saves every file on the phone on first visit. After that the app opens with no signal.
@@ -26,7 +27,8 @@ Open it once with signal so the tanks download. It then works offline.
 
 ## Updating
 
-- Replace a model in `models/` (a `.glb` file in meters, with the floor at y = 0).
+- Models are named `<filter>[-<scalesolver>][-a<apapure count>].glb`, e.g. `2250-6633-a2.glb`, plus a `-sizes` version with size labels. Thumbnails in `img/` use the same names. `models/sizes.js` holds each system's width and height.
+- Replace a model in `models/` (a `.glb` file in meters, with the floor at y = 0), and add any new files to `FILES` in `sw.js`.
 - **Bump `VERSION` in `sw.js`** so phones download the new files.
 - Upload again.
 
