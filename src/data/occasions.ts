@@ -14,6 +14,7 @@ export const OCCASIONS: { id: OccasionId; label: string; emoji: string; ids: str
       'whisky_highball', 'elderflower_gt', 'lillet_tonic', 'wine_spritzer', 'bicicletta', 'cantarito', 'matador',
       'virgin_mojito', 'virgin_colada', 'lime_rickey', 'arnold_palmer', 'cucumber_cooler', 'strawberry_lemonade',
       'mint_lemonade', 'virgin_paloma', 'virgin_margarita', 'peach_iced_tea', 'cherry_limeade', 'passion_fizz',
+      'watermelon_cooler', 'frozen_margarita', 'strawberry_margarita', 'watermelon_margarita', 'pineapple_margarita', 'pineapple_mojito', 'strawberry_mojito', 'coconut_mojito', 'banana_daiquiri', 'frose', 'rose_spritz', 'limoncello_spritz', 'tinto_de_verano', 'orange_crush', 'coconut_rum_pineapple', 'vodka_soda', 'tequila_tonic', 'bourbon_lemonade', 'peach_smash', 'chelada', 'watermelon_agua_fresca', 'coconut_lime_cooler', 'pink_lemonade', 'raspberry_lemonade', 'peach_lemonade', 'cucumber_mint_lemonade', 'pineapple_nojito', 'virgin_strawberry_daiquiri',
     ],
   },
   {
@@ -22,6 +23,7 @@ export const OCCASIONS: { id: OccasionId; label: string; emoji: string; ids: str
       'mimosa', 'bellini', 'bloody_mary', 'bloody_maria', 'screwdriver', 'french_75', 'aperol_spritz', 'kir_royale',
       'rossini', 'garibaldi', 'michelada', 'brandy_milk_punch', 'espresso_martini', 'irish_coffee', 'poinsettia',
       'virgin_mary', 'virgin_bellini', 'sunrise_cooler', 'espresso_tonic', 'cinderella', 'arnold_palmer',
+      'mojito_royale', 'limoncello_spritz', 'chelada', 'vanilla_iced_latte', 'mexican_coffee', 'virgin_sangria', 'creamsicle_fizz',
     ],
   },
   {
@@ -30,6 +32,7 @@ export const OCCASIONS: { id: OccasionId; label: string; emoji: string; ids: str
       'negroni', 'americano', 'aperol_spritz', 'campari_spritz', 'negroni_sbagliato', 'martini', 'dirty_martini',
       'vesper', 'gin_tonic', 'kir', 'kir_royale', 'bicicletta', 'lillet_tonic', 'garibaldi', 'boulevardier',
       'french_75', 'martinez', 'bronx', 'champagne_cocktail', 'whisky_highball', 'paloma', 'gimlet',
+      'gibson', 'vodka_martini', 'old_pal', 'bitter_soda', 'aperitivo_sour', 'limoncello_spritz', 'rose_spritz', 'no_gin_tonic',
     ],
   },
   {
@@ -39,6 +42,7 @@ export const OCCASIONS: { id: OccasionId; label: string; emoji: string; ids: str
       'chocolate_martini', 'toasted_almond', 'godfather', 'godmother', 'rusty_nail', 'stinger', 'old_fashioned',
       'manhattan', 'sazerac', 'vieux_carre', 'irish_coffee', 'baileys_coffee', 'carajillo', 'amaretto_sour',
       'b52', 'baby_guinness', 'black_manhattan', 'rob_roy',
+      'brave_bull', 'french_connection', 'bushwacker', 'mexican_coffee', 'japanese_cocktail', 'irish_cream_hot_chocolate',
     ],
   },
   {
@@ -49,6 +53,7 @@ export const OCCASIONS: { id: OccasionId; label: string; emoji: string; ids: str
       'jungle_bird', 'hurricane', 'bahama_mama', 'fuzzy_navel', 'melon_ball', 'b52', 'baby_guinness',
       'mojito', 'moscow_mule', 'french_martini', 'pornstar_martini', 'espresso_martini', 'cuba_libre',
       'shirley_temple', 'roy_rogers', 'tropical_punch', 'cherry_limeade',
+      'dirty_shirley', 'long_beach', 'tokyo_tea', 'green_tea_shot', 'mind_eraser', 'washington_apple', 'orange_crush', 'frozen_margarita', 'beergarita', 'appletini', 'vodka_bay_breeze', 'raspberry_lemon_drop', 'shirley_ginger', 'pink_lemonade',
     ],
   },
   {
@@ -57,6 +62,7 @@ export const OCCASIONS: { id: OccasionId; label: string; emoji: string; ids: str
       'hot_toddy', 'irish_coffee', 'mulled_wine', 'hot_spiced_cider', 'eggnog', 'rum_flip', 'baileys_coffee',
       'old_fashioned', 'maple_old_fashioned', 'manhattan', 'penicillin', 'rusty_nail', 'godfather', 'boulevardier',
       'white_russian', 'brandy_alexander', 'warm_spiced_apple', 'honey_lemon_soother',
+      'irish_cream_hot_chocolate', 'peppermint_hot_chocolate', 'mexican_coffee', 'mulled_cider', 'coquito', 'bourbon_cider', 'cinnamon_apple_highball', 'irish_mule',
     ],
   },
 ];

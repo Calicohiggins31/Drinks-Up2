@@ -1,4 +1,5 @@
 import { ABOUT } from './about';
+import { RECIPES_300 } from './recipes-300';
 import { EXTRA_RECIPES } from './recipes-extra';
 import { MORE_RECIPES } from './recipes-more';
 
@@ -856,7 +857,7 @@ const CLASSICS: Recipe[] = [
   },
 ];
 
-export const RECIPES: Recipe[] = [...CLASSICS, ...MORE_RECIPES, ...EXTRA_RECIPES].map((r) => ({ ...r, about: ABOUT[r.id] }));
+export const RECIPES: Recipe[] = [...CLASSICS, ...MORE_RECIPES, ...EXTRA_RECIPES, ...RECIPES_300].map((r) => ({ ...r, about: ABOUT[r.id] }));
 
 const byId = new Map(RECIPES.map((r) => [r.id, r]));
 

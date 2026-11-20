@@ -12,8 +12,11 @@ export const CLASSICS: string[] = [
   'sazerac', 'kamikaze', 'sea_breeze', 'cape_codder', 'hurricane', 'rum_punch', 'painkiller', 'caipirinha',
   'fuzzy_navel', 'greyhound', 'salty_dog', 'eggnog', 'mulled_wine', 'michelada', 'whiskey_ginger', 'b52',
   'grasshopper', 'boulevardier', 'pisco_sour',
+  'vodka_tonic', 'vodka_soda', 'frozen_margarita', 'strawberry_margarita', 'whiskey_cola', 'appletini',
+  'dirty_shirley', 'vodka_martini', 'orange_crush', 'mexican_mule', 'irish_mule',
   // Mocktails everyone knows
   'shirley_temple', 'virgin_mojito', 'arnold_palmer', 'virgin_mary', 'virgin_colada', 'roy_rogers', 'virgin_margarita',
+  'pink_lemonade', 'virgin_strawberry_daiquiri', 'raspberry_lemonade',
 ];
 
 const rank = new Map(CLASSICS.map((id, i) => [id, i]));

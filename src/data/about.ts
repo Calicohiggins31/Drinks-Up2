@@ -405,4 +405,205 @@ export const ABOUT: Record<string, string> = {
     'Hot apple cider with cinnamon: cosy, sweet and spiced.',
   honey_lemon_soother:
     "Warm honey and lemon: soothing and comforting. A favourite when you're feeling under the weather.",
+
+  vodka_tonic:
+    'Vodka and tonic with a squeeze of lime: crisp, clean and lightly bitter. One of the most ordered drinks at any bar.',
+  vodka_soda:
+    'Vodka, soda and lime: about as light and simple as a mixed drink gets. A favourite for people who want something low in sugar.',
+  vodka_martini:
+    'A martini made with vodka instead of gin: smoother and cleaner, with just a hint of vermouth. Shaken or stirred, it should be ice cold.',
+  vodka_lemonade:
+    'Vodka topped with lemonade: sweet, tart and easy. A go-to for barbecues and big batches.',
+  vodka_sour:
+    'Vodka, lemon and sugar, with egg white for a silky foam if you like: bright and tart, letting the citrus shine.',
+  appletini:
+    'Vodka with sour apple schnapps and a little lemon: sweet, tangy and bright green. A 1990s icon that\'s still a crowd-pleaser.',
+  watermelon_cooler:
+    'Fresh watermelon, vodka and lime topped with soda: juicy, light and made for hot days.',
+  cucumber_smash:
+    'Muddled cucumber with vodka, lime and a little sugar: cool, crisp and garden-fresh.',
+  raspberry_lemon_drop:
+    'A Lemon Drop sweetened with raspberry: pink, sweet-tart and dangerously easy to drink.',
+  cranberry_mule:
+    'A Moscow Mule with a splash of cranberry: spicy, tart and festive. Popular around the holidays.',
+  vodka_collins:
+    'A Tom Collins made with vodka: a tall, fizzy, lightly sweet lemonade with a clean kick.',
+  hairy_navel:
+    'A Fuzzy Navel with a shot of vodka: peachy, juicy and a little stronger.',
+  vodka_bay_breeze:
+    'Vodka with pineapple and cranberry: fruity, pink and refreshing. A close cousin of the Sea Breeze.',
+  gibson:
+    'A gin martini garnished with a cocktail onion instead of an olive or twist: crisp, dry and slightly savoury. It dates to the early 1900s.',
+  gin_buck:
+    'Gin, lime and ginger ale: a \'buck\' is an old name for a spirit with ginger and citrus. Light, zesty and easy.',
+  gin_daisy:
+    'Gin, lemon and grenadine served over crushed ice: tart, fruity and pink. Daisies were a popular style in the late 1800s.',
+  ramos_gin_fizz:
+    'Gin, citrus, cream and egg white shaken long and hard, then topped with soda so a tall foam rises: light, creamy and citrusy. Created in New Orleans in 1888. The classic recipe also uses a few drops of orange flower water.',
+  cucumber_gimlet:
+    'A gimlet with muddled cucumber: sharp lime softened by cool, fresh cucumber.',
+  strawberry_gin_smash:
+    'Muddled strawberries with gin, lemon and a touch of basil: fruity, bright and summery.',
+  gin_sling:
+    'Gin, lemon and sugar lengthened with soda: one of the oldest styles of mixed drink, simple and refreshing.',
+  fitzgerald:
+    'A gin sour with a couple of dashes of bitters: tart, crisp and a little spiced. A modern classic from the 1990s.',
+  elderflower_collins:
+    'A Tom Collins with elderflower liqueur: floral, fizzy and light.',
+  banana_daiquiri:
+    'Rum, lime and banana blended with ice: creamy, fruity and frosty. A beach-bar favourite.',
+  rum_sour:
+    'Rum, lemon and sugar, with egg white for foam if you like: rounder and sweeter than most sours.',
+  pineapple_mojito:
+    'A mojito with pineapple juice: minty, limey and tropical.',
+  strawberry_mojito:
+    'A mojito with muddled strawberries: sweet, minty and pink. Popular in summer.',
+  coconut_mojito:
+    'A mojito made with coconut rum: minty and limey with a tropical, creamy edge.',
+  rum_collins:
+    'A Collins made with rum: tall, lemony and sparkling.',
+  bushwacker:
+    'Rum, coffee liqueur, chocolate liqueur, coconut and milk blended with ice: a boozy milkshake from the Virgin Islands, later famous on Florida\'s Gulf Coast.',
+  mojito_royale:
+    'A mojito topped with sparkling wine instead of soda: minty, limey and celebratory.',
+  ti_punch:
+    'Rum with a squeeze of lime and a little cane sugar: strong and simple. It\'s the everyday drink of Martinique and Guadeloupe, where it\'s made with rhum agricole.',
+  coquito:
+    'Rum with coconut, milk, sugar and cinnamon: a rich, creamy Puerto Rican holiday drink, often called Puerto Rican eggnog. Traditional recipes use condensed and evaporated milk; this is a simpler version.',
+  coconut_rum_pineapple:
+    'Coconut rum and pineapple juice over ice: sweet, tropical and as easy as it gets.',
+  frozen_margarita:
+    'Tequila, orange liqueur and lime blended with ice: slushy, tart and refreshing. The frozen margarita machine was invented in Dallas in 1971.',
+  strawberry_margarita:
+    'A margarita with fresh strawberries: sweet, tart and pink. Blend it frozen or shake it on the rocks.',
+  watermelon_margarita:
+    'A margarita with fresh watermelon: juicy, light and perfect for summer.',
+  pineapple_margarita:
+    'A margarita with pineapple juice: tropical, sweet and tart.',
+  blue_margarita:
+    'A margarita made with blue curaçao instead of triple sec: the same tangy taste in electric blue.',
+  mexican_mule:
+    'A mule made with tequila: spicy ginger beer, lime and agave.',
+  mezcal_margarita:
+    'A margarita made with mezcal: tart and bright with a smoky finish.',
+  tequila_sour:
+    'Tequila, lime and sugar, with egg white if you like: tart, earthy and smooth.',
+  spicy_paloma:
+    'A Paloma with fresh jalapeño: grapefruit, lime and a little heat.',
+  tequila_tonic:
+    'Tequila topped with tonic and lime: earthy, bitter-sweet and crisp.',
+  mezcal_paloma:
+    'A Paloma made with mezcal: grapefruit, lime and soda with a smoky edge.',
+  whiskey_cola:
+    'Whiskey and cola over ice: sweet, smooth and simple. One of the most common bar orders anywhere.',
+  irish_mule:
+    'A mule made with Irish whiskey: smooth whiskey, spicy ginger beer and lime.',
+  old_pal:
+    'Rye, red bitter aperitivo and dry vermouth in equal parts: drier and sharper than a Boulevardier. Recorded in Paris in the 1920s.',
+  scofflaw:
+    'Rye, dry vermouth, lemon and grenadine: tart, fruity and spicy. Created in Paris in 1924 and named after the slang for people who flouted Prohibition.',
+  bourbon_lemonade:
+    'Bourbon with lemonade and a little mint: sweet, tart and made for a summer porch.',
+  peach_smash:
+    'Bourbon with peach, lemon and mint over crushed ice: juicy, fresh and Southern.',
+  john_collins:
+    'A Collins made with bourbon: tall, lemony and sparkling, with a warmer flavour than gin.',
+  algonquin:
+    'Rye, dry vermouth and pineapple: a little tropical, a little spicy. Named after New York\'s Algonquin Hotel.',
+  mamie_taylor:
+    'Scotch, lime and ginger beer: a forerunner of the Moscow Mule, popular around 1900.',
+  cinnamon_apple_highball:
+    'Cinnamon whisky with apple cider: like apple pie in a glass. A fall party favourite.',
+  bourbon_cider:
+    'Bourbon topped with hard cider: crisp apple and warm vanilla. Great in autumn.',
+  brandy_sour:
+    'Brandy, lemon and sugar: rich, fruity and tart. Hugely popular in Cyprus, where it\'s a national favourite.',
+  japanese_cocktail:
+    'Brandy with almond syrup and bitters: nutty, smooth and aromatic. It appeared in the first bartending book, from 1862.',
+  pisco_punch:
+    'Pisco with pineapple and lime: fruity and dangerously smooth. It was famous in San Francisco in the late 1800s.',
+  brandy_smash:
+    'Brandy with muddled lemon and mint over crushed ice: fresh, bright and warming at the same time.',
+  french_connection:
+    'Cognac with a little amaretto: smooth, nutty and warming. A cousin of the Godfather.',
+  frose:
+    'Frozen rosé blended with strawberries and lemon: a slushy, pink summer drink that became a hit in 2016.',
+  rose_spritz:
+    'Rosé lengthened with soda, and a splash of elderflower if you like: light, fruity and refreshing.',
+  black_velvet:
+    'Stout and sparkling wine layered in a flute: rich and dry. Created in London in 1861 to mourn Prince Albert.',
+  snakebite:
+    'Half lager, half hard cider: crisp, sweet and fizzy. A British pub favourite.',
+  beergarita:
+    'A margarita topped with cold beer: tart, salty and fizzy. A backyard party favourite.',
+  limoncello_spritz:
+    'Limoncello with prosecco and soda: sunny, sweet and lemony. The Italian lemon liqueur at its most refreshing.',
+  chelada:
+    'Beer with lime juice and a salted rim: crisp, tart and refreshing. A simpler cousin of the Michelada.',
+  mulled_cider:
+    'Hard cider gently warmed with cinnamon, honey and orange: cosy and spiced.',
+  tinto_de_verano:
+    'Red wine with lemon-lime soda over ice: \'summer red wine\', what many Spaniards actually drink instead of sangria.',
+  aperitivo_sour:
+    'Orange aperitivo shaken with lemon and sugar: bittersweet, tart and silky with egg white. Low in alcohol.',
+  bitter_soda:
+    'Red bitter aperitivo topped with soda: bright red, bitter and refreshing. A classic before-dinner drink in Milan.',
+  washington_apple:
+    'Whisky, sour apple schnapps and cranberry: sweet, tart and fruity. Often served as a shot.',
+  green_tea_shot:
+    'Irish whiskey, peach schnapps and sweet-and-sour, topped with a splash of soda: it tastes like sweet iced tea, though it contains no tea. A popular party shot.',
+  mind_eraser:
+    'Coffee liqueur, vodka and soda layered over ice and drunk quickly through a straw: sweet, strong and fizzy.',
+  amaretto_stone_sour:
+    'Amaretto, lemon and orange juice: a fruitier, softer Amaretto Sour.',
+  irish_cream_hot_chocolate:
+    'Hot chocolate with Irish cream liqueur: rich, creamy and cosy.',
+  peppermint_hot_chocolate:
+    'Hot chocolate with mint liqueur: like a chocolate-mint candy in a mug.',
+  mexican_coffee:
+    'Hot coffee with tequila and coffee liqueur, topped with cream: warming and smooth.',
+  brave_bull:
+    'Tequila with coffee liqueur: a tequila twist on the Black Russian, strong and sweet.',
+  dirty_shirley:
+    'A Shirley Temple with vodka: lemon-lime soda, grenadine and a cherry. Sweet, fizzy and nostalgic, it\'s had a big comeback.',
+  long_beach:
+    'A Long Island Iced Tea topped with cranberry instead of cola: fruity, pink and strong.',
+  tokyo_tea:
+    'A Long Island Iced Tea made with melon liqueur and lemon-lime soda: bright green, sweet and strong.',
+  orange_crush:
+    'Fresh orange juice, vodka and orange liqueur with a splash of soda: juicy and fizzy. The signature drink of Ocean City, Maryland.',
+  watermelon_agua_fresca:
+    'Blended watermelon with lime and a little sugar: light, fresh and hydrating. Agua fresca means \'fresh water\' in Spanish.',
+  coconut_lime_cooler:
+    'Coconut water with lime and mint: light, hydrating and refreshing.',
+  pineapple_ginger_fizz:
+    'Pineapple juice with spicy ginger beer and lime: tropical with a kick.',
+  raspberry_lemonade:
+    'Lemonade with raspberry syrup: pink, sweet and tart.',
+  virgin_strawberry_daiquiri:
+    'Strawberries, lime and sugar blended with ice: all the frosty fun, no rum.',
+  virgin_sangria:
+    'Cranberry, orange and apple juice with fruit and soda: fruity and festive, with no alcohol.',
+  ginger_mint_lemonade:
+    'Lemonade with ginger syrup and fresh mint: zingy and refreshing.',
+  creamsicle_fizz:
+    'Orange juice, vanilla and cream topped with soda: like an orange creamsicle in a glass.',
+  cucumber_mint_lemonade:
+    'Lemonade with muddled cucumber and mint: cool and spa-like.',
+  pink_lemonade:
+    'Lemonade tinted pink with grenadine or cranberry: sweet, tart and a summer fair classic.',
+  no_gin_tonic:
+    'Tonic with lime and cucumber over lots of ice: crisp and bitter, the G&T ritual without the gin.',
+  pineapple_nojito:
+    'An alcohol-free pineapple mojito: mint, lime and pineapple topped with soda.',
+  shirley_ginger:
+    'A Shirley Temple made with ginger ale and a squeeze of lime: sweet, spicy and fizzy.',
+  passion_fruit_lemonade:
+    'Lemonade with passion fruit: tropical, tart and fragrant.',
+  peach_lemonade:
+    'Lemonade with peach purée: sweet, fruity and summery.',
+  strawberry_basil_soda:
+    'Muddled strawberries and basil with lemon and soda: sweet, herbal and refreshing.',
+  vanilla_iced_latte:
+    'Espresso with vanilla and milk over ice: smooth, sweet café-style coffee with no alcohol.',
 };
