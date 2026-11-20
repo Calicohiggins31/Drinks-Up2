@@ -50,10 +50,10 @@ test('results are sorted by how few ingredients are missing', () => {
 
 test('shopping suggestions pick the ingredient that unlocks the most drinks', () => {
   const owned = new Set(['vodka', 'gin', 'white_rum', 'simple_syrup', 'soda_water']);
-  const [top] = shoppingSuggestions(matchAll(owned));
-  assert.equal(top.ingredientId, 'lime_juice');
-  const names = top.unlocks.map((r) => r.id);
-  assert.ok(names.includes('daiquiri') && names.includes('gimlet'));
+  const top2 = shoppingSuggestions(matchAll(owned)).slice(0, 2);
+  assert.deepEqual(top2.map((s) => s.ingredientId).sort(), ['lemon_juice', 'lime_juice'], 'citrus unlocks the most');
+  const lime = top2.find((s) => s.ingredientId === 'lime_juice')!.unlocks.map((r) => r.id);
+  assert.ok(lime.includes('daiquiri') && lime.includes('gimlet'));
 });
 
 test('amounts format in oz and ml', () => {
@@ -65,7 +65,7 @@ test('amounts format in oz and ml', () => {
 });
 
 test('every built-in recipe has an About section and at least one step', () => {
-  assert.equal(RECIPES.length, 200);
+  assert.equal(RECIPES.length, 300);
   for (const r of RECIPES) {
     assert.ok(r.about && r.about.length > 40, `${r.id} has no about text`);
     assert.ok(r.steps.length > 0, `${r.id} has no steps`);
@@ -131,10 +131,10 @@ test('among drinks you can make, classics are listed first', () => {
 
 test('shopping list favours classics and everyday items over specialty bottles', () => {
   const owned = new Set(['vodka', 'tequila', 'white_rum', 'triple_sec', 'simple_syrup', 'cream']);
-  const list = shoppingSuggestions(matchAll(owned)).map((s) => s.ingredientId);
+  const list = shoppingSuggestions(matchAll(owned), 10).map((s) => s.ingredientId);
   assert.equal(list[0], 'lime_juice', 'lime unlocks Margarita and Daiquiri');
+  assert.ok(list.slice(0, 5).includes('cranberry_juice'), `cranberry (Cape Codder) should be in the top 5: ${list}`);
   assert.ok(list.includes('orange_juice'), `orange juice (Screwdriver) should be suggested: ${list}`);
-  assert.ok(list.includes('cranberry_juice'), `cranberry (Cape Codder) should be suggested: ${list}`);
   const oj = list.indexOf('orange_juice');
   const coffee = list.indexOf('coffee_liqueur');
   assert.ok(coffee === -1 || oj < coffee, `orange juice should beat coffee liqueur: ${list}`);

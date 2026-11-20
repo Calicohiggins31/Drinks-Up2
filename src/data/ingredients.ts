@@ -42,6 +42,7 @@ export const INGREDIENTS: Ingredient[] = [
   { id: 'spiced_rum', name: 'Spiced rum', category: 'Spirits' },
   { id: 'irish_whiskey', name: 'Irish whiskey', category: 'Spirits' },
   { id: 'absinthe', name: 'Absinthe / pastis', category: 'Spirits' },
+  { id: 'cinnamon_whisky', name: 'Cinnamon whisky', category: 'Spirits' },
 
   // Liqueurs & wine
   { id: 'triple_sec', name: 'Triple sec (orange liqueur)', category: 'Liqueurs & Wine' },
@@ -54,6 +55,11 @@ export const INGREDIENTS: Ingredient[] = [
   { id: 'sparkling_wine', name: 'Prosecco / sparkling wine', category: 'Liqueurs & Wine' },
   { id: 'red_wine', name: 'Red wine', category: 'Liqueurs & Wine' },
   { id: 'white_wine', name: 'White wine', category: 'Liqueurs & Wine' },
+  { id: 'rose_wine', name: 'Rosé wine', category: 'Liqueurs & Wine' },
+  { id: 'stout', name: 'Stout (dark beer)', category: 'Liqueurs & Wine' },
+  { id: 'hard_cider', name: 'Hard cider', category: 'Liqueurs & Wine' },
+  { id: 'limoncello', name: 'Limoncello', category: 'Liqueurs & Wine' },
+  { id: 'sour_apple_schnapps', name: 'Sour apple schnapps', category: 'Liqueurs & Wine' },
   { id: 'beer', name: 'Beer / lager', category: 'Liqueurs & Wine' },
   { id: 'elderflower_liqueur', name: 'Elderflower liqueur', category: 'Liqueurs & Wine' },
   { id: 'irish_cream', name: 'Irish cream liqueur', category: 'Liqueurs & Wine' },
@@ -82,6 +88,7 @@ export const INGREDIENTS: Ingredient[] = [
   { id: 'lemonade', name: 'Lemonade', category: 'Mixers' },
   { id: 'iced_tea', name: 'Iced tea', category: 'Mixers' },
   { id: 'coffee', name: 'Hot coffee', category: 'Mixers' },
+  { id: 'hot_chocolate', name: 'Hot chocolate', category: 'Mixers' },
 
   // Juices
   { id: 'lime_juice', name: 'Lime juice', category: 'Juices' },
@@ -94,6 +101,7 @@ export const INGREDIENTS: Ingredient[] = [
   { id: 'apple_juice', name: 'Apple juice / cider', category: 'Juices' },
   { id: 'passion_fruit', name: 'Passion fruit purée', category: 'Juices' },
   { id: 'peach_puree', name: 'Peach purée', category: 'Juices' },
+  { id: 'coconut_water', name: 'Coconut water', category: 'Juices' },
 
   // Syrups & sweeteners
   { id: 'simple_syrup', name: 'Simple syrup', category: 'Syrups & Sweeteners' },
@@ -129,6 +137,9 @@ export const INGREDIENTS: Ingredient[] = [
   { id: 'basil', name: 'Fresh basil', category: 'Fresh & Pantry' },
   { id: 'jalapeno', name: 'Jalapeño', category: 'Fresh & Pantry' },
   { id: 'olives', name: 'Olives (and brine)', category: 'Fresh & Pantry' },
+  { id: 'cocktail_onion', name: 'Cocktail onions', category: 'Fresh & Pantry' },
+  { id: 'banana', name: 'Banana', category: 'Fresh & Pantry' },
+  { id: 'watermelon', name: 'Watermelon (fresh or juice)', category: 'Fresh & Pantry' },
   { id: 'milk', name: 'Milk', category: 'Fresh & Pantry' },
   { id: 'nutmeg', name: 'Nutmeg', category: 'Fresh & Pantry' },
   { id: 'cinnamon', name: 'Cinnamon', category: 'Fresh & Pantry' },
