@@ -10,7 +10,7 @@ One codebase runs on **iPhone and Android** (built with [Expo](https://expo.dev)
 - **Age gate**: date of birth on first launch; under-21s are blocked.
 - **Mix**: every drink you can make now, grouped under foldable base-spirit headers (Vodka, Gin, Rum…), filtered by cocktails or mocktails. It also shows drinks that are **one ingredient away**, plus a **shopping list** of the single purchases that unlock the most new drinks, and a **Find a liquor store near me** button that opens Maps.
 - **Drink page**: ingredients with ✓ / ✕ for what you have, amounts in oz or ml, method steps, and an "I have it" button for anything missing. Sensible swaps count automatically (rye for bourbon, sugar for simple syrup).
-- **Drinks**: search all 300 drinks by name, ingredient or description, with "I can make" and base-spirit filters. Every drink has an "About this drink" note.
+- **Drinks**: search all 400 drinks by name, ingredient or description, with "I can make" and base-spirit filters. Every drink has an "About this drink" note.
 - **Pick a drink for me**: a random drink you can make right now, on the Mix screen.
 - **Shopping list**: add missing ingredients from any drink or suggestion, tick them off at the store, move them into My Bar, or share the list.
 - **Ratings and notes**: signed-in users rate drinks 1–5 stars (everyone sees the average); private notes on any drink.

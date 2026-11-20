@@ -14,6 +14,7 @@ export const CLASSICS: string[] = [
   'grasshopper', 'boulevardier', 'pisco_sour',
   'vodka_tonic', 'vodka_soda', 'frozen_margarita', 'strawberry_margarita', 'whiskey_cola', 'appletini',
   'dirty_shirley', 'vodka_martini', 'orange_crush', 'mexican_mule', 'irish_mule',
+  'spiced_rum_cola', 'frozen_daiquiri', 'mango_margarita', 'tequila_shot', 'lemon_drop_shot', 'vodka_cola',
   // Mocktails everyone knows
   'shirley_temple', 'virgin_mojito', 'arnold_palmer', 'virgin_mary', 'virgin_colada', 'roy_rogers', 'virgin_margarita',
   'pink_lemonade', 'virgin_strawberry_daiquiri', 'raspberry_lemonade',

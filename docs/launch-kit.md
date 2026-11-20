@@ -58,7 +58,7 @@ If the name is taken: `Drinks Up: Cocktail Mixer`
 `Tell us what's in your bar and see every cocktail you can make right now.`
 
 **Apple promotional text** (170 max, can change any time without review):
-`300 cocktails and mocktails, sorted by what you can make tonight. Tap what's in your bar, and Drinks Up does the rest. Cheers!`
+`400 cocktails and mocktails, sorted by what you can make tonight. Tap what's in your bar, and Drinks Up does the rest. Cheers!`
 
 **Description** (both stores):
 
@@ -68,7 +68,7 @@ What can I make with what I've got? Drinks Up answers that in seconds.
 Tap the bottles, mixers and fruit you have at home, and Drinks Up shows every drink you can make right now, plus the ones you're just one ingredient away from.
 
 WHAT YOU GET
-• 300 cocktails and mocktails, from the Margarita and Old Fashioned to the Paper Plane and Espresso Martini
+• 400 cocktails and mocktails, from the Margarita and Old Fashioned to the Paper Plane and Espresso Martini
 • Classics first, so you see the drinks everyone knows
 • Grouped by spirit: tap Vodka, Gin, Rum or Tequila to see what you can mix
 • "Tonight's pick" and a Pick-a-drink-for-me button for when you can't decide
