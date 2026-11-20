@@ -606,4 +606,205 @@ export const ABOUT: Record<string, string> = {
     'Muddled strawberries and basil with lemon and soda: sweet, herbal and refreshing.',
   vanilla_iced_latte:
     'Espresso with vanilla and milk over ice: smooth, sweet café-style coffee with no alcohol.',
+
+  vodka_ginger:
+    'Vodka with ginger ale and a squeeze of lime: smooth, lightly spicy and easy. A simple bar staple.',
+  vodka_lemon_lime:
+    'Vodka topped with lemon-lime soda: sweet, citrusy and fizzy. About as easy as mixed drinks get.',
+  vodka_pineapple:
+    'Vodka and pineapple juice: sweet, tropical and smooth. A quick crowd-pleaser.',
+  vodka_cola:
+    'Vodka and cola with lime: sweet and bubbly, letting the cola do the talking.',
+  spiked_sweet_tea:
+    'Sweet iced tea with vodka and lemon: a Southern porch favourite that\'s dangerously easy to sip.',
+  strawberry_vodka_lemonade:
+    'Muddled strawberries with vodka and lemonade: sweet, tart and pink. Perfect for summer.',
+  peach_vodka_lemonade:
+    'Peach purée, vodka and lemonade: fruity, sweet and refreshing.',
+  pineapple_mule:
+    'A Moscow Mule with pineapple juice: spicy ginger, sharp lime and tropical sweetness.',
+  mango_mule:
+    'A Moscow Mule with mango: fruity, spicy and refreshing.',
+  vodka_mojito:
+    'A mojito made with vodka instead of rum: cleaner and crisper, with all the mint and lime.',
+  vodka_sunrise:
+    'Vodka, orange juice and grenadine sinking to the bottom: sweet, fruity and pretty.',
+  vodka_coconut_water:
+    'Vodka with coconut water and lime: light, hydrating and lower in sugar than most mixers.',
+  vodka_spritz:
+    'Vodka with lemon, a little sugar, sparkling wine and soda: light, bright and bubbly.',
+  raspberry_vodka_soda:
+    'Vodka and soda with raspberry and lime: lightly sweet, fruity and fizzy.',
+  spiked_cherry_limeade:
+    'Lime, grenadine and lemon-lime soda with vodka: sweet, tart and nostalgic.',
+  holiday_punch:
+    'Vodka with cranberry and orange juice, topped with sparkling wine: festive, fruity and bubbly. Easy to scale up for a party bowl.',
+  long_island_lemonade:
+    'A Long Island Iced Tea topped with lemon-lime soda instead of cola: brighter, lemony and just as strong.',
+  gin_soda:
+    'Gin, soda and lime: crisp, dry and light, letting the gin\'s botanicals show.',
+  gin_lemonade:
+    'Gin topped with lemonade: sweet, tart and herbal. A summer garden favourite.',
+  gin_ginger:
+    'Gin with ginger ale and lemon: gently spicy, herbal and refreshing.',
+  gin_grapefruit:
+    'Gin with fresh grapefruit juice: tart, bitter-sweet and refreshing.',
+  gin_cranberry:
+    'Gin with cranberry and lime: tart, fruity and herbal.',
+  gin_lemon_lime:
+    'Gin topped with lemon-lime soda: sweet, citrusy and easy.',
+  pink_gin_tonic:
+    'A gin and tonic with a touch of raspberry: fruity, pink and refreshing.',
+  cucumber_gin_tonic:
+    'A gin and tonic with fresh cucumber: extra cool and crisp. A popular way to serve G&Ts in Spain and the UK.',
+  gin_mule:
+    'A Moscow Mule made with gin: herbal gin, spicy ginger beer and lime.',
+  gin_spritz:
+    'Gin with sparkling wine and soda: light, crisp and celebratory.',
+  orange_blossom:
+    'Gin and fresh orange juice with a little sugar: bright and fruity. A popular Prohibition-era drink, when fresh juice helped hide rough gin.',
+  fifty_fifty_martini:
+    'Equal parts gin and dry vermouth: softer, lighter and more aromatic than a dry martini. A classic from the early 1900s, loved by bartenders.',
+  red_snapper:
+    'A Bloody Mary made with gin: savoury and spicy with a herbal edge. Some say it predates the vodka version.',
+  rum_pineapple:
+    'Rum with pineapple juice: sweet, tropical and simple. Try it with dark or spiced rum too.',
+  rum_orange:
+    'Rum with orange juice: sweet, sunny and easy.',
+  rum_cranberry:
+    'Rum with cranberry and lime: tart, fruity and refreshing.',
+  rum_lemonade:
+    'Rum topped with lemonade: sweet, tangy and easy. Spiced rum makes it warmer.',
+  spiced_rum_cola:
+    'Spiced rum and cola with lime: vanilla, spice and fizz. One of the most popular bar orders.',
+  coconut_rum_cranberry:
+    'Coconut rum with cranberry juice: sweet, tart and tropical.',
+  coconut_rum_cola:
+    'Coconut rum with cola and lime: like a coconut cola.',
+  rum_rickey:
+    'Rum, lime and soda with no sugar: tart, dry and refreshing.',
+  rum_sunrise:
+    'Rum, orange juice and grenadine: fruity, sweet and colourful.',
+  frozen_daiquiri:
+    'Rum, lime and sugar blended with ice: tart, slushy and refreshing. A Havana favourite famously enjoyed at El Floridita bar.',
+  mango_daiquiri:
+    'Rum, lime and mango blended with ice: tropical, sweet and frosty.',
+  coconut_daiquiri:
+    'Rum, lime and coconut cream: creamy, tart and tropical.',
+  mango_mojito:
+    'A mojito with mango: minty, limey and tropical.',
+  raspberry_mojito:
+    'A mojito sweetened with raspberry: minty, tart and pink.',
+  watermelon_mojito:
+    'A mojito with fresh watermelon: juicy, minty and summery.',
+  cucumber_mojito:
+    'A mojito with muddled cucumber: extra cool and refreshing.',
+  hot_buttered_rum:
+    'Dark rum, butter, sugar and spices topped with hot water: rich and warming. A New England winter classic from colonial times.',
+  blue_hawaii:
+    'Vodka, rum and blue curaçao with pineapple and sweet-and-sour: bright blue and tropical. Created in Hawaii in 1957. Not to be confused with the creamy Blue Hawaiian.',
+  tequila_lemon_lime:
+    'Tequila topped with lemon-lime soda and lime: sweet, citrusy and easy.',
+  tequila_cranberry:
+    'Tequila with cranberry and lime: tart, fruity and earthy.',
+  tequila_lemonade:
+    'Tequila topped with lemonade: sweet, tart and refreshing.',
+  tequila_mojito:
+    'A mojito made with tequila and agave: minty, limey and earthy.',
+  tequila_old_fashioned:
+    'Tequila stirred with agave and bitters: smooth and warming. Reposado or añejo tequila works best.',
+  mango_margarita:
+    'A margarita with mango: sweet, tart and tropical. Great frozen or on the rocks.',
+  coconut_margarita:
+    'A margarita with coconut cream: creamy, tart and tropical.',
+  cranberry_margarita:
+    'A margarita with cranberry juice: tart, festive and pink.',
+  skinny_margarita:
+    'Tequila, lime, a splash of orange juice and a little agave: lighter and less sweet than a classic margarita.',
+  cucumber_margarita:
+    'A margarita with muddled cucumber: cool, crisp and tart.',
+  grapefruit_margarita:
+    'A margarita with grapefruit: tart, slightly bitter and refreshing.',
+  raspberry_margarita:
+    'A margarita with raspberry: tart, fruity and pink.',
+  peach_margarita:
+    'A margarita with peach: sweet, juicy and summery.',
+  mexican_martini:
+    'A margarita shaken hard and served up with olive brine and olives: tart, salty and strong. A famous Austin, Texas favourite.',
+  bourbon_sweet_tea:
+    'Sweet iced tea with bourbon and lemon: smooth and Southern.',
+  bourbon_peach_tea:
+    'Peach iced tea with bourbon: fruity, smooth and refreshing.',
+  bourbon_cranberry:
+    'Bourbon with cranberry and lime: tart, fruity and warming.',
+  maple_bourbon_sour:
+    'A whiskey sour sweetened with maple syrup: rich, tart and cosy.',
+  bourbon_iced_coffee:
+    'Chilled coffee with bourbon, a little sugar and milk: smooth and energising.',
+  bourbon_hot_chocolate:
+    'Hot chocolate with bourbon: rich, warming and indulgent.',
+  bourbon_milk_punch:
+    'Bourbon, milk, vanilla and sugar with nutmeg: creamy and smooth. A New Orleans brunch classic.',
+  cinnamon_whisky_cola:
+    'Cinnamon whisky and cola: sweet and spicy, like a cinnamon cola.',
+  cherry_whiskey_cola:
+    'Whiskey and cola with a splash of grenadine and a cherry: sweet, fizzy and nostalgic.',
+  brandy_manhattan:
+    'A Manhattan made with brandy: fruity, rich and smooth. Especially popular in Wisconsin.',
+  brandy_highball:
+    'Brandy and soda with lemon: light, fruity and refreshing.',
+  amaretto_cola:
+    'Amaretto and cola: sweet and nutty, and many people say it tastes like cherry cola.',
+  coffee_cream:
+    'Coffee liqueur with milk or cream over ice: sweet, creamy and simple.',
+  pineapple_mimosa:
+    'Sparkling wine with pineapple juice: a tropical twist on the brunch classic.',
+  cranberry_mimosa:
+    'Sparkling wine with cranberry juice: tart, red and festive.',
+  grapefruit_mimosa:
+    'Sparkling wine with grapefruit juice: tart, pink and less sweet than a classic mimosa.',
+  mango_mimosa:
+    'Sparkling wine with mango: tropical, sweet and bubbly.',
+  apple_cider_mimosa:
+    'Sparkling wine with apple cider: crisp and autumnal.',
+  beermosa:
+    'Beer topped with orange juice: light, fruity and easy. A tailgate brunch favourite.',
+  lemon_drop_shot:
+    'Vodka, lemon and sugar in a sugar-rimmed shot glass: sweet-sour and smooth.',
+  tequila_shot:
+    'The classic: lick the salt, drink the tequila, bite the lime. The salt and lime soften the tequila\'s bite.',
+  scooby_snack:
+    'Coconut rum, melon liqueur, pineapple and cream: a sweet, creamy, green party shot.',
+  white_gummy_bear:
+    'Vodka and peach schnapps with a splash of lemon-lime soda: tastes like peach gummy candy.',
+  mango_lemonade:
+    'Lemonade with mango: sweet, tart and tropical.',
+  pineapple_lemonade:
+    'Lemonade with pineapple juice: sweet, tangy and tropical.',
+  mango_nojito:
+    'An alcohol-free mango mojito: mint, lime and mango topped with soda.',
+  strawberry_nojito:
+    'An alcohol-free strawberry mojito: mint, lime and berries topped with soda.',
+  virgin_mango_margarita:
+    'Mango, lime and orange blended with ice: all the margarita fun, no tequila.',
+  virgin_mango_colada:
+    'Mango, pineapple and coconut blended with ice: creamy and tropical.',
+  virgin_cosmo:
+    'Cranberry, orange and lime: pink and tart, the Cosmopolitan without the vodka.',
+  virgin_mai_tai:
+    'Orange, pineapple, lime, almond and grenadine: tiki flavour with no rum.',
+  cranberry_orange_punch:
+    'Cranberry and orange juice with lemon-lime soda: fruity and fizzy. Easy to make by the jug.',
+  orange_spritzer:
+    'Orange juice lengthened with soda: lighter, fizzier and less sweet.',
+  cranberry_ginger_ale:
+    'Cranberry juice and ginger ale: tart, spicy and festive.',
+  grapefruit_tonic:
+    'Grapefruit juice and tonic: bitter, tart and grown-up.',
+  lime_soda:
+    'Fresh lime with sugar, a pinch of salt and soda: sweet, salty and tart. A beloved street drink across India.',
+  lemon_lime_bitters:
+    'Lemon-lime soda with lime and a few dashes of aromatic bitters: tart and refreshing. Australia\'s classic pub soft drink. Bitters contain a trace of alcohol, but it\'s served as a soft drink.',
+  raspberry_iced_tea:
+    'Iced tea with raspberry and lemon: fruity and refreshing.',
 };

@@ -102,6 +102,7 @@ export const INGREDIENTS: Ingredient[] = [
   { id: 'passion_fruit', name: 'Passion fruit purée', category: 'Juices' },
   { id: 'peach_puree', name: 'Peach purée', category: 'Juices' },
   { id: 'coconut_water', name: 'Coconut water', category: 'Juices' },
+  { id: 'mango', name: 'Mango juice / purée', category: 'Juices' },
 
   // Syrups & sweeteners
   { id: 'simple_syrup', name: 'Simple syrup', category: 'Syrups & Sweeteners' },
@@ -139,6 +140,7 @@ export const INGREDIENTS: Ingredient[] = [
   { id: 'olives', name: 'Olives (and brine)', category: 'Fresh & Pantry' },
   { id: 'cocktail_onion', name: 'Cocktail onions', category: 'Fresh & Pantry' },
   { id: 'banana', name: 'Banana', category: 'Fresh & Pantry' },
+  { id: 'butter', name: 'Butter', category: 'Fresh & Pantry' },
   { id: 'watermelon', name: 'Watermelon (fresh or juice)', category: 'Fresh & Pantry' },
   { id: 'milk', name: 'Milk', category: 'Fresh & Pantry' },
   { id: 'nutmeg', name: 'Nutmeg', category: 'Fresh & Pantry' },

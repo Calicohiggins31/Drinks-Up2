@@ -65,7 +65,7 @@ test('amounts format in oz and ml', () => {
 });
 
 test('every built-in recipe has an About section and at least one step', () => {
-  assert.equal(RECIPES.length, 300);
+  assert.equal(RECIPES.length, 400);
   for (const r of RECIPES) {
     assert.ok(r.about && r.about.length > 40, `${r.id} has no about text`);
     assert.ok(r.steps.length > 0, `${r.id} has no steps`);
